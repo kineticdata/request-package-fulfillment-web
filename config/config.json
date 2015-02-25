@@ -1,0 +1,31 @@
+{
+    "package": "Package Scaffold",
+    "languages": {
+      "en_US" : "English"
+    },
+    "views": {
+        "example": {
+            "content": "interface/views/package/exampleView.jsp",
+            "title": "Example View"
+        },
+        "default": {
+            "content": "interface/views/package/package.jsp",
+            "title": "Package Scaffold"
+        }
+    },
+    "callbacks": {
+        "example": {
+            "content": "interface/callbacks/package/example.json.jsp"
+        }
+    },
+    "links": {
+        "scaffoldPackage": {
+            "type": "main-menu",
+            "label": "Package Scaffold",
+            "class": "package",
+            "description": "Package Scaffold - used to create a new package",
+            "icon": "<i class=\"fa fa-gift\"></i>",
+            "displayName": "PackageScaffold"
+        }
+    }
+}

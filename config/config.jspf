@@ -1,0 +1,9 @@
+<%--
+    Base Package config
+    NOTE: This file is required.
+--%>
+<%
+    // Define url to base package portal page
+    bundle.setProperty("basePackageUrl", bundle.getProperty("displayPageUrlSlug") + "PackageScaffold");
+
+%>
