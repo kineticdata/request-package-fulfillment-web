@@ -10,7 +10,7 @@
         },
         "default": {
             "content": "interface/views/package/package.jsp",
-            "title": "Package Scaffold"
+            "title": "Fulfillment NG"
         }
     },
     "callbacks": {
@@ -21,11 +21,11 @@
     "links": {
         "scaffoldPackage": {
             "type": "main-menu",
-            "label": "Package Scaffold",
+            "label": "Fulfillment NG",
             "class": "package",
-            "description": "Package Scaffold - used to create a new package",
-            "icon": "<i class=\"fa fa-gift\"></i>",
-            "displayName": "PackageScaffold"
+            "description": "Fulfillment NG - Next generation fulfillment.",
+            "icon": "<i class=\"fa fa-support\"></i>",
+            "displayName": "FulfillmentNG"
         }
     }
 }

@@ -1,0 +1,121 @@
+<div role="tabpanel">
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="" aria-controls="summary" role="tab" data-toggle="tab" data-target="#summary">SUMMARY</a></li>
+    <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work">WORK</a></li>
+    <li role="presentation"><a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">NOTES</a></li>
+    <li role="presentation"><a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">LOGS</a></li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="summary">
+      <div ng-show="workOrderLoading">
+        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      </div>
+
+      <div ng-hide="workOrderLoading">
+        <!-- Assignments details -->
+        <div class="well well-sm">
+          <dl class="dl-horizontal">
+            <dt>Assigned To</dt>
+            <dd>
+              <i class="fa fa-users"></i> {{workOrder.getGroupName()}} <br />
+              <i class="fa fa-user"></i> {{workOrder.getAssignedName()}}
+            </dd>
+          </dl>
+        </div>
+
+        <!-- Working buttons -->
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <button class="btn btn-block btn-warning">Assign</button>
+          </div>
+          <div class="col-md-6 col-xs-6">
+            <button class="btn btn-block btn-primary">Work It</button>
+          </div>
+        </div>
+
+        <!-- Work Order Details -->
+        <div class="well well-sm">
+          <dl class="dl-horizontal">
+            <dt>Work Order Name</dt>
+            <dd>{{workOrder.workOrder}}</dd>
+
+            <dt>Requested For</dt>
+            <dd>{{workOrder.requestedFor}}</dd>
+
+            <dt>Priority</dt>
+            <dd>{{workOrder.priority}}</dd>
+
+            <dt>ID</dt>
+            <dd>{{workOrder.requestId}}</dd>
+
+            <dt>Status</dt>
+            <dd>{{workOrder.status}}</dd>
+
+            <dt>Due</dt>
+            <dd>{{workOrder.due | amCalendar}}</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="work">
+      <work-frame dest="{{workOrderWorkURL}}"></work-frame>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="notes">
+      <div ng-show="workOrderNotesProvider.loading">
+        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      </div>
+      <div ng-hide="workOrderNotesProvider.loading">
+
+        <div ng-show="showAddNote">
+          <div class="row">
+            <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
+              <input type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-offset-2 col-xs-offset-2 col-md-4 col-xs-4">
+              <button class="btn btn-default btn-block" ng-click="cancelNote()">Cancel</button>
+            </div>
+            <div class="col-md-4 col-xs-4">
+              <button class="btn btn-danger btn-block" ng-click="addNote()">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div ng-hide="showAddNote">
+          <div class="row">
+            <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
+              <button class="btn btn-default btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
+            </div>
+          </div>
+        </div>
+
+        <div ng-repeat="note in workOrderNotes.all" class="well-log">
+          <p>{{note.information}}</p>
+          <p>Submitted By: {{note.submittedBy}}</p>
+        </div>
+
+        <paginated-resource success="notesRtrSuccessFn()" failure="providerFailureFn()" provider="workOrderNotesProvider"></paginated-resource>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="logs">
+      <div ng-show="workOrderLogsProvider.loading">
+        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      </div>
+      <div ng-hide="workOrderLogsProvider.loading">
+        <div ng-repeat="log in workOrderLogs.all" class="well-log">
+          <p>{{log.id}} {{log.entry}}</p>
+          <p>Submitted By: {{log.assigneeId}}</p>
+        </div>
+
+        <paginated-resource success="logRtrSuccessFn()" failure="providerFailureFn()" provider="workOrderLogsProvider"></paginated-resource>
+      </div>
+    </div>
+  </div>
+</div>

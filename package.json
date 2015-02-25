@@ -1,0 +1,25 @@
+{
+  "name": "fulfillment",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "chai-as-promised": "^4.2.0",
+    "karma": "~0.12.16",
+    "karma-chai": "~0.1.0",
+    "karma-chai-plugins": "^0.2.4",
+    "karma-chrome-launcher": "~0.1.4",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-mocha": "~0.1.3",
+    "karma-notify-reporter": "^0.1.1",
+    "karma-phantomjs-launcher": "~0.1.4",
+    "karma-script-launcher": "~0.1.0",
+    "karma-sinon": "^1.0.4",
+    "main-bower-files": "^1.0.1",
+    "sinon": "^1.12.2"
+  }
+}
