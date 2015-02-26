@@ -3,32 +3,36 @@ angular.module('kineticdata.fulfillment.services.workorder', [
   'kineticdata.fulfillment.services.paginateddataprovider'
 ])
   .service('WorkOrdersService', ['$q', '$http', '$log', 'ConfigService', 'ModelFactory', 'PaginatedDataProviderFactory', function($q, $http, $log, ConfigService, ModelFactory, PaginatedDataProviderFactory) {
-    var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders'
+    'use strict';
+
+    var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
     var workOrderFactory = ModelFactory.get('WorkOrder');
 
     var workOrdersByFilterCache = {};
 
     /// Retrieves all filters from the KR server.
-    var getWorkOrdersWithFilter = function(filterName, target) {
-      var deferred = $q.defer();
+    var getWorkOrdersWithFilter = function(filterName) {
+      //var deferred = $q.defer();
       if(workOrdersByFilterCache[filterName] === undefined) {
-        workOrdersByFilterCache[filterName] = PaginatedDataProviderFactory.getResourceProvider('/work-orders&filter=' + filterName, 'WorkOrderCollection')
+        workOrdersByFilterCache[filterName] = PaginatedDataProviderFactory.getResourceProvider('/work-orders&filter=' + filterName, 'WorkOrderCollection');
       }
+
+      return workOrdersByFilterCache[filterName];
       // Copy the cache to the target object.
-      angular.copy(workOrdersByFilterCache[filterName].data, target);
+      //angular.copy(workOrdersByFilterCache[filterName].data, target);
 
-      workOrdersByFilterCache[filterName].get().then(
-        function() {
-          // Cache the data.
-          angular.copy(workOrdersByFilterCache[filterName].data, target);
-          deferred.resolve();
-        },
-        function() {
-          deferred.reject();
-        }
-      );
-
-      return deferred.promise;
+      // workOrdersByFilterCache[filterName].get().then(
+      //   function() {
+      //     // Cache the data.
+      //     angular.copy(workOrdersByFilterCache[filterName].data, target);
+      //     deferred.resolve();
+      //   },
+      //   function() {
+      //     deferred.reject();
+      //   }
+      // );
+      //
+      // return deferred.promise;
     };
 
     var getWorkOrderById = function(id) {

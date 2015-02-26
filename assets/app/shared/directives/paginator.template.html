@@ -1,0 +1,7 @@
+<nav >
+  <ul class="pagination">
+    <li class="previous" ng-disable="hasPrev"><a href="" ng-click="clickPrev()">Previous</a></li>
+    <li ng-repeat="n in logPageCount() track by $index" ng-class="{active: activePageIndex() == $index}"><a href="" ng-click="clickPage($index)">{{$index + 1}}</a></li>
+    <li class="next" ng-class="{disabled: hasNext}"><a href="" ng-click="clickNext()">Next</a></li>
+  </ul>
+</nav>

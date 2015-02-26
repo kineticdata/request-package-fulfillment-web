@@ -18,12 +18,12 @@
 
 
 <div ng-app="kineticdata.fulfillment">
-  <div class="container">  
+  <div class="container">
     <div ng-controller="MainController">
       <ul class="nav nav-pills">
 
-        <li role="presentation" ng-repeat="filter in filterCollection.all">
-          <a ui-sref="filter({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
+        <li role="presentation" ng-repeat="filter in filterCollection.all" ng-class="{active: isActiveFilter(filter)}">
+          <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
         </li>
       </ul>
     </div>
@@ -45,14 +45,11 @@
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-cookie/angular-cookie.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-cookies/angular-cookies.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-flash/dist/angular-flash.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/moment/moment.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
-<!--<script src="<%=bundle.packagePath()%>assets/bower_components/jquery/dist/jquery.js"></script>-->
 <script src="<%=bundle.packagePath()%>assets/bower_components/lodash/lodash.js"></script>
 <script src="<%=bundle.packagePath()%>assets/bower_components/angular-moment/angular-moment.js"></script>
-<!--<script src="<%=bundle.packagePath()%>assets/bower_components/bootstrap/dist/js/bootstrap.js"></script>-->
 
 
 <!--<script src="<%=bundle.packagePath()%>resources/js/services/workorders.service.js"></script>
@@ -62,13 +59,12 @@
 <script src="<%=bundle.packagePath()%>resources/js/services/auth.service.js"></script>
 <script src="<%=bundle.packagePath()%>resources/js/services/http.interceptor.factory.js"></script>
 
-<script src="<%=bundle.packagePath()%>resources/js/directives/workframe.directive.js"></script>
-<script src="<%=bundle.packagePath()%>resources/js/directives/paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>resources/js/controllers/workorder.controller.js"></script>
 
 <script src="<%=bundle.packagePath()%>resources/js/controllers/login.controller.js"></script>
 -->
 
+<script src="<%=bundle.packagePath()%>assets/app/shared/directives/paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/paginateddataprovider.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/config.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/filters.service.js"></script>
@@ -80,4 +76,5 @@
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.list.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.detail.controller.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.frame.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/app.js"></script>

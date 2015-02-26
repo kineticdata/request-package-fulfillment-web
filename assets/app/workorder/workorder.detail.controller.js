@@ -3,11 +3,13 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
 ])
   .controller('WorkOrderDetailController', [ '$scope', '$stateParams', '$log', 'flash', 'WorkOrdersService',
     function($scope, $stateParams, $log, flash, WorkOrdersService) {
-      $scope.currentWorkOrderId = $stateParams.id;
+      $scope.currentWorkOrderId = $stateParams.workOrderId;
       $scope.workOrder = {};
       $scope.workOrderLogs = {};
       $scope.workOrderNotes = {};
+      // Loading trackers.
       $scope.workOrderLoading = true;
+      $scope.workOrderNotesLoading = true;
       $scope.workOrderNotesProvider = WorkOrdersService.getWorkOrderNotes($scope.currentWorkOrderId);
       $scope.workOrderLogsProvider = WorkOrdersService.getWorkOrderLogs($scope.currentWorkOrderId);
       $scope.workOrderWorkURL = '';
@@ -85,14 +87,19 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         }
       };
 
+      $scope.internal.notesStartFn = function() {
+        $scope.workOrderNotesLoading = true;
+      };
+
       /**
        * Provides a scoped handler for chaining notes provider retrievals.
        * @param {function} next A closure function to be chained, can be undefined.
        * @returns {function}
        */
       $scope.internal.notesRtrSuccessFn = function(next) {
-        return function() {
-          $scope.workOrderNotes = $scope.workOrderNotesProvider.data;
+        return function(notes) {
+          $scope.workOrderNotesLoading = false;
+          $scope.workOrderNotes = notes;
           if(typeof next !== 'undefined') { next(); }
         }
       };

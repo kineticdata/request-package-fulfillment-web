@@ -66,10 +66,10 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="notes">
-      <div ng-show="workOrderNotesProvider.loading">
+      <div ng-show="workOrderNotesLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
-      <div ng-hide="workOrderNotesProvider.loading">
+      <div ng-hide="workOrderNotesLoading">
 
         <div ng-show="showAddNote">
           <div class="row">
@@ -100,7 +100,7 @@
           <p>Submitted By: {{note.submittedBy}}</p>
         </div>
 
-        <paginated-resource success="notesRtrSuccessFn()" failure="providerFailureFn()" provider="workOrderNotesProvider"></paginated-resource>
+        <paginated-resource start="internal.notesStartFn" success="internal.notesRtrSuccessFn()" failure="internal.providerFailureFn()" provider="workOrderNotesProvider"></paginated-resource>
       </div>
     </div>
 

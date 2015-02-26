@@ -13,9 +13,9 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.models.filter',
 
   // // Directives
-  // 'kineticdata.fulfillment.directives.paginator',
-  // 'kineticdata.fulfillment.directives.workframe',
-  //
+  'kineticdata.fulfillment.directives.paginator',
+  'kineticdata.fulfillment.directives.workframe',
+
   // Controllers
   'kineticdata.fulfillment.controllers.main',
   'kineticdata.fulfillment.controllers.workorderlist',
@@ -36,22 +36,16 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     flashProvider.errorClassnames.push('alert-danger');
 
-    //$urlRouterProvider.otherwise('/default');
+    $urlRouterProvider.otherwise('/workorder/default');
     $stateProvider
-      .state('defaultFilter', {
-        url: '/default',
-        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
-        controller: 'WorkOrderListController',
-        module: 'private'
-      })
-      .state('filter', {
-        url: '/filter/:id',
-        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
-        controller: 'WorkOrderListController',
-        module: 'private'
-      })
-      .state('workOrder', {
+      .state('workorders', {
         url: '/workorder/:id',
+        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
+        controller: 'WorkOrderListController',
+        module: 'private'
+      })
+      .state('workorders.detail', {
+        url: '/:workOrderId',
         templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
         controller: 'WorkOrderDetailController',
         module: 'private'

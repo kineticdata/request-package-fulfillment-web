@@ -4,18 +4,19 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
 ])
   .factory('PaginatedDataProviderFactory', ['$q', '$log', '$http', 'ConfigService', 'ModelFactory', function($q, $log, $http, ConfigService, ModelFactory) {
     'use strict';
-    
+
     $log.info('{SVC} PaginatedDataProviderFactory :: Initializing.');
 
     var defaultOptions = {
-      limit: 10,
+      limit: 2,
       offset: 0,
       count: 0
     };
 
     var ResourceProvider = function(url, model, params) {
       var self = this;
-      self.loading = true;
+      self.promises = [];
+      self.dirty = true;
 
       // Default the options.
       self.options = angular.copy(defaultOptions);
@@ -27,39 +28,59 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
       self.model = model;
       self.factory = ModelFactory.get(model);
 
-      // Define methods
+      ///////////////////////////////
+      // RESOURCE PROVIDER METHODS //
+      ///////////////////////////////
 
       // This method actually performs the retrieval of data.
       self.get = function() {
-        self.loading = true;
         var targetUrl = self.generateUrl();
-
-        $log.debug('Attempting to retrieve from: ' + targetUrl)
         var deferred = $q.defer();
 
-        $http({
-          method: 'GET',
-          url: targetUrl
-        }).success(function(data, status, headers) {
-          self.loading = false;
-          if(headers('content-type') === 'text/html;charset=UTF-8') {
-            $log.error('Rejected invalid response, came as HTML instead of JSON.');
+        // We are already loading and there are pending promises.
+        if(self.promises.length > 0) {
+          self.promises.push(deferred);
+
+        // Data has not yet been loaded so initiate the load.
+        } else if(self.data === undefined || self.dirty) {
+          $log.debug('{PRP} Attempting to retrieve for '+self.model+' from: ' + targetUrl);
+          self.promises.push(deferred);
+
+          $http({
+            method: 'GET',
+            url: targetUrl
+          }).success(function(data, status, headers) {
+
+            // If we receive invalid input we need to reject all promises.
+            if(headers('content-type') === 'text/html;charset=UTF-8') {
+              $log.error('{PRP} Rejected invalid response, came as HTML instead of JSON.');
+              while(self.promises.length) {
+                self.promises.shift().reject(data);
+              }
+            } else {
+              // Save the page data.
+              self.options.limit = data.limit;
+              self.options.count = data.count;
+              self.options.offset = data.offset;
+
+              // Convert the model.
+              self.data = new self.factory.factoryObject(data[self.factory.restName]);
+
+              // Resolve all promises.
+              while(self.promises.length) {
+                self.promises.shift().resolve(self.data);
+              }
+            }
+
+          }).error(function(data) {
             deferred.reject(data);
-          } else {
-            // Save the page data.
-            self.options.limit = data.limit;
-            self.options.count = data.count;
-            self.options.offset = data.offset;
+          });
 
-            // Convert the model and return it.
-            self.data = new self.factory.factoryObject(data[self.factory.restName]);
-            deferred.resolve();
-          }
+        // Data has been loaded, just resolve with the loaded data.
+        } else {
+          deferred.resolve(self.data);
+        }
 
-        }).error(function(data) {
-          self.loading = false;
-          deferred.reject(data);
-        });
 
         return deferred.promise;
 
@@ -83,31 +104,33 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
 
       self.nextPage = function() {
         if(!self.hasNextPage()) {
-          $log.warn('Attempted to move to next page when no more pages remain: ' + self.options.count);
+          $log.warn('{PRP} Attempted to move to next page when no more pages remain: ' + self.options.count);
           return;
         }
 
         self.options.offset += self.options.limit;
+        self.dirty = true;
         return self.get();
       };
 
       self.prevPage = function() {
         if(!self.hasPrevPage()) {
-          $log.warn('Attempted to move to previous page when no more pages remain: ' + self.options.count);
+          $log.warn('{PRP} Attempted to move to previous page when no more pages remain: ' + self.options.count);
           return;
         }
 
         self.options.offset -= self.options.limit;
+        self.dirty = true;
         return self.get();
       };
 
       self.gotoPage = function(page) {
         var targetOffset = page * self.options.limit;
         if(targetOffset > self.options.count) {
-          $log.warn('Attempted to change to invalid page.');
           return;
         }
         self.options.offset = targetOffset;
+        self.dirty = true;
         return self.get();
       };
 
@@ -119,7 +142,10 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
     };
 
     return {
-      getResourceProvider: function(url, model, params) { return new ResourceProvider(url, model, params) },
+      getResourceProvider: function(url, model, params) {
+        $log.info('{PRP} Generating PRP for "'+model+'"');
+        return new ResourceProvider(url, model, params);
+      },
       defaults: {
         options: defaultOptions
       }
