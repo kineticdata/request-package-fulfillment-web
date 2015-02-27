@@ -63,12 +63,13 @@ describe('MainController', function() {
     });
 
     describe('when filter loading fails', function() {
-      it('should TODO something', function() {
-        filtersProviderGetStub.withArgs().returns(getThenSuccess({filters:[{name:'test'}]}));
+      it('should set the error flash', inject(function(flash) {
+        filtersProviderGetStub.withArgs().returns(getThenFailure());
 
+        expect(flash.error).to.be.empty;
         scope.retrieveAllFilters();
-        expect(scope.filtersProvider.get).to.be.called;
-      });
+        expect(flash.error).to.not.be.empty;
+      }));
     });
 
     describe('when filter loading succeeds.', function() {

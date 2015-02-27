@@ -2,7 +2,7 @@ angular.module('kineticdata.fulfillment.controllers.main', [
   'ui.router',
   'kineticdata.fulfillment.services.filter'
 ])
-  .controller('MainController', ['$scope', '$stateParams', '$log', 'FiltersService', function($scope, $stateParams, $log, FiltersService) {
+  .controller('MainController', ['$scope', '$stateParams', '$log', 'flash', 'FiltersService', function($scope, $stateParams, $log, flash, FiltersService) {
     'use strict';
     $log.info('{CTRL} Initializing MainController.');
 
@@ -21,6 +21,9 @@ angular.module('kineticdata.fulfillment.controllers.main', [
       return $scope.activeFilter === filter.name;
     };
 
+    /**
+     * Triggers the retrieval of all of the filters.
+     */
     $scope.retrieveAllFilters = function() {
       $scope.filtersProvider.get().then(
         function(filters) {
@@ -28,10 +31,14 @@ angular.module('kineticdata.fulfillment.controllers.main', [
         },
         function() {
           $log.error('Failed to load all filters');
+          flash.error = 'There was a problem loading available filters.';
         }
       );
     };
 
+    /**
+     * Watches for the 'krs-filter-changed' event, save the filter name.
+     */
     $scope.$on('krs-filter-changed', function(event, filter) {
       $scope.activeFilter = filter;
     });
