@@ -16,6 +16,15 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
+    "angular": false,
+    "sinon": false,
+    "chai": false,
+    "describe": false,
+    "it": false,
+    "expect": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "module": false,
+    "BUNDLE": false
   }
 }

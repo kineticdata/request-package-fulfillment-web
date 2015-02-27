@@ -13,36 +13,36 @@ module.exports = function ( karma ) {
      */
     files: [
         // Thirdparty JS
-        'resources/bower_components/angular/angular.js',
-        'resources/bower_components/angular-route/angular-route.js',
-        'resources/bower_components/angular-cookie/angular-cookie.js',
-        'resources/bower_components/angular-cookies/angular-cookies.js',
-        'resources/bower_components/angular-flash/dist/angular-flash.js',
-        'resources/bower_components/moment/moment.js',
-        'resources/bower_components/angular-ui-router/release/angular-ui-router.js',
-        'resources/bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js',
-        'resources/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-        'resources/bower_components/jquery/dist/jquery.js',
-        'resources/bower_components/lodash/lodash.js',
-        'resources/bower_components/angular-moment/angular-moment.js',
-        'resources/bower_components/bootstrap/dist/js/bootstrap.js',
-        'resources/bower_components/angular-mocks/angular-mocks.js',
+        'assets/bower_components/angular/angular.js',
+        'assets/bower_components/angular-route/angular-route.js',
+        'assets/bower_components/angular-cookie/angular-cookie.js',
+        'assets/bower_components/angular-cookies/angular-cookies.js',
+        'assets/bower_components/angular-flash/dist/angular-flash.js',
+        'assets/bower_components/moment/moment.js',
+        'assets/bower_components/angular-ui-router/release/angular-ui-router.js',
+        'assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js',
+        'assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
+        'assets/bower_components/jquery/dist/jquery.js',
+        'assets/bower_components/lodash/lodash.js',
+        'assets/bower_components/angular-moment/angular-moment.js',
+        'assets/bower_components/bootstrap/dist/js/bootstrap.js',
+        'assets/bower_components/angular-mocks/angular-mocks.js',
 
         // Application JS
-        'resources/js/services/*.service.js',
-        'resources/js/services/*.factory.js',
-        'resources/js/models/*.model.js',
-        'resources/js/directives/*.directive.js',
-        'resources/js/controllers/*.controller.js',
-        'resources/js/app.js',
+        'assets/app/shared/directives/*.js',
+        'assets/app/shared/models/*.js',
+        'assets/app/shared/services/*.js',
+        'assets/app/main/*.js',
+        'assets/app/workorder/*.js',
+        'assets/app/app.js',
 
         // Specs.
-        'resources/js/specs/spechelper.js',
-        'resources/js/specs/*.spec.js'
+        'assets/app/tests/spec_helper.js',
+        'assets/app/tests/unit/*.spec.js'
       ],
 
-    frameworks: [ 'mocha', 'chai', 'chai-as-promised', 'sinon' ],
-    plugins: [ 'karma-mocha', 'karma-chai-plugins', 'karma-sinon', 'karma-phantomjs-launcher', 'karma-notify-reporter' ],
+    frameworks: [ 'mocha', 'chai', 'sinon-chai', 'chai-as-promised' ],
+    plugins: [ 'karma-mocha', 'karma-chai-plugins', 'karma-phantomjs-launcher', 'karma-notify-reporter' ],
 
     /**
      * How to report, by default.
