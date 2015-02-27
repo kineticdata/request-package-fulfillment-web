@@ -1,4 +1,4 @@
-<nav >
+<nav ng-hide="hidden()">
   <ul class="pagination">
     <li class="previous" ng-disable="hasPrev"><a href="" ng-click="clickPrev()">Previous</a></li>
     <li ng-repeat="n in logPageCount() track by $index" ng-class="{active: activePageIndex() == $index}"><a href="" ng-click="clickPage($index)">{{$index + 1}}</a></li>

@@ -20,30 +20,6 @@ angular.module('kineticdata.fulfillment.directives.paginator', [])
     scope.hasNext = false;
     scope.logPageCount = [];
 
-    // $scope.$watch('provider', function(provider) {
-    //   if(!angular.isDefined(provider) || _.isEmpty(provider)) {
-    //     return;
-    //   }
-    //   $log.debug('provider changed...', provider);
-    //   $scope.hasPrev = provider.hasPrevPage();
-    //   $scope.hasNext = provider.hasNextPage();
-    // });
-    //
-    // $scope.$watch('provider.options.count', function(count) {
-    //   if(!angular.isDefined($scope.provider) || _.isEmpty($scope.provider)) {
-    //     return;
-    //   }
-    //
-    //   var pageCount = $scope.provider.pageCount();
-    //   $log.debug('page count', pageCount);
-    //
-    //   if(pageCount>0) {
-    //     $scope.logPageCount = new Array(pageCount);
-    //   } else {
-    //     $scope.logPageCount = [];
-    //   }
-    // });
-
     scope.clickPrev = function() {
       if(angular.isDefined(scope.start())) {
         scope.start()();
@@ -64,7 +40,7 @@ angular.module('kineticdata.fulfillment.directives.paginator', [])
       if(angular.isDefined(scope.start())) {
         scope.start()();
       }
-      
+
       scope.provider().gotoPage(pageIndex).then(scope.success(), scope.failure());
     };
 
@@ -72,17 +48,9 @@ angular.module('kineticdata.fulfillment.directives.paginator', [])
       return scope.provider().activePageIndex();
     };
 
-    // $scope.hasPrev = function() {
-    //   return $scope.provider.hasPrevPage();
-    // };
-    //
-    // $scope.hasNext = function() {
-    //   return $scope.provider.hasNextPage();
-    // };
-    //
     // // Stupid ng-repeat hack.
     scope.logPageCount = function() {
-      if(!angular.isDefined(scope.provider()) || _.isEmpty(scope.provider())) {
+      if(isProviderMissing()) {
         return [];
       }
 
@@ -92,6 +60,23 @@ angular.module('kineticdata.fulfillment.directives.paginator', [])
       } else {
         return [];
       }
+    };
+
+    scope.hidden = function() {
+      if(isProviderMissing()) {
+        return true;
+      }
+
+      var pages = scope.provider().pageCount();
+      if(pages > 1) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    var isProviderMissing = function() {
+      return !angular.isDefined(scope.provider()) || _.isEmpty(scope.provider())
     };
   };
   return directive;

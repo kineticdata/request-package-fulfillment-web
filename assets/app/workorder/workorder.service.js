@@ -18,21 +18,6 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       }
 
       return workOrdersByFilterCache[filterName];
-      // Copy the cache to the target object.
-      //angular.copy(workOrdersByFilterCache[filterName].data, target);
-
-      // workOrdersByFilterCache[filterName].get().then(
-      //   function() {
-      //     // Cache the data.
-      //     angular.copy(workOrdersByFilterCache[filterName].data, target);
-      //     deferred.resolve();
-      //   },
-      //   function() {
-      //     deferred.reject();
-      //   }
-      // );
-      //
-      // return deferred.promise;
     };
 
     var getWorkOrderById = function(id) {
@@ -51,7 +36,6 @@ angular.module('kineticdata.fulfillment.services.workorder', [
           }
         })
         .error(function(data) {
-          $log.error('failed')
           deferred.reject(data);
         });
 

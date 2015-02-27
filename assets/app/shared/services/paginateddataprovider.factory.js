@@ -33,9 +33,13 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
       ///////////////////////////////
 
       // This method actually performs the retrieval of data.
-      self.get = function() {
+      self.get = function(force) {
         var targetUrl = self.generateUrl();
         var deferred = $q.defer();
+
+        if(angular.isDefined(force) && force) {
+          self.dirty = true;
+        }
 
         // We are already loading and there are pending promises.
         if(self.promises.length > 0) {
@@ -65,6 +69,9 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
 
               // Convert the model.
               self.data = new self.factory.factoryObject(data[self.factory.restName]);
+
+              // Turn off the 'dirty' flag as we've successfully loaded data.
+              self.dirty = false;
 
               // Resolve all promises.
               while(self.promises.length) {
