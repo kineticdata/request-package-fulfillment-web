@@ -6,16 +6,22 @@ angular.module('kineticdata.fulfillment.controllers.main', [
     'use strict';
     $log.info('{CTRL} Initializing MainController.');
 
-    // Pre-populate scope.
-    $scope.filterCollection = { filters:[] };
+    /// Holds all of the filters used in the pill-bar.
+    $scope.filterCollection = {};
+    /// Holds a copy of the resource provider for getting filters.
     $scope.filtersProvider = FiltersService.getFilters();
+    /// Holds the name of the active filter, 'default' means look up the default one.
     $scope.activeFilter = 'default';
 
+    /**
+     * Helper function used to determine whether a filter is the actively selected filter.
+     * @param {string} filter the name of a filter.
+     */
     $scope.isActiveFilter = function(filter) {
       return $scope.activeFilter === filter.name;
     };
 
-    var retrieveAllFilters = function() {
+    $scope.retrieveAllFilters = function() {
       $scope.filtersProvider.get().then(
         function(filters) {
           $scope.filterCollection = filters;
@@ -24,22 +30,12 @@ angular.module('kineticdata.fulfillment.controllers.main', [
           $log.error('Failed to load all filters');
         }
       );
-      $log.debug($scope.filtersProvider);
     };
-
-    // $scope.activate = function(filter) {
-    //   $scope.activeFilter = filter.name;
-    //   $log.debug('yay');
-    // };
-
-    // $scope.logout = function() {
-    //   // The API does not allow logging out just yet.
-    // };
 
     $scope.$on('krs-filter-changed', function(event, filter) {
       $scope.activeFilter = filter;
     });
 
-    retrieveAllFilters();
+    $scope.retrieveAllFilters();
 
   }]);
