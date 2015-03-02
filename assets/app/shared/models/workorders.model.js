@@ -14,7 +14,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
         });
 
         return group;
-      }
+      };
 
       self.getGroupName = function(label) {
         var group = self.getGroup(label);
@@ -22,14 +22,14 @@ angular.module('kineticdata.fulfillment.models.workorder', [
           return 'None';
         }
         return group.name;
-      }
+      };
 
       self.getAssignedName = function() {
         if(self.assignedName === undefined || self.assignedName === null) {
           return 'Unassigned';
         }
         return self.assignedName;
-      }
+      };
 
     };
 

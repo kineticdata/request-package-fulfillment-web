@@ -38,7 +38,7 @@ module.exports = function ( karma ) {
 
         // Specs.
         'assets/app/tests/spec_helper.js',
-        'assets/app/tests/unit/*.spec.js'
+        'assets/app/tests/unit/**/*.spec.js'
       ],
 
     frameworks: [ 'mocha', 'chai', 'sinon-chai', 'chai-as-promised' ],

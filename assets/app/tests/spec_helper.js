@@ -17,3 +17,7 @@ getThenFailure = function(response) {
     }
   };
 };
+
+getFakeFilters = function() {
+  return [ {name:'test1'}, {name:'test2', default: true} ];
+};

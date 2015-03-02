@@ -9,9 +9,10 @@ describe('MainController', function() {
   var scope;
 
   var filtersProviderGetStub;
+  var fakeFilterCollection;
 
   beforeEach(module('kineticdata.fulfillment'));
-  beforeEach(inject(function(_$rootScope_, _$controller_, _$stateParams_, _$log_, _$q_, _FiltersService_) {
+  beforeEach(inject(function(_$rootScope_, _$controller_, _$stateParams_, _$log_, _$q_, _FiltersService_, _ModelFactory_) {
     scope = _$rootScope_.$new();
 
     _$controller_('MainController', {
@@ -22,19 +23,10 @@ describe('MainController', function() {
       FiltersService: _FiltersService_
     });
 
-    getSuccessFn = function() {
-      var deferred = _$q_.defer();
-      deferred.resolve({filters:[{name:'test'}]});
-      return deferred.promise;
-    };
-
-    getFailureFn = function() {
-      var deferred = _$q_.defer();
-      deferred.reject();
-      return deferred.promise;
-    };
-
     filtersProviderGetStub = sinon.stub(scope.filtersProvider, 'get');
+
+    var fobj = _ModelFactory_.get('FilterCollection').factoryObject;
+    fakeFilterCollection = new fobj(getFakeFilters());
   }));
 
   afterEach(function() {
@@ -56,7 +48,7 @@ describe('MainController', function() {
   describe('#retrieveAllFilters', function() {
 
     it('should use the filter provider', function() {
-      filtersProviderGetStub.withArgs().returns(getThenSuccess({filters:[{name:'test'}]}));
+      filtersProviderGetStub.withArgs().returns(getThenSuccess(fakeFilterCollection));
 
       scope.retrieveAllFilters();
       expect(scope.filtersProvider.get).to.be.called;
@@ -72,13 +64,13 @@ describe('MainController', function() {
       }));
     });
 
-    describe('when filter loading succeeds.', function() {
+    describe('when filter loading succeeds', function() {
       it('should set the filters collection', function() {
-        filtersProviderGetStub.withArgs().returns(getThenSuccess({filters:[{name:'test'}]}));
+        filtersProviderGetStub.withArgs().returns(getThenSuccess(fakeFilterCollection));
 
         scope.retrieveAllFilters();
-        expect(scope.filterCollection.filters).to.be.ok;
-        expect(scope.filterCollection.filters).to.have.length(1);
+        expect(scope.filterCollection.all).to.be.ok;
+        expect(scope.filterCollection.all).to.have.length(fakeFilterCollection.all.length);
       });
     });
 
