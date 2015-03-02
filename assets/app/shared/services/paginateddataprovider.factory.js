@@ -8,7 +8,7 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
     $log.info('{SVC} PaginatedDataProviderFactory :: Initializing.');
 
     var defaultOptions = {
-      limit: 2,
+      limit: 10,
       offset: 0,
       count: 0
     };
