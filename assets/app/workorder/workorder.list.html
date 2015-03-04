@@ -4,11 +4,31 @@
 
 
 <div class="row">
-  <div class="col-md-4" ng-class="{'hidden-xs': isChildState()}">
+  <div class="col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState()}">
 
 
     <div ng-hide="filtersLoading">
-      <h2>{{currentFilter.name}} <button class="btn btn-default btn-lg"><i class="fa fa-sort"></i></button><i class="fa fa-spinner fa-spin" ng-show="workOrdersLoading"></i></h2>
+      <span>
+        <div class="dropdown">
+          <button class="btn btn-default btn-md" type="button" data-toggle="dropdown" aria-expander="true" id="workOrderListSort">
+            <i class="fa fa-sort"></i>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">ID</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Request</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Work Order</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Requested For</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Status</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Priority</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Due Date</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Assigned To</a></li>
+          </ul>
+        </div>
+        <h3>
+          {{currentFilter.name}}
+          <i class="fa fa-spinner fa-spin" ng-show="workOrdersLoading"></i>
+        </h3>
+      </span>
 
       <div class="row workorder-row" ng-repeat="workOrder in workOrders.all">
         <div class="col-md-12" ng-click="selectWorkOrder(workOrder)">

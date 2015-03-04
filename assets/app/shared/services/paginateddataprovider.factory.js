@@ -46,7 +46,7 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
           self.promises.push(deferred);
 
         // Data has not yet been loaded so initiate the load.
-        } else if(self.data === undefined || self.dirty) {
+        } else if(!angular.isDefined(self.data) || self.dirty) {
           $log.debug('{PRP} Attempting to retrieve for '+self.model+' from: ' + targetUrl);
           self.promises.push(deferred);
 
@@ -80,7 +80,9 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
             }
 
           }).error(function(data) {
-            deferred.reject(data);
+            while(self.promises.length) {
+              self.promises.shift().reject(data);
+            }
           });
 
         // Data has been loaded, just resolve with the loaded data.

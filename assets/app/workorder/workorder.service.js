@@ -10,6 +10,8 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
     var workOrdersByFilterCache = {};
 
+    var workOrderCache = {};
+
     /// Retrieves all filters from the KR server.
     var getWorkOrdersWithFilter = function(filterName) {
       //var deferred = $q.defer();
@@ -21,23 +23,52 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     };
 
     var getWorkOrderById = function(id) {
-
       var deferred = $q.defer();
-      var url = workOrderUrl + '/' + id;
 
-      $http.get(url)
-        .success(function(data, status, headers) {
-          //$log.info('headers:', data, headers('content-type'))
-          if(headers('content-type') === 'text/html;charset=UTF-8') {
-            $log.error('Failure from server: response not in JSON.');
-            deferred.reject(data);
-          } else {
-            deferred.resolve(new workOrderFactory.factoryObject(data));
-          }
-        })
-        .error(function(data) {
-          deferred.reject(data);
-        });
+      // Retrieve and, if necessary, initialize the cache.
+
+      if(!angular.isDefined(workOrderCache[id])) {
+        workOrderCache[id] = {};
+        workOrderCache[id].promises = [];
+        workOrderCache[id].data = {};
+        workOrderCache[id].dirty = true;
+      }
+      var cache = workOrderCache[id];
+
+      // If data retrieval is pending.
+      if(cache.promises.length > 0) {
+        cache.promises.push(deferred);
+
+      // Data has not yet been loaded, so kick it off.
+      } else if(!angular.isDefined(cache.data) || cache.dirty) {
+        $log.debug('{SVC} Attempting to retrieve WorkOrder.')
+        cache.promises.push(deferred);
+
+        var url = workOrderUrl + '/' + id;
+        $http.get(url)
+          .success(function(data, status, headers) {
+            //$log.info('headers:', data, headers('content-type'))
+            if(headers('content-type') === 'text/html;charset=UTF-8') {
+              $log.error('{SVC} Rejected invalid response, response not in JSON.');
+              while(cache.promises.length) {
+                cache.promises.shift().reject(data);
+              }
+            } else {
+              cache.data = new workOrderFactory.factoryObject(data);
+              cache.dirty = false;
+              while(cache.promises.length) {
+                cache.promises.shift().resolve(cache.data);
+              }
+            }
+          })
+          .error(function(data) {
+            while(cache.promises.length) {
+              cache.promises.shift().reject(data);
+            }
+          });
+      } else {
+        deferred.resolve(cache.data);
+      }
 
       return deferred.promise;
     };

@@ -76,5 +76,6 @@
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.list.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.detail.controller.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.assign.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.frame.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/app.js"></script>

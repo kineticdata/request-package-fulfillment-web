@@ -20,7 +20,7 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.controllers.main',
   'kineticdata.fulfillment.controllers.workorderlist',
   'kineticdata.fulfillment.controllers.workorderdetail',
-  // 'kineticdata.fulfillment.controllers.workorder',
+  'kineticdata.fulfillment.controllers.workorderassign',
   // 'kineticdata.fulfillment.controllers.login',
   //
   // Services
@@ -49,6 +49,11 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
         controller: 'WorkOrderDetailController',
         module: 'private'
+      })
+      .state('workorders.assign', {
+        url: '/:workOrderId/assign',
+        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
+        controller: 'WorkOrderAssignController'
       })
       .state('login', {
         url: '/login',

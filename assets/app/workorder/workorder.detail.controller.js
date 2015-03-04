@@ -57,7 +57,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * Logs that work order retrieval failed and shows a flash.
        */
       $scope.flash.workOrderLoadFailure = function(data) {
-        $log.error('Failed to retrieve work order:', data)
+        $log.error('Failed to retrieve work order:', data);
         flash.error ='Server Error: Failed to retrieve work order.';
       };
 
@@ -65,7 +65,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * Shows a generic API flash error.
        */
       $scope.flash.genericProviderFailure = function(data) {
-        $log.error('Failed to retrieve data from server:', data)
+        $log.error('Failed to retrieve data from server:', data);
         flash.error = 'Server Error: Failed to retrieve data from server.';
       };
 
@@ -84,7 +84,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $scope.workOrderLogs = $scope.workOrderLogsProvider.data;
 
           if(typeof next !== 'undefined') { next(); }
-        }
+        };
       };
 
       $scope.internal.notesStartFn = function() {
@@ -101,7 +101,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $scope.workOrderNotesLoading = false;
           $scope.workOrderNotes = notes;
           if(typeof next !== 'undefined') { next(); }
-        }
+        };
       };
 
       /**
@@ -115,7 +115,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         return function(data) {
           $scope.flash.genericProviderFailure(data);
           if(typeof next !== 'undefined') { next(); }
-        }
+        };
       };
 
       /**

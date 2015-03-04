@@ -1,0 +1,11 @@
+<h3>Work Order Assignments <button class="btn btn-default" ui-sref="workorders.detail({ workOrderId: currentWorkOrderId })">Details</button></h3>
+
+<ul class="list-group">
+  <li class="list-group-item" ng-repeat="group in workOrder.groups">
+    <strong>{{group.label}}:</strong> {{group.name}}
+    <span class="pull-right"><button class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></button></span>
+  </li>
+  <li class="list-group-item">
+    <strong>Member:</strong> {{workOrder.assignedName}}
+    <span class="pull-right"><button class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></button></span>
+</ul>

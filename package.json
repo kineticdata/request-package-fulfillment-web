@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test": "./node_modules/karma/bin/karma start",
     "postinstall": "./node_modules/bower/bin/bower install"
   },
   "dependencies": {},

@@ -7,6 +7,27 @@ angular.module('kineticdata.fulfillment.models.workorder', [
 
       _.assign(self, workOrder);
 
+      //////////////////////////////////
+      // GENERATE CONTEXTUAL METADATA //
+      //////////////////////////////////
+
+      for(var idx=0; idx<self.groups.length; idx++) {
+        var group = self.groups[idx];
+        if(idx === 0) {
+          // The first group has no parent.
+          group._parent = '';
+        } else {
+          // Set the current group's parent to the previous group.
+          group._parent = self.groups[idx-1].label;
+          // Set the previous group's child to the current group.
+          self.groups[idx-1]._child = group.label;
+        }
+      }
+      $log.debug('{GRP} Parents ', self.groups);
+
+      ////////////////////////////////////////////
+      // Decorate the data with helper methods. //
+      ////////////////////////////////////////////
       self.getGroup = function(label) {
         label = typeof label !== 'undefined' ? label : 'Group';
         var group = _.find(self.groups, function(wog) {
