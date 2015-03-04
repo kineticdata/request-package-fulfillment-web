@@ -1,4 +1,15 @@
-// 'use strict';
+/// We'll need to manually wire the request package search bar into Angular.
+$(function() {
+  var injector = angular.element($('[ng-app]')).injector();
+  var button = $('form.portal-search span button').on('click', function(e) {
+    e.preventDefault();
+    var search = $(this).parent().parent().find('input#search').val();
+    injector.get('$state').go('workorders', {
+      id: 'search',
+      terms: search
+    });
+  });
+});
 
 angular.module('kineticdata.fulfillment', [
   // Third Party Dependencies.
@@ -39,7 +50,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     $urlRouterProvider.otherwise('/workorder/default');
     $stateProvider
       .state('workorders', {
-        url: '/workorder/:id',
+        url: '/workorder/{id}?{terms}',
         templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
         controller: 'WorkOrderListController',
         module: 'private'

@@ -9,8 +9,11 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     var workOrderFactory = ModelFactory.get('WorkOrder');
 
     var workOrdersByFilterCache = {};
-
     var workOrderCache = {};
+
+    var getWorkOrdersWithSearch = function(searchTerms) {
+      return PaginatedDataProviderFactory.getResourceProvider('/work-orders/search&query='+searchTerms, 'WorkOrderCollection');
+    }
 
     /// Retrieves all filters from the KR server.
     var getWorkOrdersWithFilter = function(filterName) {
@@ -106,6 +109,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
     return {
       getWorkOrdersWithFilter: getWorkOrdersWithFilter,
+      getWorkOrdersWithSearch: getWorkOrdersWithSearch,
       getWorkOrder: getWorkOrderById,
       getWorkOrderLogs: getWorkOrderLogsById,
       getWorkOrderNotes: getWorkOrderNotesById,

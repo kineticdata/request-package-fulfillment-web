@@ -69,11 +69,14 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
         $scope.currentFilter = filters.getDefault();
       } else if($stateParams.id === 'default') {
         $scope.currentFilter = filters.getDefault();
+      } else if($stateParams.id === 'search') {
+        $scope.currentFilter = { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
+        $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
       } else {
         $scope.currentFilter = filters.getFilter($stateParams.id);
+        $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
       }
 
-      $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
       $scope.loadWorkOrders();
     };
 
@@ -125,7 +128,14 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      */
     $scope.loadWorkOrders = function() {
       if($scope.workOrderProvider === undefined) {
-        $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithFilter($scope.currentFilter.name);
+        if(angular.isDefined($scope.currentFilter.terms)) {
+          $log.debug('searching')
+          $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithSearch($scope.currentFilter.terms);
+        } else {
+          $log.debug('not searching')
+          $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithFilter($scope.currentFilter.name);
+        }
+
       }
 
       $scope.internal.loadWorkOrdersStart();
@@ -138,7 +148,11 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * Changes UI state to the selected work order object's detail view.
      */
     $scope.selectWorkOrder = function(workOrder) {
-      $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id });
+      if(angular.isDefined($scope.currentFilter.terms)) {
+        $state.go('workorders.detail', { id: 'search', terms: $scope.currentFilter.terms, workOrderId: workOrder.id });
+      } else {
+        $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id });
+      }
     };
 
     ///////////////////////////////
