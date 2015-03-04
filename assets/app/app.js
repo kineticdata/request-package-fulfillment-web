@@ -40,7 +40,8 @@ angular.module('kineticdata.fulfillment', [
   // Services
   // 'kineticdata.fulfillment.services.auth',
   // 'kineticdata.fulfillment.services.httpinterceptorfactory'
-  'kineticdata.fulfillment.services.paginateddataprovider'
+  'kineticdata.fulfillment.services.paginateddataprovider',
+  'kineticdata.fulfillment.interceptors.auth'
 
 ]);
 
@@ -77,6 +78,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
       });
 
     $httpProvider.defaults.withCredentials = true;
+    $httpProvider.interceptors.push('AuthInterceptor');
   }])
   .run(['$log', '$rootScope', '$state', '$stateParams', function($log, $rootScope, $state, $stateParams) {
     'use strict';

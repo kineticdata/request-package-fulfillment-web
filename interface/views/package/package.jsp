@@ -48,28 +48,19 @@
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-router/angular-ui-router.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/lodash/lodash.js"></script>
 
-
-
-<!--<script src="<%=bundle.packagePath()%>resources/js/services/workorders.service.js"></script>
-
-
-
-<script src="<%=bundle.packagePath()%>resources/js/services/auth.service.js"></script>
-<script src="<%=bundle.packagePath()%>resources/js/services/http.interceptor.factory.js"></script>
-
-<script src="<%=bundle.packagePath()%>resources/js/controllers/workorder.controller.js"></script>
-
-<script src="<%=bundle.packagePath()%>resources/js/controllers/login.controller.js"></script>
--->
-
 <script src="<%=bundle.packagePath()%>assets/app/shared/directives/paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/paginateddataprovider.factory.js"></script>
+
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/config.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/filters.service.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/services/auth.interceptor.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/model.factory.js"></script>
+
+<!-- Models -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/models/workorders.model.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/models/filters.model.js"></script>
 
+<!-- Work Orders -->
 <script src="<%=bundle.packagePath()%>assets/app/main/main.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.list.controller.js"></script>
