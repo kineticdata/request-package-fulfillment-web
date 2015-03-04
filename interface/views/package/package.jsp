@@ -40,16 +40,14 @@
 
 
 
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular/angular.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-route/angular-route.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-cookie/angular-cookie.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-flash/dist/angular-flash.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/lodash/lodash.js"></script>
-<script src="<%=bundle.packagePath()%>assets/bower_components/angular-moment/angular-moment.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular/angular.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-flash/angular-flash.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-moment/angular-moment.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/ui-bootstrap.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-ui-router/angular-ui-router.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/lodash/lodash.js"></script>
+
 
 
 <!--<script src="<%=bundle.packagePath()%>resources/js/services/workorders.service.js"></script>
