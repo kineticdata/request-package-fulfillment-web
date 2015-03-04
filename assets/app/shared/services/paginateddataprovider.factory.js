@@ -100,7 +100,7 @@ angular.module('kineticdata.fulfillment.services.paginateddataprovider', [
       };
 
       self.pageCount = function() {
-        return Math.ceil((self.options.count / self.options.limit));
+        return self.options.limit===0 ? 0 : Math.ceil((self.options.count / self.options.limit));
       };
 
       self.hasNextPage = function() {
