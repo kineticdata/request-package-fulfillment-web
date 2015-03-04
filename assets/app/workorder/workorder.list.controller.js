@@ -71,12 +71,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
         $scope.currentFilter = filters.getDefault();
       } else if($stateParams.id === 'search') {
         $scope.currentFilter = { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
-        $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
       } else {
         $scope.currentFilter = filters.getFilter($stateParams.id);
-        $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
+
       }
 
+      $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
       $scope.loadWorkOrders();
     };
 
