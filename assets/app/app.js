@@ -4,10 +4,13 @@ $(function() {
   var button = $('form.portal-search span button').on('click', function(e) {
     e.preventDefault();
     var search = $(this).parent().parent().find('input#search').val();
-    injector.get('$state').go('workorders', {
-      id: 'search',
-      terms: search
-    });
+    if(angular.isDefined(search) && search.length > 0) {
+      injector.get('$state').go('workorders', {
+        id: 'search',
+        terms: search
+      });
+    }
+
   });
 });
 
