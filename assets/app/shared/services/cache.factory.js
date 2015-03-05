@@ -1,5 +1,5 @@
 angular.module('kineticdata.fulfillment.services.cache', [])
-  .factory('CacheFactory', [ '$log', '$q', function($log, $q) {
+  .factory('CacheFactory', [ '$log', '$q', '$timeout', function($log, $q, $timeout) {
     var CacheProvider = function(dataProviderFn) {
       var self = this;
 
@@ -15,6 +15,19 @@ angular.module('kineticdata.fulfillment.services.cache', [])
       /// Whether the data needs to be reloaded.
       self.dirty = true;
 
+      /// Toggles the retry interval if there are problems encountered.
+      self.retry = false
+
+      /// Sets the retry interval (in milliseconds).
+      self.retryInterval = 1000;
+
+      /// Sets the number of retry attempts.
+      self.retryAttempts = 5;
+
+      /// (Internal) Holds the promise used for manipulating the retry interval.
+      self._retryPromise;
+      self._retryTries=0;
+
       /// Performs a deferred retrieval of data, notifies all waiting promises.
       self.get = function() {
         var deferred = $q.defer();
@@ -27,8 +40,25 @@ angular.module('kineticdata.fulfillment.services.cache', [])
           }
         };
         var fCb = function(data) {
-          while(self.promises.length) {
-            self.promises.shift().reject(data);
+
+          // If retries are enabled.
+          if(self.retry) {
+            // If the number of attempts have not been met.
+            if(self._retryTries < self.retryAttempts) {
+              self._retryTries++;
+              self._retryPromise = $timeout(function() { dataProviderFn(sCb, fCb); }, self._retryInterval);
+            } else {
+              // Out of tries, reject the promise.
+              self._retryTries = 0;
+              while(self.promises.length) {
+                self.promises.shift().reject(data);
+              }
+            }
+
+          } else {
+            while(self.promises.length) {
+              self.promises.shift().reject(data);
+            }
           }
         };
 

@@ -165,91 +165,174 @@ describe('CacheFactory', function() {
           cache = CacheFactory.getCache(fakeProviderSpy);
         });
 
-        it('should reject all promises in queue', function() {
-          var requestAttempts = 5;
-          var successData = [];
-          var failureData = [];
+        describe('with retries enabled', function() {
+          beforeEach(inject(function(_$timeout_) {
+            // Flush out anything old and pending.
+            _$timeout_.flush();
 
-          // Attempt to get data a bunch of times.
-          for(var idx=0; idx<requestAttempts; idx++) {
-            cache.get().then(
-              getClosureFn(idx, successData),
-              getClosureFn(idx, failureData)
-            );
-          }
+            // Enable retries.
+            cache.retry = true;
+          }));
 
-          // Make sure that the provider wasn't spammed with requests.
-          expect(fakeProviderSpy).to.have.been.calledOnce;
+          describe('while retry attempts remain', function() {
+            it('should not reject any promises', function() {
+              var resolvedData = [];
 
-          // Make sure there are the right number of promises to resolve.
-          expect(cache.promises).to.be.length(requestAttempts);
+              // Execute the retrieval.
+              cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
 
-          // Signal the cache provider that the data provider failed to get data.
-          rejectionCallback(rejectionData);
+              expect(cache.promises).to.be.length(1);
+              rejectionCallback(rejectionData);
 
-          // Apply the scope to resolve the promises.
-          $rootScope.$apply();
+              $rootScope.$apply();
 
-          // Expect that there were no successes, and all failures.
-          for(var idx=0; idx<requestAttempts; idx++) {
-            expect(successData[idx]).to.not.be.ok;
-            expect(failureData[idx]).to.be.ok;
-          }
+              expect(cache.promises).to.be.length(1);
+              expect(resolvedData[1]).to.be.empty;
+            });
 
+            it('should queue a delayed check', inject(function(_$timeout_) {
+              var resolvedData = [];
+              _$timeout_.verifyNoPendingTasks()
+
+              // Execute the retrieval.
+              cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+
+              expect(cache.promises).to.be.length(1);
+              rejectionCallback(rejectionData);
+
+              // Flush the timeout timer
+              _$timeout_.flush();
+              $rootScope.$apply();
+
+              // Should be called twice: once for the initial failure and one for the timeout.
+              expect(fakeProviderSpy).to.have.been.calledTwice;
+              expect(cache._retryTries).to.be.equal(1);
+            }));
+          });
+
+          describe('when retry attempts run out', function() {
+            beforeEach(function() {
+              cache._retryTries = cache.retryAttempts;
+            });
+
+            it('should immediately reject the promises', function() {
+              var resolvedData = [];
+
+              // Execute the retrieval.
+              cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+
+              expect(cache.promises).to.be.length(1);
+              rejectionCallback(rejectionData);
+
+              $rootScope.$apply();
+
+              expect(cache.promises).to.be.length(0);
+              expect(resolvedData[1]).to.not.be.empty;
+            });
+
+            it('should reset the retry tries for future attempts', function() {
+              var resolvedData = [];
+
+              expect(cache._retryTries).to.be.equal(cache.retryAttempts);
+              // Execute the retrieval.
+              cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+
+              rejectionCallback(rejectionData);
+
+              $rootScope.$apply();
+
+              expect(cache._retryTries).to.be.equal(0);
+            });
+          });
         });
 
-        it('should not modify the cached data', function() {
-          // Set some cache data and ensure that the data is 'dirty' so an attempt to
-          // retrieve the data is made.
-          cache.data = successData;
-          cache.dirty = true;
-          cache.get().then(function(){}, function(){});
-          rejectionCallback(rejectionData);
+        describe('without retries enabled', function() {
+          it('should reject all promises in queue', function() {
+            var requestAttempts = 5;
+            var successData = [];
+            var failureData = [];
 
-          // Resolve the promises.
-          $rootScope.$apply();
+            // Attempt to get data a bunch of times.
+            for(var idx=0; idx<requestAttempts; idx++) {
+              cache.get().then(
+                getClosureFn(idx, successData),
+                getClosureFn(idx, failureData)
+              );
+            }
 
-          // Make sure cache data wasn't replaced with the rejection data.
-          expect(cache.data.demo).to.be.equal(successData.demo);
-        });
+            // Make sure that the provider wasn't spammed with requests.
+            expect(fakeProviderSpy).to.have.been.calledOnce;
 
-        it('should not modify the dirty flag', function() {
-          // Set some cache data and ensure that the data is 'dirty' so an attempt to
-          // retrieve the data is made.
-          cache.data = successData;
-          cache.dirty = true;
-          cache.get().then(function(){}, function(){});
-          rejectionCallback(rejectionData);
+            // Make sure there are the right number of promises to resolve.
+            expect(cache.promises).to.be.length(requestAttempts);
 
-          // Resolve the promises.
-          $rootScope.$apply();
+            // Signal the cache provider that the data provider failed to get data.
+            rejectionCallback(rejectionData);
 
-          // Make sure cache data wasn't replaced with the rejection data.
-          expect(cache.dirty).to.be.true;
-        });
+            // Apply the scope to resolve the promises.
+            $rootScope.$apply();
 
-        it('should return the provided data in the rejection', function() {
-          var resolvedData = [];
+            // Expect that there were no successes, and all failures.
+            for(var idx=0; idx<requestAttempts; idx++) {
+              expect(successData[idx]).to.not.be.ok;
+              expect(failureData[idx]).to.be.ok;
+            }
 
-          // Execute the retrieval.
-          cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+          });
 
-          // The provider should only get called once.
-          expect(cache.promises).to.be.length(1);
-          expect(fakeProviderSpy).to.have.been.calledOnce;
+          it('should not modify the cached data', function() {
+            // Set some cache data and ensure that the data is 'dirty' so an attempt to
+            // retrieve the data is made.
+            cache.data = successData;
+            cache.dirty = true;
+            cache.get().then(function(){}, function(){});
+            rejectionCallback(rejectionData);
 
-          rejectionCallback(rejectionData);
+            // Resolve the promises.
+            $rootScope.$apply();
 
-          // Make sure there is no failure data ahead of time.
-          expect(resolvedData[1]).to.be.empty;
+            // Make sure cache data wasn't replaced with the rejection data.
+            expect(cache.data.demo).to.be.equal(successData.demo);
+          });
 
-          $rootScope.$apply();
+          it('should not modify the dirty flag', function() {
+            // Set some cache data and ensure that the data is 'dirty' so an attempt to
+            // retrieve the data is made.
+            cache.data = successData;
+            cache.dirty = true;
+            cache.get().then(function(){}, function(){});
+            rejectionCallback(rejectionData);
 
-          // Make sure we now have failure data.
-          expect(resolvedData[1]).to.not.be.empty;
-          // And that we never received any success data.
-          expect(resolvedData[0]).to.be.empty;
-          expect(resolvedData[1].message).to.be.equal(rejectionData.message);
+            // Resolve the promises.
+            $rootScope.$apply();
+
+            // Make sure cache data wasn't replaced with the rejection data.
+            expect(cache.dirty).to.be.true;
+          });
+
+          it('should return the provided data in the rejection', function() {
+            var resolvedData = [];
+
+            // Execute the retrieval.
+            cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+
+            // The provider should only get called once.
+            expect(cache.promises).to.be.length(1);
+            expect(fakeProviderSpy).to.have.been.calledOnce;
+
+            rejectionCallback(rejectionData);
+
+            // Make sure there is no failure data ahead of time.
+            expect(resolvedData[1]).to.be.empty;
+
+            $rootScope.$apply();
+
+            // Make sure we now have failure data.
+            expect(resolvedData[1]).to.not.be.empty;
+            // And that we never received any success data.
+            expect(resolvedData[0]).to.be.empty;
+            expect(resolvedData[1].message).to.be.equal(rejectionData.message);
+          });
         });
       });
 
