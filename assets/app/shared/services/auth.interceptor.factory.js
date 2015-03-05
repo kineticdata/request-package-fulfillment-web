@@ -3,7 +3,7 @@ angular.module('kineticdata.fulfillment.interceptors.auth', [])
     return {
       responseError: function(errorResponse) {
         if(errorResponse.status === 401) {
-          BUNDLE.ajaxLogin();
+          BUNDLE.ajaxLogin({});
         }
 
         return $q.reject(errorResponse);
