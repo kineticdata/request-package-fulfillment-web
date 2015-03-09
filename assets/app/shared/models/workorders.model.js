@@ -23,7 +23,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
           self.groups[idx-1]._child = group.label;
         }
       }
-      $log.debug('{GRP} Parents ', self.groups);
+      //$log.debug('{GRP} Parents ', self.groups);
 
       ////////////////////////////////////////////
       // Decorate the data with helper methods. //

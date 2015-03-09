@@ -22,7 +22,7 @@
     <div ng-controller="MainController">
       <ul class="nav nav-pills">
 
-        <li role="presentation" ng-repeat="filter in filterCollection.all" ng-class="{active: isActiveFilter(filter)}">
+        <li role="presentation" ng-repeat="filter in filtersProvider.cache.data.all" ng-class="{active: isActiveFilter(filter)}">
           <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
         </li>
       </ul>
@@ -51,10 +51,17 @@
 <script src="<%=bundle.packagePath()%>assets/app/shared/directives/paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/paginateddataprovider.factory.js"></script>
 
+<!-- Services -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/config.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/filters.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/auth.interceptor.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/model.factory.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/services/cache.factory.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/services/dataprovider.factory.js"></script>
+
+<!-- Data Resources -->
+<script src="<%=bundle.packagePath()%>assets/app/shared/dataproviders/restful.data.resource.js"></script>
+
 
 <!-- Models -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/models/workorders.model.js"></script>
@@ -67,4 +74,9 @@
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.detail.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.assign.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.frame.directive.js"></script>
+
+<!-- Debug -->
+<script src="<%=bundle.packagePath()%>assets/app/debug/debug.controller.js"></script>
+
+
 <script src="<%=bundle.packagePath()%>assets/app/app.js"></script>

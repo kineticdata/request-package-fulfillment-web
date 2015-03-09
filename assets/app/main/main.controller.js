@@ -2,7 +2,7 @@ angular.module('kineticdata.fulfillment.controllers.main', [
   'ui.router',
   'kineticdata.fulfillment.services.filter'
 ])
-  .controller('MainController', ['$scope', '$stateParams', '$log', 'flash', 'FiltersService', function($scope, $stateParams, $log, flash, FiltersService) {
+  .controller('MainController', ['$scope', '$stateParams', '$log', 'flash', 'DataProviderFactory', 'FiltersService', function($scope, $stateParams, $log, flash, DataProviderFactory, FiltersService) {
     'use strict';
     $log.info('{CTRL} Initializing MainController.');
 
@@ -25,11 +25,13 @@ angular.module('kineticdata.fulfillment.controllers.main', [
      * Triggers the retrieval of all of the filters.
      */
     $scope.retrieveAllFilters = function() {
+      $log.debug('get dem filtahs', $scope.filtersProvider)
       $scope.filtersProvider.get().then(
-        function(filters) {
-          $scope.filterCollection = filters;
+        function() {
+          // TODO:MTR I should do something with filter loading.
         },
         function() {
+          // TODO:MTR there should be a better way to do this.
           $log.error('Failed to load all filters');
           flash.error = 'There was a problem loading available filters.';
         }

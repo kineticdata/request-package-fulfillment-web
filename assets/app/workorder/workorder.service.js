@@ -2,7 +2,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
   'kineticdata.fulfillment.services.config',
   'kineticdata.fulfillment.services.paginateddataprovider'
 ])
-  .service('WorkOrdersService', ['$q', '$http', '$log', 'ConfigService', 'ModelFactory', 'PaginatedDataProviderFactory', function($q, $http, $log, ConfigService, ModelFactory, PaginatedDataProviderFactory) {
+  .service('WorkOrdersService', ['$q', '$http', '$log', 'ConfigService', 'ModelFactory', 'DataProviderFactory', function($q, $http, $log, ConfigService, ModelFactory, DataProviderFactory) {
     'use strict';
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
@@ -12,14 +12,19 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     var workOrderCache = {};
 
     var getWorkOrdersWithSearch = function(searchTerms) {
-      return PaginatedDataProviderFactory.getResourceProvider('/work-orders/search&query='+searchTerms, 'WorkOrderCollection');
-    }
+      return new DataProviderFactory.get('PaginatedRestfulDataResource', {
+        url: '/work-orders/search&query='+searchTerms,
+        model: 'WorkOrderCollection'
+      });
+    };
 
     /// Retrieves all filters from the KR server.
     var getWorkOrdersWithFilter = function(filterName) {
       //var deferred = $q.defer();
       if(workOrdersByFilterCache[filterName] === undefined) {
-        workOrdersByFilterCache[filterName] = PaginatedDataProviderFactory.getResourceProvider('/work-orders&filter=' + filterName, 'WorkOrderCollection');
+        workOrdersByFilterCache[filterName] = DataProviderFactory.get('PaginatedRestfulDataResource',{
+          url: '/work-orders&filter=' + filterName,
+          model: 'WorkOrderCollection'});
       }
 
       return workOrdersByFilterCache[filterName];
@@ -77,12 +82,20 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     };
 
     var getWorkOrderNotesById = function(id) {
-      return PaginatedDataProviderFactory.getResourceProvider('/work-orders/' + id + '/notes', 'WorkOrderNoteCollection');
+      return DataProviderFactory.get('PaginatedRestfulDataResource', {
+        url: '/work-orders/' + id + '/notes',
+        model: 'WorkOrderNoteCollection'
+      })
+      //return PaginatedDataProviderFactory.getResourceProvider(, 'WorkOrderNoteCollection');
       //return workOrderNotes;
     };
 
     var getWorkOrderLogsById = function(id) {
-      return PaginatedDataProviderFactory.getResourceProvider('/work-orders/' + id + '/logs', 'WorkOrderLogCollection');
+      return DataProviderFactory.get('PaginatedRestfulDataResource', {
+        url: '/work-orders/' + id + '/logs',
+        model: 'WorkOrderLogCollection'
+      });
+      //return PaginatedDataProviderFactory.getResourceProvider(, );
       //return workOrderNotes;
     };
 

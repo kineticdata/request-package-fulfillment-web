@@ -8,11 +8,11 @@ angular.module('kineticdata.fulfillment.services.modelfactory', [
     modelFactory.register = function(factoryClassName, factoryObject) {
       if(angular.isArray(factoryClassName)) {
         _.forEach(factoryClassName, function(factory) {
-          $log.info('ModelFactory: Registering ' + factory);
+          $log.info('{MF} Registering ' + factory);
           modelFactory.factories[factory] = factoryObject;
         });
       } else {
-        $log.info('ModelFactory: Registering ' + factoryClassName);
+        $log.info('{MF} Registering ' + factoryClassName);
         modelFactory.factories[factoryClassName] = factoryObject;
       }
     };

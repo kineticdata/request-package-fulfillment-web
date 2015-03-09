@@ -29,10 +29,12 @@ module.exports = function ( karma ) {
         'assets/bower_components/angular-mocks/angular-mocks.js',
 
         // Application JS
+        'assets/app/shared/dataproviders/*.js',
         'assets/app/shared/directives/*.js',
         'assets/app/shared/models/*.js',
         'assets/app/shared/services/*.js',
         'assets/app/main/*.js',
+        'assets/app/debug/*.js',
         'assets/app/workorder/*.js',
         'assets/app/app.js',
 

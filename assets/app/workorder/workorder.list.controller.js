@@ -17,6 +17,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
 
     /// This will hold scope methods meant primarily for internal controller use.
     $scope.internal = {};
+    $scope.internal.workOrderLoadFailures = 0;
 
     //var filters = [];
 
@@ -85,6 +86,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      */
     $scope.internal.loadFiltersFailure = function() {
       // Handle failures on loading filters.
+
     };
 
     ////////////////////////
@@ -110,6 +112,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      */
     $scope.internal.loadWorkOrdersFailure = function() {
       // Handle failed loading.
+
     };
 
     /**
@@ -126,20 +129,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * should be used when retrieving data or refreshing data is required, not the
      * internal methods it uses.
      */
-    $scope.loadWorkOrders = function() {
+    $scope.loadWorkOrders = function(refresh) {
       if($scope.workOrderProvider === undefined) {
         if(angular.isDefined($scope.currentFilter.terms)) {
-          $log.debug('searching')
           $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithSearch($scope.currentFilter.terms);
         } else {
-          $log.debug('not searching')
           $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithFilter($scope.currentFilter.name);
         }
-
       }
 
       $scope.internal.loadWorkOrdersStart();
-      $scope.workOrderProvider.get().then(
+      $scope.workOrderProvider.get(refresh).then(
         $scope.internal.loadWorkOrdersSuccess, $scope.internal.loadWorkOrdersFailure
       );
     };
@@ -160,5 +160,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     ///////////////////////////////
 
     $scope.setupFilterView();
+
+
 
   }]);

@@ -35,13 +35,19 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.controllers.workorderlist',
   'kineticdata.fulfillment.controllers.workorderdetail',
   'kineticdata.fulfillment.controllers.workorderassign',
+  'kineticdata.fulfillment.controllers.debug',
   // 'kineticdata.fulfillment.controllers.login',
   //
   // Services
   // 'kineticdata.fulfillment.services.auth',
   // 'kineticdata.fulfillment.services.httpinterceptorfactory'
   'kineticdata.fulfillment.services.paginateddataprovider',
-  'kineticdata.fulfillment.interceptors.auth'
+  'kineticdata.fulfillment.services.cache',
+  'kineticdata.fulfillment.services.dataproviderfactory',
+  'kineticdata.fulfillment.interceptors.auth',
+
+  // Data Providers
+  'kineticdata.fulfillment.dataproviders.restfuldataresource'
 
 ]);
 
@@ -69,6 +75,11 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         url: '/:workOrderId/assign',
         templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
         controller: 'WorkOrderAssignController'
+      })
+      .state('debug', {
+        url: '/debug',
+        templateUrl: BUNDLE.packagePath+'/assets/app/debug/debug.html',
+        controller: 'DebugController'
       })
       .state('login', {
         url: '/login',

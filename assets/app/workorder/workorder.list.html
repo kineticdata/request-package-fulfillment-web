@@ -9,7 +9,7 @@
 
     <div ng-hide="filtersLoading">
       <span>
-        <div class="dropdown">
+        <!--<div class="dropdown">
           <button class="btn btn-default btn-md" type="button" data-toggle="dropdown" aria-expander="true" id="workOrderListSort">
             <i class="fa fa-sort"></i>
           </button>
@@ -23,14 +23,17 @@
             <li role="presentation"><a role="menuitem" tabindex="-1" href="">Due Date</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="">Assigned To</a></li>
           </ul>
-        </div>
+        </div>-->
+
         <h3>
+
           {{currentFilter.name}}
+          <button class="btn btn-default" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
           <i class="fa fa-spinner fa-spin" ng-show="workOrdersLoading"></i>
         </h3>
       </span>
 
-      <div class="row workorder-row" ng-repeat="workOrder in workOrders.all">
+      <div class="row workorder-row" ng-repeat="workOrder in workOrderProvider.cache.data.all">
         <div class="col-md-12" ng-click="selectWorkOrder(workOrder)">
           <div class="row">
             <div class="col-md-6 col-xs-6">{{workOrder.requestId}}</div>

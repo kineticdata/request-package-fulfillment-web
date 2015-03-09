@@ -208,6 +208,21 @@ describe('CacheFactory', function() {
               expect(fakeProviderSpy).to.have.been.calledTwice;
               expect(cache._retryTries).to.be.equal(1);
             }));
+
+            it('should increment the retry tries', function() {
+              var resolvedData = [];
+
+              expect(cache._retryTries).to.be.equal(0);
+
+              // Execute the retrieval.
+              cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
+
+              rejectionCallback(rejectionData);
+
+              $rootScope.$apply();
+
+              expect(cache._retryTries).to.be.equal(1);
+            })
           });
 
           describe('when retry attempts run out', function() {

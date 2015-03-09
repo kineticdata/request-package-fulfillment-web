@@ -3,8 +3,18 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="" aria-controls="summary" role="tab" data-toggle="tab" data-target="#summary">SUMMARY</a></li>
     <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work">WORK</a></li>
-    <li role="presentation"><a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">NOTES</a></li>
-    <li role="presentation"><a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">LOGS</a></li>
+    <li role="presentation">
+      <a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">
+        NOTES
+        <i ng-show="workOrderNotesLoading" class="fa fa-spinner fa-spin"></i>
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">
+        LOGS
+        <i ng-show="workOrderLogsLoading" class="fa fa-spinner fa-spin"></i>
+      </a>
+    </li>
   </ul>
 
   <!-- Tab Content -->
@@ -95,7 +105,7 @@
           </div>
         </div>
 
-        <div ng-repeat="note in workOrderNotes.all" class="well-log">
+        <div ng-repeat="note in workOrderNotesProvider.cache.data.all" class="well-log">
           <p>{{note.information}}</p>
           <p>Submitted By: {{note.submittedBy}}</p>
         </div>
@@ -105,16 +115,16 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="logs">
-      <div ng-show="workOrderLogsProvider.loading">
+      <div ng-show="workOrderLogsLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
-      <div ng-hide="workOrderLogsProvider.loading">
-        <div ng-repeat="log in workOrderLogs.all" class="well-log">
+      <div ng-hide="workOrderLogsLoading">
+        <div ng-repeat="log in workOrderLogsProvider.cache.data.all" class="well-log">
           <p>{{log.id}} {{log.entry}}</p>
           <p>Submitted By: {{log.assigneeId}}</p>
         </div>
 
-        <paginated-resource success="logRtrSuccessFn()" failure="providerFailureFn()" provider="workOrderLogsProvider"></paginated-resource>
+        <paginated-resource start="internal.logsStartFn" success="internal.logsRtrSuccessFn()" failure="internal.providerFailureFn()" provider="workOrderLogsProvider"></paginated-resource>
       </div>
     </div>
   </div>

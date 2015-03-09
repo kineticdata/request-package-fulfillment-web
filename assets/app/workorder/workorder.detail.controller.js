@@ -10,6 +10,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       // Loading trackers.
       $scope.workOrderLoading = true;
       $scope.workOrderNotesLoading = true;
+      $scope.workOrderLogsLoading = true;
       $scope.workOrderNotesProvider = WorkOrdersService.getWorkOrderNotes($scope.currentWorkOrderId);
       $scope.workOrderLogsProvider = WorkOrdersService.getWorkOrderLogs($scope.currentWorkOrderId);
       $scope.workOrderWorkURL = '';
@@ -81,8 +82,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        */
       $scope.internal.logsRtrSuccessFn = function(next) {
         return function() {
-          $scope.workOrderLogs = $scope.workOrderLogsProvider.data;
-
+          //$scope.workOrderLogs = $scope.workOrderLogsProvider.data;
+          $log.debug('DONE')
+          $scope.workOrderLogsLoading = false;
           if(typeof next !== 'undefined') { next(); }
         };
       };
@@ -90,6 +92,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.internal.notesStartFn = function() {
         $scope.workOrderNotesLoading = true;
       };
+
+      $scope.internal.logsStartFn = function() {
+        $scope.workOrderLogsLoading = true;
+      }
 
       /**
        * Provides a scoped handler for chaining notes provider retrievals.
@@ -99,7 +105,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.internal.notesRtrSuccessFn = function(next) {
         return function(notes) {
           $scope.workOrderNotesLoading = false;
-          $scope.workOrderNotes = notes;
+          //$scope.workOrderNotes = notes;
           if(typeof next !== 'undefined') { next(); }
         };
       };
@@ -113,6 +119,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        */
       $scope.internal.providerFailureFn = function(next) {
         return function(data) {
+          $log.debug('flsakdfj');
           $scope.flash.genericProviderFailure(data);
           if(typeof next !== 'undefined') { next(); }
         };
@@ -123,6 +130,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * continue to chain on to retrieving notes.
        */
       $scope.internal.retrieveLogs = function() {
+        $scope.workOrderLogsLoading = true;
         $scope.workOrderLogsProvider.get().then($scope.internal.logsRtrSuccessFn($scope.internal.retrieveNotes), $scope.internal.providerFailureFn($scope.internal.retrieveNotes));
       };
 
@@ -130,6 +138,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * Initiates the retrievel of notes. It uses scoped provider functions to process the responses.
        */
       $scope.internal.retrieveNotes = function() {
+        $scope.workOrderNotesLoading = true;
         $scope.workOrderNotesProvider.get().then($scope.internal.notesRtrSuccessFn(), $scope.internal.providerFailureFn());
       };
 
