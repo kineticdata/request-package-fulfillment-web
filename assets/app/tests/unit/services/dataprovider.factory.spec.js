@@ -19,10 +19,10 @@ describe('DataProviderFactory', function() {
     it('should be retrievable', function() {
       var factory = function() {};
 
-      expect(DataProviderFactory.get('key')).to.be.an('undefined');
+      expect(DataProviderFactory.get('key', {})).to.be.an('undefined');
       DataProviderFactory.register('key', factory);
 
-      expect(DataProviderFactory.get('key')).to.be.a('function');
+      expect(DataProviderFactory.get('key')).to.be.an('object');
     });
   });
 

@@ -3,6 +3,10 @@ var expect = chai.expect;
 describe('CacheFactory', function() {
   'use strict';
 
+  var context = {
+    model: 'TestModel'
+  };
+
   var CacheFactory;
   var $rootScope;
 
@@ -23,14 +27,14 @@ describe('CacheFactory', function() {
   describe('#getCache', function() {
     describe('when data provider provided', function() {
       it('should return a CacheProvider', function() {
-        var cache = CacheFactory.getCache(function() {});
+        var cache = CacheFactory.getCache(context, function() {});
         expect(cache).to.be.an('object');
       });
     });
 
     describe('when data provider is not provided', function() {
       it('should return an undefined', function() {
-        var cache = CacheFactory.getCache();
+        var cache = CacheFactory.getCache(context);
         expect(cache).to.be.an('undefined');
       });
     });
@@ -45,7 +49,7 @@ describe('CacheFactory', function() {
 
         beforeEach(function() {
           providerSpy = sinon.spy();
-          cache = CacheFactory.getCache(providerSpy)
+          cache = CacheFactory.getCache(context, providerSpy)
         });
 
         it('should queue a promise', function() {
@@ -67,7 +71,7 @@ describe('CacheFactory', function() {
 
         beforeEach(function() {
           providerSpy = sinon.spy();
-          cache = CacheFactory.getCache(providerSpy);
+          cache = CacheFactory.getCache(context, providerSpy);
           cache.data = { demo: 'data' };
           cache.dirty = true;
         });
@@ -92,7 +96,7 @@ describe('CacheFactory', function() {
 
         beforeEach(function() {
           providerSpy = sinon.spy();
-          CacheProvider = CacheFactory.getCache(providerSpy);
+          CacheProvider = CacheFactory.getCache(context, providerSpy);
           CacheProvider.data = { demo: 'data' };
           CacheProvider.dirty = false;
         });
@@ -118,7 +122,7 @@ describe('CacheFactory', function() {
       describe('when data is being loaded.', function() {
         it('should not call the data provider', function() {
           var providerSpy = sinon.spy();
-          var cache = CacheFactory.getCache(providerSpy);
+          var cache = CacheFactory.getCache(context, providerSpy);
           cache.get();
           cache.get();
 
@@ -129,7 +133,7 @@ describe('CacheFactory', function() {
 
         it('should queue the promise', function() {
           var providerSpy = sinon.spy();
-          var cache = CacheFactory.getCache(providerSpy);
+          var cache = CacheFactory.getCache(context, providerSpy);
           cache.get();
           cache.get();
 
@@ -157,12 +161,12 @@ describe('CacheFactory', function() {
         var fakeProviderSpy;
 
         beforeEach(function() {
-          fakeProvider = function(sCb, fCb) {
+          fakeProvider = function(context, sCb, fCb) {
             rejectionCallback = fCb;
           };
           fakeProviderSpy = sinon.spy(fakeProvider);
 
-          cache = CacheFactory.getCache(fakeProviderSpy);
+          cache = CacheFactory.getCache(context, fakeProviderSpy);
         });
 
         describe('with retries enabled', function() {
@@ -192,7 +196,7 @@ describe('CacheFactory', function() {
 
             it('should queue a delayed check', inject(function(_$timeout_) {
               var resolvedData = [];
-              _$timeout_.verifyNoPendingTasks()
+              _$timeout_.verifyNoPendingTasks();
 
               // Execute the retrieval.
               cache.get().then(getClosureFn(0, resolvedData), getClosureFn(1, resolvedData));
@@ -262,6 +266,11 @@ describe('CacheFactory', function() {
         });
 
         describe('without retries enabled', function() {
+          beforeEach(function() {
+            // Ensure the retry functionality is disabled.
+            cache.retry = false;
+          });
+
           it('should reject all promises in queue', function() {
             var requestAttempts = 5;
             var successData = [];
@@ -358,12 +367,12 @@ describe('CacheFactory', function() {
         var fakeProviderSpy;
 
         beforeEach(function() {
-          fakeProvider = function(sCb, fCb) {
+          fakeProvider = function(context, sCb, fCb) {
             successCallback = sCb;
           };
           fakeProviderSpy = sinon.spy(fakeProvider);
 
-          cache = CacheFactory.getCache(fakeProviderSpy);
+          cache = CacheFactory.getCache(context, fakeProviderSpy);
         });
 
         it('should resolve all promises in the queue', function() {

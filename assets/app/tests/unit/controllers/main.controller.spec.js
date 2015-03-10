@@ -54,7 +54,7 @@ describe('MainController', function() {
       expect(scope.filtersProvider.get).to.be.called;
     });
 
-    describe('when filter loading fails', function() {
+    xdescribe('when filter loading fails', function() {
       it('should set the error flash', inject(function(flash) {
         filtersProviderGetStub.withArgs().returns(getThenFailure());
 
@@ -64,7 +64,7 @@ describe('MainController', function() {
       }));
     });
 
-    describe('when filter loading succeeds', function() {
+    xdescribe('when filter loading succeeds', function() {
       it('should set the filters collection', function() {
         filtersProviderGetStub.withArgs().returns(getThenSuccess(fakeFilterCollection));
 
