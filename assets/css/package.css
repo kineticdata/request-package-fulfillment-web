@@ -320,3 +320,8 @@ table tbody tr td.nav-pop-v {
 .row-workorder-actions {
   margin-bottom: 20px;
 }
+
+iframe#workFrame {
+  width: 100%;
+  height: 100%;
+}

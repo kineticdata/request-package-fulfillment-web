@@ -3,7 +3,8 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
     var directive = {};
 
     directive.restrict = 'E';
-    directive.template = '<div id="workFrame"></div>';
+    //directive.template = '<div id="workFrame"></div>';
+    directive.template = '<iframe id="workFrame"></iframe>';
 
     directive.link = function(scope, element, attributes) {
 
@@ -12,15 +13,17 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
           return;
         }
 
-        $log.debug("Updating work frame URL: " + dest)
-        var frame = $('div#workFrame');
-        $http.get(""+dest)
-          .success(function(data) {
-            frame.html(data);
-          })
-          .error(function(data) {
-            $log.error("Failed to retrieve work frame content.");
-          });
+        $log.debug("Updating work frame URL: " + dest);
+        var frame = $('iframe#workFrame');
+        frame.attr('src', dest);
+        //var frame = $('div#workFrame');
+        //$http.get(""+dest)
+        //  .success(function(data) {
+        //    frame.html(data);
+        //  })
+        //  .error(function(data) {
+        //    $log.error("Failed to retrieve work frame content.");
+        //  });
       });
     };
 
