@@ -25,6 +25,7 @@ angular.module('kineticdata.fulfillment', [
   // // Models.
   'kineticdata.fulfillment.models.workorder',
   'kineticdata.fulfillment.models.filter',
+  'kineticdata.fulfillment.models.assignments',
 
   // // Directives
   'kineticdata.fulfillment.directives.paginator',
@@ -35,7 +36,7 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.controllers.workorderlist',
   'kineticdata.fulfillment.controllers.workorderdetail',
   'kineticdata.fulfillment.controllers.workorderassign',
-  'kineticdata.fulfillment.controllers.debug',
+  //'kineticdata.fulfillment.controllers.debug',
   // 'kineticdata.fulfillment.controllers.login',
   //
   // Services
@@ -45,6 +46,7 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.services.cache',
   'kineticdata.fulfillment.services.dataproviderfactory',
   'kineticdata.fulfillment.interceptors.auth',
+  'kineticdata.fulfillment.services.assignments',
 
   // Data Providers
   'kineticdata.fulfillment.dataproviders.restfuldataresource'

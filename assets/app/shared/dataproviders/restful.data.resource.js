@@ -54,7 +54,7 @@ angular.module('kineticdata.fulfillment.dataproviders.restfuldataresource', [
       self.dataProvider = function(context, sCb, fCb) {
         $log.info('{PRDR:DP} Attempting to retrieve paginated RESTful data.');
         var targetUrl = context.generateUrl();
-
+        $log.debug('{REST} Retrieving: ' + targetUrl);
         $http({
           method: 'GET',
           url: targetUrl
@@ -71,23 +71,19 @@ angular.module('kineticdata.fulfillment.dataproviders.restfuldataresource', [
             context.options.offset = data.offset;
 
             // Convert the model.
-            //self.data = new self.factory.factoryObject(data[self.factory.restName]);
-            modelData = new context.factory.factoryObject(data[context.factory.restName]);
-            $log.debug(modelData);
-            // Turn off the 'dirty' flag as we've successfully loaded data.
-            //self.dirty = false;
+            if(_.isEmpty(context.factory.restName)) {
+              modelData = new context.factory.factoryObject(data);
+            } else {
+              modelData = new context.factory.factoryObject(data[context.factory.restName]);
+            }
 
-            // Resolve all promises.
-            //while(self.promises.length) {
-            //  self.promises.shift().resolve(self.data);
-            //}
+
+            // Call the cache callback for success.
             sCb(modelData);
           }
 
         }).error(function(data) {
-          //while(self.promises.length) {
-          //  self.promises.shift().reject(data);
-          //}
+          // Call the cache callback for failure.
           fCb(data);
         });
       };
@@ -143,7 +139,7 @@ angular.module('kineticdata.fulfillment.dataproviders.restfuldataresource', [
         self.options.limit = limit;
         self.options.offset = 0;
         return self.get(true);
-      }
+      };
 
       self.get = function(force) {
         if(typeof force !== 'undefined') {

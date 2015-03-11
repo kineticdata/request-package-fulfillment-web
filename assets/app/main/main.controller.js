@@ -25,7 +25,6 @@ angular.module('kineticdata.fulfillment.controllers.main', [
      * Triggers the retrieval of all of the filters.
      */
     $scope.retrieveAllFilters = function() {
-      $log.debug('get dem filtahs', $scope.filtersProvider)
       $scope.filtersProvider.get().then(
         function() {
           // TODO:MTR I should do something with filter loading.

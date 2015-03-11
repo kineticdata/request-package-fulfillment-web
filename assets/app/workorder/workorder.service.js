@@ -49,7 +49,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
       // Data has not yet been loaded, so kick it off.
       } else if(!angular.isDefined(cache.data) || cache.dirty) {
-        $log.debug('{SVC} Attempting to retrieve WorkOrder.')
+        $log.debug('{SVC} Attempting to retrieve WorkOrder.');
         cache.promises.push(deferred);
 
         var url = workOrderUrl + '/' + id;
@@ -63,7 +63,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
               }
             } else {
               cache.data = new workOrderFactory.factoryObject(data);
-              cache.dirty = false;
+              //cache.dirty = false;
               while(cache.promises.length) {
                 cache.promises.shift().resolve(cache.data);
               }
@@ -85,9 +85,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return DataProviderFactory.get('PaginatedRestfulDataResource', {
         url: '/work-orders/' + id + '/notes',
         model: 'WorkOrderNoteCollection'
-      })
-      //return PaginatedDataProviderFactory.getResourceProvider(, 'WorkOrderNoteCollection');
-      //return workOrderNotes;
+      });
     };
 
     var getWorkOrderLogsById = function(id) {
@@ -95,8 +93,6 @@ angular.module('kineticdata.fulfillment.services.workorder', [
         url: '/work-orders/' + id + '/logs',
         model: 'WorkOrderLogCollection'
       });
-      //return PaginatedDataProviderFactory.getResourceProvider(, );
-      //return workOrderNotes;
     };
 
     var postNoteById = function(id, message, visibility) {
@@ -120,12 +116,33 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return deferred.promise;
     };
 
+    var postAssignments = function(id, assignments) {
+      var deferred = $q.defer();
+      var url = workOrderUrl + '/' + id + '/assign';
+
+      $http.post(url, assignments)
+        .success(function(data, status, headers) {
+          if(headers('content-type') === 'text/html;charset=UTF-8') {
+            $log.error('Failure from server: response not in JSON.', data);
+            deferred.reject(data);
+          } else {
+            deferred.resolve(data);
+          }
+        })
+        .error(function(data) {
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
     return {
       getWorkOrdersWithFilter: getWorkOrdersWithFilter,
       getWorkOrdersWithSearch: getWorkOrdersWithSearch,
       getWorkOrder: getWorkOrderById,
       getWorkOrderLogs: getWorkOrderLogsById,
       getWorkOrderNotes: getWorkOrderNotesById,
-      postNote: postNoteById
+      postNote: postNoteById,
+      postAssignments: postAssignments
     };
   }]);

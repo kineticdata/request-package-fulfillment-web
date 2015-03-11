@@ -11,8 +11,6 @@ angular.module('kineticdata.fulfillment.services.filter', [
       model: 'FilterCollection'
     });
 
-    $log.debug(filterProvider);
-
     /// Retrieves all filters from the KR server.
     var getFilters = function() {
       return filterProvider;

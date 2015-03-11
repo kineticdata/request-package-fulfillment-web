@@ -18,6 +18,14 @@ getThenFailure = function(response) {
   };
 };
 
+getThenNoop = function() {
+  return {
+    then: function() {
+
+    }
+  };
+};
+
 getFakeFilters = function() {
   return [ {name:'test1'}, {name:'test2', default: true} ];
 };

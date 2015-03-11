@@ -13,6 +13,10 @@ angular.module('kineticdata.fulfillment.services.dataproviderfactory', [
     };
 
     var get = function(key, options) {
+      if(factories[key] === undefined) {
+        return;
+      }
+
       return new factories[key](options);
     };
 

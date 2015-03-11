@@ -22,7 +22,7 @@ angular.module('kineticdata.fulfillment.services.cache', [])
       self.retry = true;
 
       /// Sets the retry interval (in milliseconds).
-      self.retryInterval = 1000;
+      self.retryInterval = 10000;
 
       /// Sets the number of retry attempts.
       self.retryAttempts = 5;
@@ -47,7 +47,9 @@ angular.module('kineticdata.fulfillment.services.cache', [])
         // When asking the cache provider to get data outside of the automatic
         // refresh we should first cancel and reschedule the refresh interval.
         $interval.cancel(self._refreshPromise);
+
         if(self.refresh == true) {
+
           self._refreshPromise = $interval(self.doRefresh, self.refreshInterval);
         }
 
@@ -58,13 +60,13 @@ angular.module('kineticdata.fulfillment.services.cache', [])
         $log.debug('{CACHE} Attempting to retrieve cache data: ', self.context.model);
         var deferred = $q.defer();
         var sCb = function(data) {
-          $log.debug(data);
+          //$log.debug(data);
           self.data = data;
           self.dirty = false;
 
           while(self.promises.length) {
             self.promises.shift().resolve(self.data);
-            $log.debug(self.data)
+            //$log.debug(self.data)
           }
         };
         var fCb = function(data) {
@@ -74,7 +76,7 @@ angular.module('kineticdata.fulfillment.services.cache', [])
             // If the number of attempts have not been met.
             if(self._retryTries < self.retryAttempts) {
               self._retryTries++;
-              self._retryPromise = $timeout(function() { dataProviderFn(self.context, sCb, fCb); }, self._retryInterval);
+              self._retryPromise = $timeout(function() { dataProviderFn(self.context, sCb, fCb); }, self.retryInterval);
             } else {
               // Out of tries, reject the promise.
               self._retryTries = 0;
@@ -103,7 +105,6 @@ angular.module('kineticdata.fulfillment.services.cache', [])
 
         // Assume that data is loaded and ready to return.
         } else {
-          $log.debug('already loaded ' + self.context.model, self.data);
           deferred.resolve(self.data);
         }
 

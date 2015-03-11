@@ -33,7 +33,7 @@
         </h3>
       </span>
 
-      <div class="row workorder-row" ng-repeat="workOrder in workOrderProvider.cache.data.all">
+      <div class="row row-workorder-list" ng-repeat="workOrder in workOrderProvider.cache.data.all">
         <div class="col-md-12" ng-click="selectWorkOrder(workOrder)">
           <div class="row">
             <div class="col-md-6 col-xs-6">{{workOrder.requestId}}</div>

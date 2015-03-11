@@ -58,6 +58,7 @@
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/model.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/cache.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/dataprovider.factory.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/services/assignments.service.js"></script>
 
 <!-- Data Resources -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/dataproviders/restful.data.resource.js"></script>
@@ -66,6 +67,7 @@
 <!-- Models -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/models/workorders.model.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/models/filters.model.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/models/assignments.model.js"></script>
 
 <!-- Work Orders -->
 <script src="<%=bundle.packagePath()%>assets/app/main/main.controller.js"></script>

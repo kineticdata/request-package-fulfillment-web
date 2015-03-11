@@ -82,8 +82,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        */
       $scope.internal.logsRtrSuccessFn = function(next) {
         return function() {
-          //$scope.workOrderLogs = $scope.workOrderLogsProvider.data;
-          $log.debug('DONE')
           $scope.workOrderLogsLoading = false;
           if(typeof next !== 'undefined') { next(); }
         };
@@ -105,7 +103,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.internal.notesRtrSuccessFn = function(next) {
         return function(notes) {
           $scope.workOrderNotesLoading = false;
-          //$scope.workOrderNotes = notes;
           if(typeof next !== 'undefined') { next(); }
         };
       };
@@ -119,7 +116,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        */
       $scope.internal.providerFailureFn = function(next) {
         return function(data) {
-          $log.debug('flsakdfj');
           $scope.flash.genericProviderFailure(data);
           if(typeof next !== 'undefined') { next(); }
         };

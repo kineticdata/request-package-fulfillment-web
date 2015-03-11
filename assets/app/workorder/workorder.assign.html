@@ -1,11 +1,58 @@
-<h3>Work Order Assignments <button class="btn btn-default" ui-sref="workorders.detail({ workOrderId: currentWorkOrderId })">Details</button></h3>
+<!--<div ng-if="state.loading">-->
+  <!--<p clas="text-center"><i class="fa fa-5x fa-spin fa-spinner"></i></p>-->
+<!--</div>-->
+<div ng-if="!state.loading">
+  <h3>Work Order Assignments
+    <button class="btn btn-default" ui-sref="workorders.detail({ workOrderId: currentWorkOrderId })">Details</button>
+    <button class="btn btn-default" ng-if="!state.overview" ng-click="goToOverview()">Cancel</button>
+  </h3>
 
-<ul class="list-group">
-  <li class="list-group-item" ng-repeat="group in workOrder.groups">
-    <strong>{{group.label}}:</strong> {{group.name}}
-    <span class="pull-right"><button class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></button></span>
-  </li>
-  <li class="list-group-item">
-    <strong>Member:</strong> {{workOrder.assignedName}}
-    <span class="pull-right"><button class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></button></span>
-</ul>
+  <!-- Overview of selected groups -->
+  <div ng-if="state.overview">
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="group in workOrder.groups">
+        <strong>{{group.label}}:</strong> {{group.name}}
+      <span class="pull-right">
+        <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment($index)"><i class="fa fa-arrow-right"></i></button>
+      </span>
+      </li>
+      <li class="list-group-item">
+        <strong>Member:</strong> {{workOrder.assignedName}}
+        <span class="pull-right"><button class="btn btn-default btn-xs" ng-click="clickOverviewMemberAssignment()"><i class="fa fa-arrow-right"></i></button></span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Selecting a new group/member structure. -->
+  <div ng-if="state.selecting">
+    <ul class="list-group">
+      <!-- List the already selected assignments -->
+      <li class="list-group-item" ng-repeat="group in currentGroupStructure">
+        <strong>{{group.label}}:</strong> {{group.name}}
+      </li>
+
+      <!-- Show the loading spinner is loading assignment information -->
+      <li class="list-group-item" ng-if="state.loadingData">
+        <p class="text-center"><i class="fa fa-3x fa-spin fa-spinner text-center"></i></p>
+      </li>
+
+      <!-- Select group, if group selection state is active -->
+      <li class="list-group-item" ng-if="state.selectGroups && !state.loadingData">
+
+        <p class="lead text-center">{{possibleAssignments.label}}</p>
+        <div class="btn-group-vertical btn-block" role="group" >
+          <button ng-repeat="item in possibleAssignments.items" class="btn btn-default" ng-click="assignLevel(item)">{{item.name}}</button>
+        </div>
+      </li>
+
+      <!-- Select member, if member selection state is active -->
+      <li class="list-group-item" ng-if="state.selectMembers && !state.loadingData">
+        <p class="lead text-center">Member</p>
+        <div class="btn-group-vertical btn-block" role="group" >
+          <button ng-repeat="member in possibleAssignments.members" class="btn btn-default" ng-click="assignMember(member)">{{member.fullName}}</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</div>
