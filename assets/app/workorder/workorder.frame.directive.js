@@ -15,14 +15,15 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
         $log.debug("Updating work frame URL: " + dest);
         var frame = $('iframe#workFrame');
         frame.attr('src', dest);
+        frame.on('load', function(){
+          $log.debug('in the frame load. plz wrk');
+          var iFrameHeight = frame[0].contentWindow.document.body.scrollHeight + 'px';
+          var iFrameWidth = '100%';
+          frame.css('width', iFrameWidth);
+          frame.css('height', iFrameHeight);
+        });
       });
 
-      element.on('load', function(){
-        var iFrameHeight = element[0].contentWindow.document.body.scrollHeight + 'px';
-        var iFrameWidth = '100%';
-        element.css('width', iFrameWidth);
-        element.css('height', iFrameHeight);
-      });
     };
 
     return directive;
