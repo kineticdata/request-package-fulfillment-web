@@ -155,9 +155,21 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       }
     };
 
+    $scope.isActiveWorkOrder = function(workOrder) {
+      if(workOrder.id === $scope.activeWorkOrder) {
+        return true;
+      }
+      return false;
+    };
+
     ///////////////////////////////
     // CONTROLLER INITIALIZATION //
     ///////////////////////////////
+
+    $scope.activeWorkOrder = '';
+    $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
+      $scope.activeWorkOrder = workOrder;
+    });
 
     $scope.setupFilterView();
 
