@@ -1,14 +1,14 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$stateParams', '$log', 'flash', 'WorkOrdersService',
-    function($scope, $stateParams, $log, flash, WorkOrdersService) {
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', 'flash', 'WorkOrdersService',
+    function($scope, $rootScope, $stateParams, $log, flash, WorkOrdersService) {
       $scope.currentWorkOrderId = $stateParams.workOrderId;
       $scope.workOrder = {};
       $scope.workOrderLogs = {};
       $scope.workOrderNotes = {};
       // Loading trackers.
-      $scope.workOrderLoading = true;
+      $scope.workOrderLoading = false;
       $scope.workOrderNotesLoading = true;
       $scope.workOrderLogsLoading = true;
       $scope.workOrderNotesProvider = WorkOrdersService.getWorkOrderNotes($scope.currentWorkOrderId);
@@ -156,14 +156,23 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * in the current scope.
        */
       $scope.internal.retrieveWorkOrder = function() {
-        $scope.workOrderLoading = true;
-        WorkOrdersService.getWorkOrder($scope.currentWorkOrderId)
-          .then($scope.internal.processWorkOrder, $scope.flash.workOrderLoadFailure);
+        if(!WorkOrdersService.canPreloadWorkOrder()) {
+          $scope.workOrderLoading = true;
+        }
+
+        WorkOrdersService.getWorkOrder($scope.currentWorkOrderId, $scope.currentFilter.name)
+          .then($scope.internal.processWorkOrder, $scope.flash.workOrderLoadFailure, function(initial) {
+            $scope.workOrder = initial;
+            $scope.workOrderWorkURL = $scope.workOrder.workOrderURL;
+            $scope.workOrderLoading = false;
+          });
       };
 
       //
       // RUNTIME
       //
+
+      $rootScope.$broadcast('krs-workorder-changed', $scope.currentWorkOrderId);
 
       // Get the individual work order.
       $scope.internal.retrieveWorkOrder();

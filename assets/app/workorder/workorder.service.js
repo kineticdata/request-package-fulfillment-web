@@ -2,7 +2,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
   'kineticdata.fulfillment.services.config',
   'kineticdata.fulfillment.services.paginateddataprovider'
 ])
-  .service('WorkOrdersService', ['$q', '$http', '$log', 'ConfigService', 'ModelFactory', 'DataProviderFactory', function($q, $http, $log, ConfigService, ModelFactory, DataProviderFactory) {
+  .service('WorkOrdersService', ['$q', '$http', '$log', '$rootScope', '$timeout', 'ConfigService', 'ModelFactory', 'DataProviderFactory', function($q, $http, $log, $rootScope, $timeout, ConfigService, ModelFactory, DataProviderFactory) {
     'use strict';
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
@@ -30,11 +30,57 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return workOrdersByFilterCache[filterName];
     };
 
+    /**
+     * Check to see if a work order is preloadable.
+     *
+     * Work Orders can be preloaded first from local pre-order cache and then
+     * by the filter list cache.
+     *
+     * @param {string} id work order id.
+     * @returns {boolean} whether a work order can be preloaded.
+     */
+    var canPreloadWorkOrder = function(id) {
+      // Is it in the local cache?
+      if(angular.isDefined(workOrderCache[id])) {
+        return true;
+
+      // Is there an active filter...
+      } else if(typeof activeFilter !== 'undefined' && activeFilter.length > 0) {
+        // If there is check to ensure that the cache is valid.
+        if(typeof workOrdersByFilterCache[activeFilter] !== 'undefined'
+        && typeof workOrdersByFilterCache[activeFilter].cache !== 'undefined'
+        && typeof workOrdersByFilterCache[activeFilter].cache.data !== 'undefined') {
+          return true;
+        }
+      }
+    };
+
     var getWorkOrderById = function(id) {
       var deferred = $q.defer();
 
-      // Retrieve and, if necessary, initialize the cache.
+      // Preload, if possible.
+      if(canPreloadWorkOrder(id)) {
+        var preloadWorkOrder;
 
+        // Try local cache first.
+        if(angular.isDefined(workOrderCache[id])) {
+          preloadWorkOrder = workOrderCache[id].data;
+        } else {
+          preloadWorkOrder = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
+        }
+
+        //var preloaded = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
+
+        // This is a silly hack since it appears to wait to resolve this until the
+        // next digest cycle, $rootScope.$apply rejects the call due to current
+        // cycle...
+        $timeout(function() {
+          deferred.notify(preloadWorkOrder);
+        }, 0);
+
+      }
+
+      // Retrieve and, if necessary, initialize the cache.
       if(!angular.isDefined(workOrderCache[id])) {
         workOrderCache[id] = {};
         workOrderCache[id].promises = [];
@@ -136,7 +182,25 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return deferred.promise;
     };
 
+    var activeFilter = '';
+    $rootScope.$on('krs-filter-changed', function(event, filter) {
+      activeFilter = filter;
+    });
+
+    var activeWorkOrder = '';
+    $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
+      activeWorkOrder = workOrder;
+    });
+
     return {
+      // Properties:
+      activeFilter: activeFilter,
+      activeWorkOrder: activeWorkOrder,
+
+      // Helper Methods:
+      canPreloadWorkOrder: canPreloadWorkOrder,
+
+      // Methods:
       getWorkOrdersWithFilter: getWorkOrdersWithFilter,
       getWorkOrdersWithSearch: getWorkOrdersWithSearch,
       getWorkOrder: getWorkOrderById,

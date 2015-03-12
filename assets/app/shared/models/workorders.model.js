@@ -62,6 +62,13 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       _.forEach(data, function(workOrder) {
         self.all.push(new WorkOrder(workOrder));
       });
+
+      self.getById = function(id) {
+        var wo = _.find(self.all, function(workOrder) {
+          return workOrder.id === id;
+        });
+        return wo;
+      }
     };
 
     var WorkOrderNote = function(note) {
