@@ -49,6 +49,7 @@
 <script src="<%=bundle.packagePath()%>assets/js/lodash/lodash.js"></script>
 
 <script src="<%=bundle.packagePath()%>assets/app/shared/directives/paginator.directive.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/shared/directives/rowhover.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/paginateddataprovider.factory.js"></script>
 
 <!-- Services -->

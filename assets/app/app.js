@@ -30,6 +30,7 @@ angular.module('kineticdata.fulfillment', [
   // // Directives
   'kineticdata.fulfillment.directives.paginator',
   'kineticdata.fulfillment.directives.workframe',
+  'kineticdata.fulfillment.directives.rowhover',
 
   // Controllers
   'kineticdata.fulfillment.controllers.main',

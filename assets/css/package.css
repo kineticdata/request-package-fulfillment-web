@@ -313,8 +313,9 @@ table tbody tr td.nav-pop-v {
   border-bottom-color: lightgray;
   border-bottom-width: thin;
 
+  padding-top: 10px;
   padding-bottom: 10px;
-  margin-bottom: 10px;
+
 }
 
 .row-workorder-actions {
