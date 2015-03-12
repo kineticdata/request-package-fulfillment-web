@@ -1,9 +1,18 @@
 /// We'll need to manually wire the request package search bar into Angular.
 $(function() {
+  // Get the Angular injector.
   var injector = angular.element($('[ng-app]')).injector();
-  var button = $('form.portal-search span button').on('click', function(e) {
+
+  var button = $('form.portal-search span button');
+
+  // Set placeholders.
+  $('form.portal-search span button').parent().parent().find('input#search').attr('placeholder', 'Search Fulfillment...');
+
+  // When the button is clicked, get the text and inject a state change in Angular.
+  button.on('click', function(e) {
     e.preventDefault();
-    var search = $(this).parent().parent().find('input#search').val();
+    var input = $(this).parent().parent().find('input#search');
+    var search = input.val();
     if(angular.isDefined(search) && search.length > 0) {
       injector.get('$state').go('workorders', {
         id: 'search',
