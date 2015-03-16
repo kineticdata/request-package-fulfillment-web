@@ -4,6 +4,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', 'flash', 'WorkOrdersService',
     function($scope, $rootScope, $stateParams, $log, flash, WorkOrdersService) {
       $scope.currentWorkOrderId = $stateParams.workOrderId;
+      $scope.currentFilter = '';
       $scope.workOrder = {};
       $scope.workOrderLogs = {};
       $scope.workOrderNotes = {};
@@ -52,6 +53,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        */
       $scope.flash.noteAddFailure = function() {
         flash.error = 'Failed to add note!';
+        $state.go('dataerror');
       };
 
       /**
@@ -60,6 +62,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.flash.workOrderLoadFailure = function(data) {
         $log.error('Failed to retrieve work order:', data);
         flash.error ='Server Error: Failed to retrieve work order.';
+        $state.go('dataerror');
       };
 
       /**
@@ -68,6 +71,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.flash.genericProviderFailure = function(data) {
         $log.error('Failed to retrieve data from server:', data);
         flash.error = 'Server Error: Failed to retrieve data from server.';
+        $state.go('dataerror');
       };
 
       ////////////////////////////////////////////
@@ -171,6 +175,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       //
       // RUNTIME
       //
+
+      $rootScope.$on('krs-filter-changed', function(event, filter) {
+        activeFilter = filter;
+      });
 
       $rootScope.$broadcast('krs-workorder-changed', $scope.currentWorkOrderId);
 

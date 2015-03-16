@@ -16,7 +16,6 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
         var frame = $('iframe#workFrame');
         frame.attr('src', dest);
         frame.on('load', function(){
-          $log.debug('in the frame load. plz wrk');
           var iFrameHeight = frame[0].contentWindow.document.body.scrollHeight + 'px';
           var iFrameWidth = '100%';
           frame.css('width', iFrameWidth);

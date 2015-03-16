@@ -19,21 +19,8 @@
 
 <div ng-app="kineticdata.fulfillment">
   <div class="container">
-    <div ng-controller="MainController">
-      <h3>Fulfillment</h3>
-      <ul class="nav nav-pills">
-        <li role="presentation" ng-repeat="filter in filtersProvider.cache.data.all" ng-class="{active: isActiveFilter(filter)}">
-          <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Subscribe to error flash messages. -->
-    <div flash-alert="error" active-class="in alert" class="fade" duration="0">
-      <strong class="alert-heading">Oh no!</strong>
-      <span class="alert-message">{{flash.message}}</span>
-    </div>
-
+    <h3>Fulfillment</h3>
+    <div ui-view="filters"></div>
     <div ui-view></div>
   </div>
 </div>

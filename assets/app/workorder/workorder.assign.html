@@ -1,23 +1,35 @@
-<!--<div ng-if="state.loading">-->
-  <!--<p clas="text-center"><i class="fa fa-5x fa-spin fa-spinner"></i></p>-->
-<!--</div>-->
+<div ng-if="state.loading">
+  <p class="text-center"><i class="fa fa-5x fa-spin fa-spinner"></i></p>
+</div>
 <div ng-if="!state.loading">
   <h3>Work Order Assignments
     <button class="btn btn-default" ui-sref="workorders.detail({ workOrderId: currentWorkOrderId })">Details</button>
     <button class="btn btn-default" ng-if="!state.overview" ng-click="goToOverview()">Cancel</button>
+    <button class="btn btn-default" ng-if="!state.overview" ng-click="savePartial()">Done</button>
   </h3>
 
   <!-- Overview of selected groups -->
   <div ng-if="state.overview">
     <ul class="list-group">
+      <!-- List off all of the assigned groups. -->
       <li class="list-group-item" ng-repeat="group in workOrder.groups">
         <strong>{{group.label}}:</strong> {{group.name}}
       <span class="pull-right">
-        <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment($index)"><i class="fa fa-arrow-right"></i></button>
+        <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment($index)"><i class="fa fa-chevron-right"></i></button>
       </span>
       </li>
-      <li class="list-group-item">
-        <strong>Member:</strong> {{workOrder.assignedName}}
+
+      <!-- If applicable, show the next group assignment -->
+      <li class="list-group-item" ng-if="showChildSelect()">
+        <strong>{{getChildLabel()}}</strong>
+        <span class="pull-right">
+        <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment(currentGroupStructure.length)"><i class="fa fa-chevron-right"></i></button>
+      </span>
+      </li>
+
+      <!-- If applicable, show the members row. -->
+      <li class="list-group-item" ng-if="!showChildSelect()">
+        <strong>Member:</strong> {{workOrder.getAssignedName()}}
         <span class="pull-right"><button class="btn btn-default btn-xs" ng-click="clickOverviewMemberAssignment()"><i class="fa fa-arrow-right"></i></button></span>
       </li>
     </ul>

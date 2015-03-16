@@ -29,9 +29,47 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
 
           $scope.currentGroupStructure = $scope.workOrder.groups;
           $scope.modified = false;
-          $scope.state.loading = false;
+
+          var parents = $scope.buildParentsArray($scope.currentGroupStructure);
+          parents.pop();
+
+          $scope.provider = AssignmentsService.getAssignmentsByParents(parents);
+          $scope.provider.get().then(function(group) {
+            var lastGroup = $scope.currentGroupStructure[$scope.currentGroupStructure.length-1];
+            $log.debug(lastGroup);
+            var groupDesc = _.find(group.items, function(item) {
+             return item.id === lastGroup.id;
+            });
+            $log.debug(groupDesc);
+            lastGroup.childrenCount = groupDesc.childrenCount;
+            AssignmentsService.getAssignmentsByParents($scope.buildParentsArray($scope.currentGroupStructure)).get().then(
+              function(nextGroup) {
+                lastGroup.nextLabel = nextGroup.label;
+                $scope.state.loading = false;
+                $scope.state.loadingData = false;
+              },
+              function() {
+                $state.go('dataerror');
+              }
+            )
+
+          }, function() {
+            $state.go('dataerror');
+          });
+
+
+        }, function() {
+          $state.go('dataerror');
         });
     };
+
+    $scope.showChildSelect = function() {
+      return $scope.currentGroupStructure[$scope.currentGroupStructure.length-1].childrenCount > 0;
+    };
+
+    $scope.getChildLabel = function() {
+      return $scope.currentGroupStructure[$scope.currentGroupStructure.length-1].nextLabel;
+    }
 
     $scope.buildParentsArray = function(structure) {
       return _.reduce(structure, function(groups, group) {
@@ -55,6 +93,8 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         $scope.possibleAssignments = group;
 
         $scope.state.loadingData = false;
+      }, function() {
+        $state.go('dataerror');
       })
     };
 
@@ -84,6 +124,8 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       $scope.state.selectGroups = false;
       $scope.state.selectMembers = false;
       $scope.state.loadingData = false;
+
+      $scope.getGroups();
     };
 
     /// Given an assignment item, assign it to the parents and cascade to next step.
@@ -120,9 +162,32 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         function(data) {
           $scope.state.loadingData = false;
           //TODO:MTR What should I do here? I'm leaving them alone for now.
+          $state.go('dataerror');
         }
       )
     };
+
+    $scope.savePartial = function() {
+      var payload = {};
+
+      _.forEach($scope.currentGroupStructure, function(parent) {
+        payload[parent.label] = parent.id;
+      });
+
+      $log.debug('huuwhat', payload);
+      $scope.state.loadingData = true;
+      WorkOrdersService.postAssignments($scope.workOrder.id, payload).then(
+        function(data) {
+          // On successful assignment we should go to the details screen.
+          $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: $scope.workOrder.id });
+        },
+        function(data) {
+          $scope.state.loadingData = false;
+          //TODO:MTR What should I do here? I'm leaving them alone for now.
+          $state.go('dataerror');
+        }
+      )
+    }
 
     // RUNTIME
 

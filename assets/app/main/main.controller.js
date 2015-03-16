@@ -32,7 +32,7 @@ angular.module('kineticdata.fulfillment.controllers.main', [
         function() {
           // TODO:MTR there should be a better way to do this.
           $log.error('Failed to load all filters');
-          flash.error = 'There was a problem loading available filters.';
+          $state.go('dataerror');
         }
       );
     };

@@ -26,8 +26,8 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * @returns {boolean} true if the state is a child state of 'workorder'
      */
     $scope.isChildState = function() {
-      var currentState = $state.$current.name;
-      return currentState.match(/workorder\./) !== null;
+      var currentState = $state.current.name;
+      return currentState.match(/workorders\./) !== null;
     };
 
     ////////////////////
@@ -112,7 +112,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      */
     $scope.internal.loadWorkOrdersFailure = function() {
       // Handle failed loading.
-
+      $state.go('dataerror');
     };
 
     /**
@@ -172,7 +172,5 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     });
 
     $scope.setupFilterView();
-
-
 
   }]);

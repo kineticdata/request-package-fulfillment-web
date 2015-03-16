@@ -67,26 +67,48 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
   function($stateProvider, $urlRouterProvider, $httpProvider, flashProvider) {
     'use strict';
 
+    var filters = {
+      templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+      controller: 'MainController'
+    };
+
     flashProvider.errorClassnames.push('alert-danger');
 
     $urlRouterProvider.otherwise('/workorder/default');
     $stateProvider
       .state('workorders', {
         url: '/workorder/{id}?{terms}',
-        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
-        controller: 'WorkOrderListController',
+        views: {
+          '@': {
+            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
+            controller: 'WorkOrderListController'
+          },
+          'filters@': filters
+        },
+
         module: 'private'
       })
       .state('workorders.detail', {
         url: '/:workOrderId',
-        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
-        controller: 'WorkOrderDetailController',
+        views: {
+          '': {
+            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
+            controller: 'WorkOrderDetailController'
+          },
+          'filters@': filters
+        },
+
         module: 'private'
       })
       .state('workorders.assign', {
         url: '/:workOrderId/assign',
-        templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
-        controller: 'WorkOrderAssignController'
+        views: {
+          '': {
+            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
+            controller: 'WorkOrderAssignController'
+          },
+          'filters@': filters
+        }
       })
       .state('debug', {
         url: '/debug',
@@ -98,7 +120,12 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         templateUrl: BUNDLE.packagePath+'/partials/login.html',
         controller: 'LoginController',
         module: 'public'
-      });
+      })
+      .state('dataerror', {
+      url: '/dataerror',
+      templateUrl: BUNDLE.packagePath+'/assets/app/main/dataerror.tpl.html',
+      controller: function() {}
+    });
 
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('AuthInterceptor');

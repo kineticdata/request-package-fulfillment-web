@@ -4,8 +4,7 @@
 
 
 <div class="row">
-  <div class="col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState()}">
-
+  <div class="col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
 
     <div ng-hide="filtersLoading">
       <span>
@@ -26,7 +25,6 @@
         </div>-->
 
         <h3>
-
           {{currentFilter.name}}
           <button class="btn btn-default" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
           <i class="fa fa-spinner fa-spin" ng-show="workOrdersLoading"></i>
@@ -36,7 +34,7 @@
       <div class="row row-workorder-list" row-hover ng-repeat="workOrder in workOrderProvider.cache.data.all">
         <div class="col-md-12" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
           <div class="row">
-            <div class="col-md-6 col-xs-6">{{workOrder.requestId}} {{isActiveWorkOrder(workOrder)}}</div>
+            <div class="col-md-6 col-xs-6">{{workOrder.getNiceRequestId()}}</div>
             <div class="col-md-6 col-xs-6">{{workOrder.priority}}</div>
           </div>
 
@@ -54,8 +52,10 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6 col-xs-6"><i class="fa fa-user"></i>{{workOrder.getAssignedName()}}</div>
-            <div class="col-md-6 col-xs-6"><i class="fa fa-calendar"></i>{{workOrder.due | amCalendar}}</div>
+            <div class="col-md-6 col-xs-6">
+              <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
+            </div>
+            <div class="col-md-6 col-xs-6" ng-class="{ 'text-danger': workOrder.isOverdue() }"><i class="fa fa-calendar" ></i>{{workOrder.getNiceDueDate()}}</div>
           </div>
         </div>
       </div>

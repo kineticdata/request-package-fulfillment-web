@@ -45,12 +45,50 @@ angular.module('kineticdata.fulfillment.models.workorder', [
         return group.name;
       };
 
-      self.getAssignedName = function() {
+      self.getGroupPath = function() {
+        var path = '';
+
+        _.forEach(self.groups, function(wog) {
+          path += wog.name + ' :: ';
+        });
+        path = path.replace(/ :: $/, '');
+
+        return path;
+      };
+
+      self.isUnassigned = function() {
         if(self.assignedName === undefined || self.assignedName === null) {
+          return true;
+        }
+        return false;
+      };
+
+      self.getAssignedName = function() {
+        if(self.isUnassigned()) {
           return 'Unassigned';
         }
         return self.assignedName;
       };
+
+      self.getNiceRequestId = function() {
+        return self.requestId.replace(/KSR0+/, 'KSR-');
+      };
+
+      self.getNiceDueDate = function() {
+        if(typeof self.due === 'undefined' || _.isEmpty(self.due)) {
+          return 'No Due Date'
+        }
+
+        return moment(self.due).fromNow();
+      };
+
+      self.isOverdue = function() {
+        var due = new Date(self.due);
+        if(due < new Date()) {
+          return true;
+        }
+        return false;
+      }
 
     };
 

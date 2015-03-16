@@ -30,8 +30,8 @@
           <dl class="dl-horizontal">
             <dt>Assigned To</dt>
             <dd>
-              <i class="fa fa-users"></i> {{workOrder.getGroupName()}} <br />
-              <i class="fa fa-user"></i> {{workOrder.getAssignedName()}}
+              <i class="fa fa-users"></i> {{workOrder.getGroupPath()}} <br />
+              <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
             </dd>
           </dl>
         </div>
@@ -59,13 +59,13 @@
             <dd>{{workOrder.priority}}</dd>
 
             <dt>ID</dt>
-            <dd>{{workOrder.requestId}}</dd>
+            <dd>{{workOrder.getNiceRequestId()}}</dd>
 
             <dt>Status</dt>
             <dd>{{workOrder.status}}</dd>
 
             <dt>Due</dt>
-            <dd>{{workOrder.due | amCalendar}}</dd>
+            <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
           </dl>
         </div>
       </div>
