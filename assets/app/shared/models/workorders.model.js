@@ -6,6 +6,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       var self = this;
 
       _.assign(self, workOrder);
+      self.workOrderURL = self.workOrderURL.replace(/.mobile=true/, '');
 
       //////////////////////////////////
       // GENERATE CONTEXTUAL METADATA //
