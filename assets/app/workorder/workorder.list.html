@@ -27,7 +27,7 @@
         <h3>
           {{currentFilter.name}}
           <button class="btn btn-default" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
-          <i class="fa fa-spinner fa-spin" ng-show="workOrdersLoading"></i>
+          <i class="fa fa-spinner fa-spin" ng-if="workOrdersLoading"></i>
         </h3>
       </span>
 
