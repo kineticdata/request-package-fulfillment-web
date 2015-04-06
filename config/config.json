@@ -8,6 +8,10 @@
             "content": "interface/views/package/exampleView.jsp",
             "title": "Example View"
         },
+        "workorder": {
+            "content": "interface/views/package/workorder.jsp",
+            "title": "Workorder View"
+        },
         "default": {
             "content": "interface/views/package/package.jsp",
             "title": "Fulfillment NG"

@@ -11,6 +11,14 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     var workOrdersByFilterCache = {};
     var workOrderCache = {};
 
+    var markAllFiltersAsDirty = function() {
+      $log.debug('laksjdf');
+      _.forEach(Object.keys(workOrdersByFilterCache), function(key) {
+        $log.debug(workOrdersByFilterCache);
+        workOrdersByFilterCache[key].cache.dirty = true;
+      });
+      $log.debug('endeded.');
+    };
     var getWorkOrdersWithSearch = function(searchTerms) {
       return new DataProviderFactory.get('PaginatedRestfulDataResource', {
         url: '/work-orders/search&query='+searchTerms,
@@ -192,6 +200,10 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       activeWorkOrder = workOrder;
     });
 
+    $rootScope.$on('krs-complete-wo', function(event) {
+      $log.debug('a work order was completed, refreshing filter: ' + activeFilter);
+    });
+
     return {
       // Properties:
       activeFilter: activeFilter,
@@ -199,6 +211,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
       // Helper Methods:
       canPreloadWorkOrder: canPreloadWorkOrder,
+      markAllFiltersAsDirty: markAllFiltersAsDirty,
 
       // Methods:
       getWorkOrdersWithFilter: getWorkOrdersWithFilter,

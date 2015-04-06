@@ -4,6 +4,6 @@
 --%>
 <%
     // Define url to base package portal page
-    bundle.setProperty("basePackageUrl", bundle.getProperty("displayPageUrlSlug") + "PackageScaffold");
+    bundle.setProperty("basePackageUrl", bundle.getProperty("displayPageUrlSlug") + "FulfillmentNG");
 
 %>
