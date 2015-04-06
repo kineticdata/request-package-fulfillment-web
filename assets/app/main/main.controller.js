@@ -11,14 +11,18 @@ angular.module('kineticdata.fulfillment.controllers.main', [
     /// Holds a copy of the resource provider for getting filters.
     $scope.filtersProvider = FiltersService.getFilters();
     /// Holds the name of the active filter, 'default' means look up the default one.
-    $scope.activeFilter = 'default';
+    $scope.activeFilter = $stateParams.id;
 
     /**
      * Helper function used to determine whether a filter is the actively selected filter.
      * @param {string} filter the name of a filter.
      */
     $scope.isActiveFilter = function(filter) {
-      return $scope.activeFilter === filter.name;
+      var name = $scope.activeFilter;
+      if(name === 'default') {
+        name = $scope.filtersProvider.cache.data.getDefault().name;
+      }
+      return name === filter.name;
     };
 
     /**

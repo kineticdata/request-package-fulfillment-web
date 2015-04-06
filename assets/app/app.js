@@ -40,6 +40,7 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.directives.paginator',
   'kineticdata.fulfillment.directives.workframe',
   'kineticdata.fulfillment.directives.rowhover',
+  'kineticdata.fulfillment.directives.worktab',
 
   // Controllers
   'kineticdata.fulfillment.controllers.main',
