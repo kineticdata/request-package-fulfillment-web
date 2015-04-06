@@ -190,6 +190,27 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return deferred.promise;
     };
 
+    var postAssignMe = function(id) {
+      var deferred = $q.defer();
+      var url = workOrderUrl + '/' + id + '/assign/me';
+
+      $http.post(url, {})
+        .success(function(data, status, headers) {
+          if(headers('content-type') === 'text/html;charset=UTF-8') {
+            $log.error('Failure from server: response not in JSON.', data);
+            deferred.reject(data);
+          } else {
+            deferred.resolve(data);
+          }
+        })
+        .error(function(data, status) {
+          data.status = status;
+          deferred.reject(data);
+        });
+
+      return deferred.promise;
+    };
+
     var activeFilter = '';
     $rootScope.$on('krs-filter-changed', function(event, filter) {
       activeFilter = filter;
@@ -220,6 +241,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       getWorkOrderLogs: getWorkOrderLogsById,
       getWorkOrderNotes: getWorkOrderNotesById,
       postNote: postNoteById,
-      postAssignments: postAssignments
+      postAssignments: postAssignments,
+      postAssignMe: postAssignMe
     };
   }]);

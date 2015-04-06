@@ -1,8 +1,8 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', 'flash', 'WorkOrdersService',
-    function($scope, $rootScope, $stateParams, $log, flash, WorkOrdersService) {
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', '$state', 'flash', 'WorkOrdersService',
+    function($scope, $rootScope, $stateParams, $log, $state, flash, WorkOrdersService) {
       $scope.currentWorkOrderId = $stateParams.workOrderId;
       $scope.currentFilter = '';
       $scope.workOrder = {};
@@ -170,6 +170,35 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
             $scope.workOrderWorkURL = $scope.workOrder.workOrderURL;
             $scope.workOrderLoading = false;
           });
+      };
+
+      $scope.workitLabel = function() {
+        if(BUNDLE.config.user === $scope.workOrder.assignedId) {
+          return 'Work It'
+        } else {
+          return 'Grab It'
+        }
+      };
+
+      $scope.doWorkIt = function() {
+        if(BUNDLE.config.user === $scope.workOrder.assignedId) {
+          // Work it, just change the tab.
+          $rootScope.$broadcast('krs-workit');
+        } else {
+          // Grab it first.
+          WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
+            function(data) {
+              $rootScope.$broadcast('krs-workit');
+            },
+            function(data) {
+              $log.debug('failed', data)
+              if(data.status === 400) {
+                $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
+              }
+            }
+          );
+        }
+
       };
 
       //

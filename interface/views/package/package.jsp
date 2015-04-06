@@ -64,6 +64,7 @@
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.detail.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.assign.controller.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/workorder/workorder.frame.directive.js"></script>
+<script src="<%=bundle.packagePath()%>assets/app/workorder/worktab.directive.js"></script>
 
 <!-- Debug -->
 <script src="<%=bundle.packagePath()%>assets/app/debug/debug.controller.js"></script>

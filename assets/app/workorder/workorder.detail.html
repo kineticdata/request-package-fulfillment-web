@@ -2,7 +2,7 @@
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="" aria-controls="summary" role="tab" data-toggle="tab" data-target="#summary">SUMMARY</a></li>
-    <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work">WORK</a></li>
+    <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work" work-tab>WORK</a></li>
     <li role="presentation">
       <a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">
         NOTES
@@ -42,7 +42,7 @@
             <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
           </div>
           <div class="col-md-6 col-xs-6">
-            <button class="btn btn-block btn-primary">Work It</button>
+            <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
           </div>
         </div>
 
