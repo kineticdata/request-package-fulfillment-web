@@ -71,13 +71,20 @@
 
         <div class="well well-sm">
           <h4>Details</h4>
-          {{workOrder.details}}
+          <p class="white-space">{{workOrder.details}}</p>
         </div>
       </div>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="work">
-      <work-frame dest="{{workOrderWorkURL}}"></work-frame>
+      <div ng-if="!isMine(workOrder)">
+        <h3>Grab Work Order?</h3>
+        Do you want to assign this to yourself?
+        <button class="btn btn-block btn-primary" ng-click="doWorkIt()">Grab It!</button>
+      </div>
+      <div ng-if="isMine(workOrder)">
+        <work-frame dest="{{workOrderWorkURL}}"></work-frame>
+      </div>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="notes">
