@@ -251,8 +251,6 @@ angular.module('kineticdata.fulfillment.services.workorder', [
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
           var newData = new factory.factoryObject(data);
           if (operation === 'getList') {
-            console.log(newData)
-            console.log(data);
             return newData.all;
           } else if(operation === 'get') {
             return newData;

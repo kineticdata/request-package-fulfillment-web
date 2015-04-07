@@ -81,7 +81,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     RestangularProvider.setBaseUrl('http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1');
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
-      console.log(element, operation, what, url, headers, params, httpConfig);
       if(typeof params.refresh !== 'undefined' && params.refresh === true) {
         httpConfig.cache = false;
         delete params.refresh;

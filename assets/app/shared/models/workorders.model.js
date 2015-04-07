@@ -117,7 +117,6 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       }
 
       // Pagination data.
-      console.log('uhh data',data)
       self.all.meta = {};
       self.all.meta.count = data.count;
       self.all.meta.limit = data.limit;

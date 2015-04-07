@@ -22,10 +22,10 @@ angular.module('kineticdata.fulfillment.services.filter', [
       return Restangular.withConfig(function(RestangularConfigurer) {
         // Set the filters base URL.
         RestangularConfigurer.setBaseUrl('http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1/work-orders');
+        RestangularConfigurer.setDefaultHttpFields({cache: true});
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
           if(operation === 'getList') {
             var newData = new factory.factoryObject(data.filters);
-            console.log(newData);
             return newData.all;
           }
 

@@ -19,8 +19,6 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
     scope.hasNext = false;
     scope.logPageCount = [];
 
-    console.log(scope.datasource)
-
     var invalidDatasource = function() {
       return (typeof scope.datasource === 'undefined' || typeof scope.datasource.meta === 'undefined')
     };

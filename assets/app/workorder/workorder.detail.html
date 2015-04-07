@@ -115,7 +115,6 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="logs">
-      {{workOrderLogs.meta}}
       <div ng-show="workOrderLogsLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
@@ -125,7 +124,6 @@
           <p>Submitted By: {{log.assigneeId}}</p>
         </div>
         <simple-paginated-resource api="workOrderLogsApi" datasource="workOrderLogs"></simple-paginated-resource>
-        <paginated-resource start="internal.logsStartFn" success="internal.logsRtrSuccessFn()" failure="internal.providerFailureFn()" provider="workOrderLogsProvider"></paginated-resource>
       </div>
     </div>
   </div>
