@@ -2,7 +2,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
   'kineticdata.fulfillment.services.config',
   'kineticdata.fulfillment.services.paginateddataprovider'
 ])
-  .service('WorkOrdersService', ['$q', '$http', '$log', '$rootScope', '$timeout', 'ConfigService', 'ModelFactory', 'DataProviderFactory', function($q, $http, $log, $rootScope, $timeout, ConfigService, ModelFactory, DataProviderFactory) {
+  .service('WorkOrdersService', ['$q', '$http', '$log', '$rootScope', '$timeout', 'ConfigService', 'ModelFactory', 'DataProviderFactory', 'Restangular', function($q, $http, $log, $rootScope, $timeout, ConfigService, ModelFactory, DataProviderFactory, Restangular) {
     'use strict';
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
@@ -225,6 +225,22 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       $log.debug('a work order was completed, refreshing filter: ' + activeFilter);
     });
 
+    var factory = ModelFactory.get('WorkOrderCollection');
+    var api = function() {
+      return Restangular.withConfig(function(RestangularConfigurer) {
+
+        RestangularConfigurer.addResponseInterceptor(function(data, operation) {
+          if (operation === 'getList') {
+            var newData = new factory.factoryObject(data);
+            console.log(newData);
+            return newData.all;
+          }
+          return data;
+        })
+
+      }).service('work-orders')
+    };
+
     return {
       // Properties:
       activeFilter: activeFilter,
@@ -242,6 +258,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       getWorkOrderNotes: getWorkOrderNotesById,
       postNote: postNoteById,
       postAssignments: postAssignments,
-      postAssignMe: postAssignMe
+      postAssignMe: postAssignMe,
+      api: api
     };
   }]);

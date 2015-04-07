@@ -98,7 +98,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
 
       self.all = [];
 
-      _.forEach(data, function(workOrder) {
+      _.forEach(data.workOrders, function(workOrder) {
         self.all.push(new WorkOrder(workOrder));
       });
 
@@ -108,6 +108,20 @@ angular.module('kineticdata.fulfillment.models.workorder', [
         });
         return wo;
       }
+
+      self.all.getById = function(id) {
+        var wo = _.find(self.all, function(workOrder) {
+          return workOrder.id === id;
+        });
+        return wo;
+      }
+
+      // Pagination data.
+      console.log('uhh data',data)
+      self.all.meta = {};
+      self.all.meta.count = data.count;
+      self.all.meta.limit = data.limit;
+      self.all.meta.offset = data.offset;
     };
 
     var WorkOrderNote = function(note) {

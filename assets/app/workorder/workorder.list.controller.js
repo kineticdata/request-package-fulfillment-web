@@ -3,23 +3,21 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
   'kineticdata.fulfillment.services.filter',
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', 'FiltersService', 'WorkOrdersService',
-      function($scope, $rootScope, $state, $stateParams, $log, $interval, FiltersService, WorkOrdersService) {
+  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', function($scope, $rootScope, $state, $stateParams, $log, $interval, FiltersService, WorkOrdersService, filters, workOrders, currentFilter) {
     'use strict';
 
     // Prepare scope varaibles.
-    $scope.currentFilter = {};
-    $scope.workOrders = [];
+    $scope.currentFilter = currentFilter;
+    $scope.workOrders = workOrders;
     $scope.workOrderProvider;
-    $scope.filterProvider = FiltersService.getFilters();
-    $scope.filtersLoading = true;
-    $scope.workOrdersLoading = true;
+    $scope.filtersLoading = false;
+    $scope.workOrdersLoading = false;
 
     /// This will hold scope methods meant primarily for internal controller use.
     $scope.internal = {};
     $scope.internal.workOrderLoadFailures = 0;
+    $scope.api = WorkOrdersService.api();
 
-    //var filters = [];
 
     /**
      * Determines if the current state is a child of this controller's typical state.
@@ -28,65 +26,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.isChildState = function() {
       var currentState = $state.current.name;
       return currentState.match(/workorders\./) !== null;
-    };
-
-    ////////////////////
-    // FILTER LOADING //
-    ////////////////////
-
-    /**
-     * Called whenever the filter and work order data needs to be refreshed and chained.
-     */
-    $scope.setupFilterView = function() {
-      //// First we need to get the collection of filters available and decide which one is the current filter.
-      $scope.internal.loadFiltersStart();
-
-
-      $scope.filterProvider.get().then($scope.internal.loadFiltersSuccess, $scope.internal.loadFiltersFailure);
-    };
-
-    /**
-     * Called at the start of filter refresh, used to set UI changes.
-     */
-    $scope.internal.loadFiltersStart = function() {
-      $scope.filtersLoading = true;
-    };
-
-    /**
-     * Handles successful filter data loading.
-     *
-     * This method is called as the success function for filter loading. It will
-     * make a decision as to which filter should be the current (in view) filter
-     * based on the state parameters, or it will use the default filter. It will
-     * broadcast 'krs-filter-changed' with the current filter name and begin
-     * loading work orders.
-     *
-     * @param {FilterCollection} filters a generated filter collection from rest data.
-     */
-    $scope.internal.loadFiltersSuccess = function(filters) {
-      $scope.filtersLoading = false;
-
-      if(typeof $stateParams.id === 'undefined') {
-        $scope.currentFilter = filters.getDefault();
-      } else if($stateParams.id === 'default') {
-        $scope.currentFilter = filters.getDefault();
-      } else if($stateParams.id === 'search') {
-        $scope.currentFilter = { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
-      } else {
-        $scope.currentFilter = filters.getFilter($stateParams.id);
-
-      }
-
-      $rootScope.$broadcast('krs-filter-changed', $scope.currentFilter.name);
-      $scope.loadWorkOrders();
-    };
-
-    /**
-     * Handles UI changes when filter loading fails for some reason.
-     */
-    $scope.internal.loadFiltersFailure = function() {
-      // Handle failures on loading filters.
-
     };
 
     ////////////////////////
@@ -129,7 +68,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * should be used when retrieving data or refreshing data is required, not the
      * internal methods it uses.
      */
-    $scope.loadWorkOrders = function(refresh) {
+    $scope.loadWorkOrdersD = function(refresh) {
       if($scope.workOrderProvider === undefined) {
         if(angular.isDefined($scope.currentFilter.terms)) {
           $scope.workOrderProvider = WorkOrdersService.getWorkOrdersWithSearch($scope.currentFilter.terms);
@@ -142,6 +81,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       $scope.workOrderProvider.get(refresh).then(
         $scope.internal.loadWorkOrdersSuccess, $scope.internal.loadWorkOrdersFailure
       );
+    };
+
+    $scope.loadWorkOrders = function() {
+      WorkOrdersService.api().getList({filter: $scope.currentFilter.name, refresh: true}).then(
+        function(data) {
+          $scope.filters = data;
+        },
+        function() {
+          toastr.error('There was a problem refreshing work orders.');
+        }
+      )
     };
 
     /**
@@ -170,7 +120,5 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
       $scope.activeWorkOrder = workOrder;
     });
-
-    $scope.setupFilterView();
 
   }]);

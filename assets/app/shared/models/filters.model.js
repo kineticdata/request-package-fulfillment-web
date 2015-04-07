@@ -15,13 +15,13 @@ angular.module('kineticdata.fulfillment.models.filter', [
         self.all.push(new Filter(filter));
       });
 
-      self.getFilter = function(name) {
+      self.all.getFilter = function(name) {
         return _.find(self.all, function(filter) {
           return filter.name == name;
         });
       };
 
-      self.getDefault = function() {
+      self.all.getDefault = function() {
         return _.find(self.all, function(filter) {
           return filter.default == true;
         });
