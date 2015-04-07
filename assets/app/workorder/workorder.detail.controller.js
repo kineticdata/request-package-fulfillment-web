@@ -1,17 +1,18 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', '$state', 'flash', 'WorkOrdersService',
-    function($scope, $rootScope, $stateParams, $log, $state, flash, WorkOrdersService) {
-      $scope.currentWorkOrderId = $stateParams.workOrderId;
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$stateParams', '$log', '$state', 'flash', 'WorkOrdersService', 'workOrderId', 'workOrder',
+    function($scope, $rootScope, $stateParams, $log, $state, flash, WorkOrdersService, workOrderId, workOrder) {
+      $scope.currentWorkOrderId = workOrderId;
       $scope.currentFilter = '';
-      $scope.workOrder = {};
-      $scope.workOrderLogs = {};
+      $scope.workOrder = workOrder;
+      $scope.workOrderLogs = [];
       $scope.workOrderNotes = {};
       // Loading trackers.
       $scope.workOrderLoading = false;
       $scope.workOrderNotesLoading = true;
       $scope.workOrderLogsLoading = true;
+      $scope.workOrderLogsApi = WorkOrdersService.Logs(workOrderId);
       $scope.workOrderNotesProvider = WorkOrdersService.getWorkOrderNotes($scope.currentWorkOrderId);
       $scope.workOrderLogsProvider = WorkOrdersService.getWorkOrderLogs($scope.currentWorkOrderId);
       $scope.workOrderWorkURL = '';
@@ -212,6 +213,16 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $rootScope.$broadcast('krs-workorder-changed', $scope.currentWorkOrderId);
 
       // Get the individual work order.
-      $scope.internal.retrieveWorkOrder();
+      //$scope.internal.retrieveWorkOrder();
+
+      $scope.workOrderLogsApi.getList().then(
+        function(data) {
+          $scope.workOrderLogsLoading = false;
+          $scope.workOrderLogs = data;
+        },
+        function() {
+          toastr.warning('There was a problem loading work order logs.');
+        }
+      )
 
     }]);

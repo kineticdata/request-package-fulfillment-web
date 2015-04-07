@@ -225,20 +225,41 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       $log.debug('a work order was completed, refreshing filter: ' + activeFilter);
     });
 
-    var factory = ModelFactory.get('WorkOrderCollection');
-    var api = function() {
+    var collectionFactory = ModelFactory.get('WorkOrderCollection');
+    var individualFactory = ModelFactory.get('WorkOrder');
+
+    var workOrders = function() {
+      return api('WorkOrderCollection').service('work-orders')
+    };
+
+    var workOrder = function(workOrderId) {
+      return api('WorkOrder').service('work-orders').one(workOrderId);
+    };
+
+    var logs = function(workOrderId) {
+      return api('WorkOrderLogCollection').one('work-orders', workOrderId).all('logs')
+    };
+
+    var api = function(modelFactory) {
+      var factory = ModelFactory.get(modelFactory);
+
       return Restangular.withConfig(function(RestangularConfigurer) {
+        Restangular.setRestangularFields({
+          id: 'id'
+        });
 
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
+          var newData = new factory.factoryObject(data);
           if (operation === 'getList') {
-            var newData = new factory.factoryObject(data);
-            console.log(newData);
+            console.log(newData)
+            console.log(data);
             return newData.all;
+          } else if(operation === 'get') {
+            return newData;
           }
           return data;
-        })
-
-      }).service('work-orders')
+        });
+      });
     };
 
     return {
@@ -259,6 +280,9 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       postNote: postNoteById,
       postAssignments: postAssignments,
       postAssignMe: postAssignMe,
-      api: api
+      api: api,
+      WorkOrders: workOrders,
+      WorkOrder: workOrder,
+      Logs: logs
     };
   }]);

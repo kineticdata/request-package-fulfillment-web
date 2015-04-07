@@ -142,12 +142,17 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       _.assign(self, log);
     };
 
-    var WorkOrderLogCollection = function(logs) {
+    var WorkOrderLogCollection = function(data) {
       var self = this;
       self.all = [];
-      _.forEach(logs, function(log) {
+      _.forEach(data.logs, function(log) {
         self.all.push(new WorkOrderLog(log));
       });
+
+      self.all.meta = {};
+      self.all.meta.count = data.count;
+      self.all.meta.limit = data.limit;
+      self.all.meta.offset = data.offset;
     };
 
     ModelFactory.register('WorkOrderCollection', {

@@ -129,12 +129,10 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
                 } else {
                   return filters.getFilter($stateParams.id);
-
                 }
               },
               workOrders: function(WorkOrdersService, currentFilter) {
-                console.log(currentFilter)
-                return WorkOrdersService.api().getList({filter: currentFilter.name});
+                return WorkOrdersService.WorkOrders().getList({filter: currentFilter.name});
               }
             }
           },
@@ -156,7 +154,15 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         views: {
           '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
-            controller: 'WorkOrderDetailController'
+            controller: 'WorkOrderDetailController',
+            resolve: {
+              workOrderId: function($stateParams) {
+                return $stateParams.workOrderId;
+              },
+              workOrder: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.WorkOrder(workOrderId).get();
+              }
+            }
           },
           'filters@': {
             templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',

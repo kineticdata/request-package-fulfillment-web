@@ -57,7 +57,7 @@
     <div class="row">
       <div class="col-md-12 col-xs-12">
         <!--<paginated-resource start="loadWorkOrdersStart" success="loadWorkOrdersSuccess" failure="loadWorkOrdersFailure" provider="workOrderProvider"></paginated-resource>-->
-        <simple-paginated-resource meta="workOrders.meta" api="api"></simple-paginated-resource>
+        <simple-paginated-resource params="listParams" api="api" datasource="workOrders"></simple-paginated-resource>
       </div>
     </div>
 
