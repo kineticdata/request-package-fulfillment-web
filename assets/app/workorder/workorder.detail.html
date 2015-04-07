@@ -68,6 +68,11 @@
             <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
           </dl>
         </div>
+
+        <div class="well well-sm">
+          <h4>Details</h4>
+          {{workOrder.details}}
+        </div>
       </div>
     </div>
 
