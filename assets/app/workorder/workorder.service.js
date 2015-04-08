@@ -225,11 +225,8 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       $log.debug('a work order was completed, refreshing filter: ' + activeFilter);
     });
 
-    var collectionFactory = ModelFactory.get('WorkOrderCollection');
-    var individualFactory = ModelFactory.get('WorkOrder');
-
-    var workOrders = function() {
-      return api('WorkOrderCollection').service('work-orders')
+    var workOrders = function(shouldCache) {
+      return api('WorkOrderCollection', shouldCache).service('work-orders')
     };
 
     var workOrder = function(workOrderId) {
@@ -240,13 +237,18 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return api('WorkOrderLogCollection').one('work-orders', workOrderId).all('logs')
     };
 
-    var api = function(modelFactory) {
+    var api = function(modelFactory, shouldCache) {
       var factory = ModelFactory.get(modelFactory);
 
       return Restangular.withConfig(function(RestangularConfigurer) {
-        Restangular.setRestangularFields({
+        RestangularConfigurer.setRestangularFields({
           id: 'id'
         });
+
+        if(shouldCache) {
+          $log.info('{WordOrderService} Enabled caching for model: ' + modelFactory);
+          RestangularConfigurer.setDefaultHttpFields({cache: true});
+        }
 
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
           var newData = new factory.factoryObject(data);

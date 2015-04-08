@@ -131,7 +131,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                 }
               },
               workOrders: function(WorkOrdersService, currentFilter) {
-                return WorkOrdersService.WorkOrders().getList({filter: currentFilter.name});
+                return WorkOrdersService.WorkOrders(true).getList({filter: currentFilter.name});
               }
             }
           },

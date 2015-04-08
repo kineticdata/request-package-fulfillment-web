@@ -33,7 +33,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     ////////////////////////
 
     $scope.loadWorkOrders = function() {
-      WorkOrdersService.api().getList({filter: $scope.currentFilter.name, refresh: true}).then(
+      WorkOrdersService.WorkOrders(true).getList({filter: $scope.currentFilter.name, refresh: true}).then(
         function(data) {
           $scope.filters = data;
         },
