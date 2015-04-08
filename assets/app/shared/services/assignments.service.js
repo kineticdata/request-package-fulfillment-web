@@ -1,7 +1,5 @@
-angular.module('kineticdata.fulfillment.services.assignments', [
-  'kineticdata.fulfillment.services.dataproviderfactory'
-])
-  .service('AssignmentsService', [ '$q', '$log', 'DataProviderFactory', 'ModelFactory', 'Restangular', 'ConfigService', '$http', function($q,wd$log, DataProviderFactory, ModelFactory, Restangular, ConfigService, $http) {
+angular.module('kineticdata.fulfillment.services.assignments', [])
+  .service('AssignmentsService', [ '$q', '$log', 'ModelFactory', 'ConfigService', '$http', function($q, $log, ModelFactory, ConfigService, $http) {
 
     var membersUrl = ConfigService.getBaseUrl() + '/assignment/members';
     var groupsUrl = ConfigService.getBaseUrl() + '/assignment/groups';
@@ -45,32 +43,7 @@ angular.module('kineticdata.fulfillment.services.assignments', [
       );
 
       return deferred.promise;
-      //return new DataProviderFactory.get('PaginatedRestfulDataResource', {
-      //  url: '/assignment/members&group=' + group.id,
-      //  model: 'Member'
-      //});
     };
-
-    var api = function(modelFactory) {
-      var factory = ModelFactory.get(modelFactory);
-
-      return Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setRestangularFields({
-          id: 'id'
-        });
-        RestangularConfigurer.addResponseInterceptor(function(data, operation) {
-          var newData = new factory.factoryObject(data);
-          if (operation === 'getList') {
-            return newData.all;
-          } else if(operation === 'get') {
-            return newData;
-          }
-          return data;
-        });
-      });
-    };
-
-
 
     return {
       getAssignmentsByParents: getAssignmentsByParents,

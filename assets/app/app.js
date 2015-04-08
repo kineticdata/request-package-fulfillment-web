@@ -42,7 +42,6 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.models.assignments',
 
   // // Directives
-  'kineticdata.fulfillment.directives.paginator',
   'kineticdata.fulfillment.directives.simplepaginator',
   'kineticdata.fulfillment.directives.workframe',
   'kineticdata.fulfillment.directives.rowhover',
@@ -53,21 +52,10 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.controllers.workorderlist',
   'kineticdata.fulfillment.controllers.workorderdetail',
   'kineticdata.fulfillment.controllers.workorderassign',
-  //'kineticdata.fulfillment.controllers.debug',
-  // 'kineticdata.fulfillment.controllers.login',
-  //
+
   // Services
-  // 'kineticdata.fulfillment.services.auth',
-  // 'kineticdata.fulfillment.services.httpinterceptorfactory'
-  'kineticdata.fulfillment.services.paginateddataprovider',
-  'kineticdata.fulfillment.services.cache',
-  'kineticdata.fulfillment.services.dataproviderfactory',
   'kineticdata.fulfillment.interceptors.auth',
-  'kineticdata.fulfillment.services.assignments',
-
-  // Data Providers
-  'kineticdata.fulfillment.dataproviders.restfuldataresource'
-
+  'kineticdata.fulfillment.services.assignments'
 ]);
 
 angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'flashProvider', 'cfpLoadingBarProvider', 'RestangularProvider', 'ConfigServiceProvider',

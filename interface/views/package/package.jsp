@@ -52,22 +52,15 @@
 <script src="<%=bundle.packagePath()%>assets/js/lodash/lodash.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/toastr/toastr.js"></script>
 
-<script src="<%=bundle.packagePath()%>assets/app/shared/directives/paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/directives/simple.paginator.directive.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/directives/rowhover.directive.js"></script>
-<script src="<%=bundle.packagePath()%>assets/app/shared/services/paginateddataprovider.factory.js"></script>
 
 <!-- Services -->
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/config.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/filters.service.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/auth.interceptor.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/model.factory.js"></script>
-<script src="<%=bundle.packagePath()%>assets/app/shared/services/cache.factory.js"></script>
-<script src="<%=bundle.packagePath()%>assets/app/shared/services/dataprovider.factory.js"></script>
 <script src="<%=bundle.packagePath()%>assets/app/shared/services/assignments.service.js"></script>
-
-<!-- Data Resources -->
-<script src="<%=bundle.packagePath()%>assets/app/shared/dataproviders/restful.data.resource.js"></script>
 
 
 <!-- Models -->

@@ -20,59 +20,53 @@
   <!-- Tab Content -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="summary">
-      <div ng-show="workOrderLoading">
-        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      <!-- Assignments details -->
+      <div class="well well-sm">
+        <dl class="dl-horizontal">
+          <dt>Assigned To</dt>
+          <dd>
+            <i class="fa fa-users"></i> {{workOrder.getGroupPath()}} <br />
+            <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
+          </dd>
+        </dl>
       </div>
 
-      <div ng-hide="workOrderLoading">
-        <!-- Assignments details -->
-        <div class="well well-sm">
-          <dl class="dl-horizontal">
-            <dt>Assigned To</dt>
-            <dd>
-              <i class="fa fa-users"></i> {{workOrder.getGroupPath()}} <br />
-              <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
-            </dd>
-          </dl>
+      <!-- Working buttons -->
+      <div class="row row-workorder-actions">
+        <div class="col-md-6 col-xs-6">
+          <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
         </div>
-
-        <!-- Working buttons -->
-        <div class="row row-workorder-actions">
-          <div class="col-md-6 col-xs-6">
-            <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
-          </div>
-          <div class="col-md-6 col-xs-6">
-            <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
-          </div>
+        <div class="col-md-6 col-xs-6">
+          <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
         </div>
+      </div>
 
-        <!-- Work Order Details -->
-        <div class="well well-sm">
-          <dl class="dl-horizontal">
-            <dt>Work Order Name</dt>
-            <dd>{{workOrder.workOrder}}</dd>
+      <!-- Work Order Details -->
+      <div class="well well-sm">
+        <dl class="dl-horizontal">
+          <dt>Work Order Name</dt>
+          <dd>{{workOrder.workOrder}}</dd>
 
-            <dt>Requested For</dt>
-            <dd>{{workOrder.requestedFor}}</dd>
+          <dt>Requested For</dt>
+          <dd>{{workOrder.requestedFor}}</dd>
 
-            <dt>Priority</dt>
-            <dd>{{workOrder.priority}}</dd>
+          <dt>Priority</dt>
+          <dd>{{workOrder.priority}}</dd>
 
-            <dt>ID</dt>
-            <dd>{{workOrder.getNiceRequestId()}}</dd>
+          <dt>ID</dt>
+          <dd>{{workOrder.getNiceRequestId()}}</dd>
 
-            <dt>Status</dt>
-            <dd>{{workOrder.status}}</dd>
+          <dt>Status</dt>
+          <dd>{{workOrder.status}}</dd>
 
-            <dt>Due</dt>
-            <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
-          </dl>
-        </div>
+          <dt>Due</dt>
+          <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
+        </dl>
+      </div>
 
-        <div class="well well-sm">
-          <h4>Details</h4>
-          <p class="white-space">{{workOrder.details}}</p>
-        </div>
+      <div class="well well-sm">
+        <h4>Details</h4>
+        <p class="white-space">{{workOrder.details}}</p>
       </div>
     </div>
 

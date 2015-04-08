@@ -1,22 +1,12 @@
 angular.module('kineticdata.fulfillment.services.filter', [
-  'kineticdata.fulfillment.services.config',
-  'kineticdata.fulfillment.services.dataproviderfactory'
+  'kineticdata.fulfillment.services.config'
 ])
-  .service('FiltersService', ['$q', '$http', '$log', 'ConfigService', 'DataProviderFactory', 'Restangular', 'ModelFactory', function($q, $http, $log, ConfigService, DataProviderFactory, Restangular, ModelFactory) {
+  .service('FiltersService', ['$q', '$log', 'ConfigService', 'Restangular', 'ModelFactory', function($q, $log, ConfigService, Restangular, ModelFactory) {
     'use strict';
 
-    //var filterProvider = PaginatedDataProviderFactory.getResourceProvider('/work-orders/filters', 'FilterCollection');
-    var filterProvider = new DataProviderFactory.get('PaginatedRestfulDataResource', {
-      url: '/work-orders/filters',
-      model: 'FilterCollection'
-    });
+    $log.info('{FiltersService} Initializing service.');
 
     var factory = ModelFactory.get('FilterCollection');
-
-    /// Retrieves all filters from the KR server.
-    var getFilters = function() {
-      return filterProvider;
-    };
 
     var api = function() {
       return Restangular.withConfig(function(RestangularConfigurer) {
@@ -35,7 +25,6 @@ angular.module('kineticdata.fulfillment.services.filter', [
     };
 
     return {
-      getFilters: getFilters,
       api: api
     };
   }]);
