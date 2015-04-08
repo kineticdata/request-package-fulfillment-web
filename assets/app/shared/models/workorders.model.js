@@ -118,12 +118,18 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       _.assign(self, note);
     };
 
-    var WorkOrderNoteCollection = function(notes) {
+    var WorkOrderNoteCollection = function(data) {
       var self = this;
       self.all = [];
-      _.forEach(notes, function(note) {
+      _.forEach(data.notes, function(note) {
         self.all.push(new WorkOrderNote(note));
       });
+
+      // Pagination data.
+      self.all.meta = {};
+      self.all.meta.count = data.count;
+      self.all.meta.limit = data.limit;
+      self.all.meta.offset = data.offset;
     };
 
     var WorkOrderLog = function(log) {
