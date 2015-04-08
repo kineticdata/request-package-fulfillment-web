@@ -78,17 +78,13 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       activeWorkOrder = workOrder;
     });
 
-    $rootScope.$on('krs-complete-wo', function(event) {
-      $log.debug('a work order was completed, refreshing filter: ' + activeFilter);
-    });
-
     var workOrders = function(shouldCache) {
       return api('WorkOrderCollection', shouldCache).service('work-orders')
     };
 
     var search = function() {
       return api('WorkOrderCollection').all('work-orders').all('search')
-    }
+    };
 
     var workOrder = function(workOrderId) {
       return api('WorkOrder').service('work-orders').one(workOrderId);
@@ -132,16 +128,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       activeFilter: activeFilter,
       activeWorkOrder: activeWorkOrder,
 
-      // Helper Methods:
-      //canPreloadWorkOrder: canPreloadWorkOrder,
-      //markAllFiltersAsDirty: markAllFiltersAsDirty,
-
       // Methods:
-      //getWorkOrdersWithFilter: getWorkOrdersWithFilter,
-      //getWorkOrdersWithSearch: getWorkOrdersWithSearch,
-      //getWorkOrder: getWorkOrderById,
-      //getWorkOrderLogs: getWorkOrderLogsById,
-      //getWorkOrderNotes: getWorkOrderNotesById,
       postNote: postNoteById,
       postAssignments: postAssignments,
       postAssignMe: postAssignMe,

@@ -29,7 +29,7 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
           return;
         }
 
-        $log.debug("Updating work frame URL: " + dest);
+        $log.info('{WorkFrame} Updating work frame URL: ' + dest);
         var frame = $('iframe#workFrame');
         frame.attr('src', dest);
         frame.on('load', function(){

@@ -70,11 +70,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
       if(typeof params.refresh !== 'undefined' && params.refresh === true) {
-        //$injector.invoke(['$cacheFactory', function($cacheFactory) {
-        //  var cache = $cacheFactory.get('$http');
-        //  console.log(cache)
-        //}])
-        //httpConfig.cache = false;
         delete params.refresh;
       }
 
@@ -219,15 +214,4 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('AuthInterceptor');
-  }])
-  .run(['$log', '$rootScope', '$state', '$stateParams', function($log, $rootScope, $state, $stateParams) {
-    'use strict';
-
-    //$rootScope.$on('$stateChangeStart', function(event, toState) {
-      //if(toState.module == 'private' && !AuthService.authorized()) {
-      //  $log.debug('Private module requiring authentication and not authenticated: ' + toState.name);
-      //  event.preventDefault();
-      //  $state.go('login');
-      //}
-    //});
   }]);

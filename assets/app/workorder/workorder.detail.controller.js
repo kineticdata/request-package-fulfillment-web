@@ -50,7 +50,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         $scope.workOrderNotesLoading = true;
         $scope.workOrderNotesApi.getList().then(
           function(data) {
-            $log.debug('notes',data.plain());
             $scope.workOrderNotesLoading = false;
             $scope.workOrderNotes = data;
           },
@@ -84,7 +83,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
             });
           },
           function(data) {
-            $log.debug('failed', data);
             if(data.status === 400) {
               $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
             }
