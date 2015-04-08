@@ -3,7 +3,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
   'kineticdata.fulfillment.services.filter',
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', function($scope, $rootScope, $state, $stateParams, $log, $interval, FiltersService, WorkOrdersService, filters, workOrders, currentFilter) {
+  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', '$cacheFactory', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', function($scope, $rootScope, $state, $stateParams, $log, $interval, $cacheFactory, FiltersService, WorkOrdersService, filters, workOrders, currentFilter) {
     'use strict';
 
     // Prepare scope varaibles.
@@ -13,7 +13,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     /// This will hold scope methods meant primarily for internal controller use.
     $scope.internal = {};
     $scope.internal.workOrderLoadFailures = 0;
-    $scope.api = WorkOrdersService.api();
+    $scope.api = WorkOrdersService.WorkOrders(true);
 
     $scope.listParams = {
       filter: $scope.currentFilter.name
@@ -33,9 +33,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     ////////////////////////
 
     $scope.loadWorkOrders = function() {
-      WorkOrdersService.WorkOrders(true).getList({filter: $scope.currentFilter.name, refresh: true}).then(
+      $cacheFactory.get('$http').removeAll();
+      $scope.api.getList({filter: $scope.currentFilter.name, refresh: true}).then(
         function(data) {
-          $scope.filters = data;
+          $scope.workOrders = data;
         },
         function() {
           toastr.error('There was a problem refreshing work orders.');
@@ -65,6 +66,11 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.activeWorkOrder = '';
     $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
       $scope.activeWorkOrder = workOrder;
+    });
+
+    $rootScope.$on('krs-workorder-modified', function(event, workOrderId) {
+      $log.info('{WorkorderListController} A work order has been changed, refreshing the list.');
+      $scope.loadWorkOrders();
     });
 
   }]);

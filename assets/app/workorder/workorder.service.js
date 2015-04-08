@@ -6,37 +6,37 @@ angular.module('kineticdata.fulfillment.services.workorder', [
     'use strict';
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
-    var workOrderFactory = ModelFactory.get('WorkOrder');
-
-    var workOrdersByFilterCache = {};
+    //var workOrderFactory = ModelFactory.get('WorkOrder');
+    //
+    //var workOrdersByFilterCache = {};
     var workOrderCache = {};
 
-    var markAllFiltersAsDirty = function() {
-      $log.debug('laksjdf');
-      _.forEach(Object.keys(workOrdersByFilterCache), function(key) {
-        $log.debug(workOrdersByFilterCache);
-        workOrdersByFilterCache[key].cache.dirty = true;
-      });
-      $log.debug('endeded.');
-    };
-    var getWorkOrdersWithSearch = function(searchTerms) {
-      return new DataProviderFactory.get('PaginatedRestfulDataResource', {
-        url: '/work-orders/search&query='+searchTerms,
-        model: 'WorkOrderCollection'
-      });
-    };
+    //var markAllFiltersAsDirty = function() {
+    //  $log.debug('laksjdf');
+    //  _.forEach(Object.keys(workOrdersByFilterCache), function(key) {
+    //    $log.debug(workOrdersByFilterCache);
+    //    workOrdersByFilterCache[key].cache.dirty = true;
+    //  });
+    //  $log.debug('endeded.');
+    //};
+    //var getWorkOrdersWithSearch = function(searchTerms) {
+    //  return new DataProviderFactory.get('PaginatedRestfulDataResource', {
+    //    url: '/work-orders/search&query='+searchTerms,
+    //    model: 'WorkOrderCollection'
+    //  });
+    //};
 
     /// Retrieves all filters from the KR server.
-    var getWorkOrdersWithFilter = function(filterName) {
-      //var deferred = $q.defer();
-      if(workOrdersByFilterCache[filterName] === undefined) {
-        workOrdersByFilterCache[filterName] = DataProviderFactory.get('PaginatedRestfulDataResource',{
-          url: '/work-orders&filter=' + filterName,
-          model: 'WorkOrderCollection'});
-      }
-
-      return workOrdersByFilterCache[filterName];
-    };
+    //var getWorkOrdersWithFilter = function(filterName) {
+    //  //var deferred = $q.defer();
+    //  if(workOrdersByFilterCache[filterName] === undefined) {
+    //    workOrdersByFilterCache[filterName] = DataProviderFactory.get('PaginatedRestfulDataResource',{
+    //      url: '/work-orders&filter=' + filterName,
+    //      model: 'WorkOrderCollection'});
+    //  }
+    //
+    //  return workOrdersByFilterCache[filterName];
+    //};
 
     /**
      * Check to see if a work order is preloadable.
@@ -47,107 +47,107 @@ angular.module('kineticdata.fulfillment.services.workorder', [
      * @param {string} id work order id.
      * @returns {boolean} whether a work order can be preloaded.
      */
-    var canPreloadWorkOrder = function(id) {
-      // Is it in the local cache?
-      if(angular.isDefined(workOrderCache[id])) {
-        return true;
-
-      // Is there an active filter...
-      } else if(typeof activeFilter !== 'undefined' && activeFilter.length > 0) {
-        // If there is check to ensure that the cache is valid.
-        if(typeof workOrdersByFilterCache[activeFilter] !== 'undefined'
-        && typeof workOrdersByFilterCache[activeFilter].cache !== 'undefined'
-        && typeof workOrdersByFilterCache[activeFilter].cache.data !== 'undefined') {
-          return true;
-        }
-      }
-    };
-
-    var getWorkOrderById = function(id) {
-      var deferred = $q.defer();
-
-      // Preload, if possible.
-      if(canPreloadWorkOrder(id)) {
-        var preloadWorkOrder;
-
-        // Try local cache first.
-        if(angular.isDefined(workOrderCache[id])) {
-          preloadWorkOrder = workOrderCache[id].data;
-        } else {
-          preloadWorkOrder = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
-        }
-
-        //var preloaded = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
-
-        // This is a silly hack since it appears to wait to resolve this until the
-        // next digest cycle, $rootScope.$apply rejects the call due to current
-        // cycle...
-        $timeout(function() {
-          deferred.notify(preloadWorkOrder);
-        }, 0);
-
-      }
-
-      // Retrieve and, if necessary, initialize the cache.
-      if(!angular.isDefined(workOrderCache[id])) {
-        workOrderCache[id] = {};
-        workOrderCache[id].promises = [];
-        workOrderCache[id].data = {};
-        workOrderCache[id].dirty = true;
-      }
-      var cache = workOrderCache[id];
-
-      // If data retrieval is pending.
-      if(cache.promises.length > 0) {
-        cache.promises.push(deferred);
-
-      // Data has not yet been loaded, so kick it off.
-      } else if(!angular.isDefined(cache.data) || cache.dirty) {
-        $log.debug('{SVC} Attempting to retrieve WorkOrder.');
-        cache.promises.push(deferred);
-
-        var url = workOrderUrl + '/' + id;
-        $http.get(url)
-          .success(function(data, status, headers) {
-            //$log.info('headers:', data, headers('content-type'))
-            if(headers('content-type') === 'text/html;charset=UTF-8') {
-              $log.error('{SVC} Rejected invalid response, response not in JSON.');
-              while(cache.promises.length) {
-                cache.promises.shift().reject(data);
-              }
-            } else {
-              cache.data = new workOrderFactory.factoryObject(data);
-              //cache.dirty = false;
-              while(cache.promises.length) {
-                cache.promises.shift().resolve(cache.data);
-              }
-            }
-          })
-          .error(function(data) {
-            while(cache.promises.length) {
-              cache.promises.shift().reject(data);
-            }
-          });
-      } else {
-        deferred.resolve(cache.data);
-      }
-
-      return deferred.promise;
-    };
-
-    var getWorkOrderNotesById = function(id) {
-      return DataProviderFactory.get('PaginatedRestfulDataResource', {
-        url: '/work-orders/' + id + '/notes',
-        model: 'WorkOrderNoteCollection'
-      });
-    };
-
-    var getWorkOrderLogsById = function(id) {
-      return DataProviderFactory.get('PaginatedRestfulDataResource', {
-        url: '/work-orders/' + id + '/logs',
-        model: 'WorkOrderLogCollection'
-      });
-    };
+    //var canPreloadWorkOrder = function(id) {
+    //  // Is it in the local cache?
+    //  if(angular.isDefined(workOrderCache[id])) {
+    //    return true;
+    //
+    //  // Is there an active filter...
+    //  } else if(typeof activeFilter !== 'undefined' && activeFilter.length > 0) {
+    //    // If there is check to ensure that the cache is valid.
+    //    if(typeof workOrdersByFilterCache[activeFilter] !== 'undefined'
+    //    && typeof workOrdersByFilterCache[activeFilter].cache !== 'undefined'
+    //    && typeof workOrdersByFilterCache[activeFilter].cache.data !== 'undefined') {
+    //      return true;
+    //    }
+    //  }
+    //};
+    //
+    //var getWorkOrderById = function(id) {
+    //  var deferred = $q.defer();
+    //
+    //  // Preload, if possible.
+    //  if(canPreloadWorkOrder(id)) {
+    //    var preloadWorkOrder;
+    //
+    //    // Try local cache first.
+    //    if(angular.isDefined(workOrderCache[id])) {
+    //      preloadWorkOrder = workOrderCache[id].data;
+    //    } else {
+    //      preloadWorkOrder = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
+    //    }
+    //
+    //    //var preloaded = workOrdersByFilterCache[activeFilter].cache.data.getById(id);
+    //
+    //    // This is a silly hack since it appears to wait to resolve this until the
+    //    // next digest cycle, $rootScope.$apply rejects the call due to current
+    //    // cycle...
+    //    $timeout(function() {
+    //      deferred.notify(preloadWorkOrder);
+    //    }, 0);
+    //
+    //  }
+    //
+    //  // Retrieve and, if necessary, initialize the cache.
+    //  if(!angular.isDefined(workOrderCache[id])) {
+    //    workOrderCache[id] = {};
+    //    workOrderCache[id].promises = [];
+    //    workOrderCache[id].data = {};
+    //    workOrderCache[id].dirty = true;
+    //  }
+    //  var cache = workOrderCache[id];
+    //
+    //  // If data retrieval is pending.
+    //  if(cache.promises.length > 0) {
+    //    cache.promises.push(deferred);
+    //
+    //  // Data has not yet been loaded, so kick it off.
+    //  } else if(!angular.isDefined(cache.data) || cache.dirty) {
+    //    $log.debug('{SVC} Attempting to retrieve WorkOrder.');
+    //    cache.promises.push(deferred);
+    //
+    //    var url = workOrderUrl + '/' + id;
+    //    $http.get(url)
+    //      .success(function(data, status, headers) {
+    //        //$log.info('headers:', data, headers('content-type'))
+    //        if(headers('content-type') === 'text/html;charset=UTF-8') {
+    //          $log.error('{SVC} Rejected invalid response, response not in JSON.');
+    //          while(cache.promises.length) {
+    //            cache.promises.shift().reject(data);
+    //          }
+    //        } else {
+    //          cache.data = new workOrderFactory.factoryObject(data);
+    //          //cache.dirty = false;
+    //          while(cache.promises.length) {
+    //            cache.promises.shift().resolve(cache.data);
+    //          }
+    //        }
+    //      })
+    //      .error(function(data) {
+    //        while(cache.promises.length) {
+    //          cache.promises.shift().reject(data);
+    //        }
+    //      });
+    //  } else {
+    //    deferred.resolve(cache.data);
+    //  }
+    //
+    //  return deferred.promise;
+    //};
+    //
+    //var getWorkOrderNotesById = function(id) {
+    //  return DataProviderFactory.get('PaginatedRestfulDataResource', {
+    //    url: '/work-orders/' + id + '/notes',
+    //    model: 'WorkOrderNoteCollection'
+    //  });
+    //};
+    //
+    //var getWorkOrderLogsById = function(id) {
+    //  return DataProviderFactory.get('PaginatedRestfulDataResource', {
+    //    url: '/work-orders/' + id + '/logs',
+    //    model: 'WorkOrderLogCollection'
+    //  });
+    //};
 
     var postNoteById = function(id, message, visibility) {
       visibility = typeof visibility === 'undefined' ? 'Public' : visibility;
@@ -229,12 +229,20 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return api('WorkOrderCollection', shouldCache).service('work-orders')
     };
 
+    var search = function() {
+      return api('WorkOrderCollection').all('work-orders').all('search')
+    }
+
     var workOrder = function(workOrderId) {
       return api('WorkOrder').service('work-orders').one(workOrderId);
     };
 
     var logs = function(workOrderId) {
       return api('WorkOrderLogCollection').one('work-orders', workOrderId).all('logs')
+    };
+
+    var notes = function(workOrderId) {
+      return api('WorkOrderLogCollection').one('work-orders', workOrderId).all('notes')
     };
 
     var api = function(modelFactory, shouldCache) {
@@ -268,21 +276,23 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       activeWorkOrder: activeWorkOrder,
 
       // Helper Methods:
-      canPreloadWorkOrder: canPreloadWorkOrder,
-      markAllFiltersAsDirty: markAllFiltersAsDirty,
+      //canPreloadWorkOrder: canPreloadWorkOrder,
+      //markAllFiltersAsDirty: markAllFiltersAsDirty,
 
       // Methods:
-      getWorkOrdersWithFilter: getWorkOrdersWithFilter,
-      getWorkOrdersWithSearch: getWorkOrdersWithSearch,
-      getWorkOrder: getWorkOrderById,
-      getWorkOrderLogs: getWorkOrderLogsById,
-      getWorkOrderNotes: getWorkOrderNotesById,
+      //getWorkOrdersWithFilter: getWorkOrdersWithFilter,
+      //getWorkOrdersWithSearch: getWorkOrdersWithSearch,
+      //getWorkOrder: getWorkOrderById,
+      //getWorkOrderLogs: getWorkOrderLogsById,
+      //getWorkOrderNotes: getWorkOrderNotesById,
       postNote: postNoteById,
       postAssignments: postAssignments,
       postAssignMe: postAssignMe,
       api: api,
       WorkOrders: workOrders,
       WorkOrder: workOrder,
-      Logs: logs
+      Logs: logs,
+      Notes: notes,
+      Search: search
     };
   }]);

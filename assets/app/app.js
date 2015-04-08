@@ -82,16 +82,22 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     RestangularProvider.setBaseUrl('http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1');
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
       if(typeof params.refresh !== 'undefined' && params.refresh === true) {
-        httpConfig.cache = false;
+        //$injector.invoke(['$cacheFactory', function($cacheFactory) {
+        //  var cache = $cacheFactory.get('$http');
+        //  console.log(cache)
+        //}])
+        //httpConfig.cache = false;
         delete params.refresh;
       }
 
       if(operation === 'getList') {
-        if(typeof params.limit === 'undefined') {
-          params.limit = 5;
-        }
-        if(typeof params.offset === 'undefined') {
-          params.offset = 0;
+        if(typeof params !== 'string') {
+          if(typeof params.limit === 'undefined') {
+            params.limit = 5;
+          }
+          if(typeof params.offset === 'undefined') {
+            params.offset = 0;
+          }
         }
       }
 
@@ -131,7 +137,11 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                 }
               },
               workOrders: function(WorkOrdersService, currentFilter) {
-                return WorkOrdersService.WorkOrders(true).getList({filter: currentFilter.name});
+                if(typeof currentFilter.terms !== 'undefined') {
+                  return WorkOrdersService.Search().getList({query: currentFilter.terms});
+                } else {
+                  return WorkOrdersService.WorkOrders(true).getList({filter: currentFilter.name});
+                }
               }
             }
           },
@@ -181,9 +191,25 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         views: {
           '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
-            controller: 'WorkOrderAssignController'
+            controller: 'WorkOrderAssignController',
+            resolve: {
+              workOrderId: function($stateParams) {
+                return $stateParams.workOrderId;
+              },
+              workOrder: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.WorkOrder(workOrderId).get();
+              }
+            }
           },
-          'filters@': filters
+          'filters@': {
+            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            controller: 'MainController',
+            resolve: {
+              filters: function(FiltersService) {
+                return FiltersService.api().getList();
+              }
+            }
+          }
         }
       })
       .state('debug', {

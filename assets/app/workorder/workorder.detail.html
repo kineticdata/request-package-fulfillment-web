@@ -83,7 +83,7 @@
         <button class="btn btn-block btn-primary" ng-click="doWorkIt()">Grab It!</button>
       </div>
       <div ng-if="isMine(workOrder)">
-        <work-frame dest="{{workOrderWorkURL}}"></work-frame>
+        <work-frame dest="{{workOrder.workOrderURL}}"></work-frame>
       </div>
     </div>
 
@@ -117,12 +117,11 @@
           </div>
         </div>
 
-        <div ng-repeat="note in workOrderNotesProvider.cache.data.all" class="well-log">
+        <div ng-repeat="note in workOrderNotes" class="well-log">
           <p>{{note.information}}</p>
           <p>Submitted By: {{note.submittedBy}}</p>
         </div>
 
-        <paginated-resource start="internal.notesStartFn" success="internal.notesRtrSuccessFn()" failure="internal.providerFailureFn()" provider="workOrderNotesProvider"></paginated-resource>
       </div>
     </div>
 
