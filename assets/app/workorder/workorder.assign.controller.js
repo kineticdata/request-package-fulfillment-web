@@ -83,7 +83,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       $scope.state.selectMembers = false;
       $scope.state.loadingData = true;
 
-      $scope.currentGroupStructure = $scope.workOrder.groups.slice(0, index);
+      //$scope.currentGroupStructure = $scope.workOrder.groups.slice(0, index);
+      $scope.currentGroupStructure = $scope.currentGroupStructure.slice(0, index);
+      $log.debug('starting assignment here: ', index, $scope.currentGroupStructure)
       var parents = $scope.buildParentsArray($scope.currentGroupStructure);
       AssignmentsService.getAssignmentsByParents(parents).then(
         function(group) {
@@ -135,7 +137,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         id: item.id,
         name: item.name
       };
+      $log.debug('ass1', $scope.currentGroupStructure)
       $scope.currentGroupStructure.push(newGroup);
+      $log.debug('ass2', $scope.currentGroupStructure)
 
       if(item.childrenCount === "0") {
         // Get members, there are no more children.
