@@ -31,11 +31,9 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       ////////////////////////////////////////////
       self.getGroup = function(label) {
         label = typeof label !== 'undefined' ? label : 'Group';
-        var group = _.find(self.groups, function(wog) {
+        return _.find(self.groups, function(wog) {
           return wog.label == label;
         });
-
-        return group;
       };
 
       self.getGroupName = function(label) {
@@ -58,10 +56,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       };
 
       self.isUnassigned = function() {
-        if(self.assignedName === undefined || self.assignedName === null) {
-          return true;
-        }
-        return false;
+        return (self.assignedName === undefined || self.assignedName === null)
       };
 
       self.getAssignedName = function() {
@@ -85,10 +80,7 @@ angular.module('kineticdata.fulfillment.models.workorder', [
 
       self.isOverdue = function() {
         var due = new Date(self.due);
-        if(due < new Date()) {
-          return true;
-        }
-        return false;
+        return (due < new Date());
       }
 
     };
@@ -103,18 +95,16 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       });
 
       self.getById = function(id) {
-        var wo = _.find(self.all, function(workOrder) {
+        return _.find(self.all, function(workOrder) {
           return workOrder.id === id;
         });
-        return wo;
-      }
+      };
 
       self.all.getById = function(id) {
-        var wo = _.find(self.all, function(workOrder) {
+        return _.find(self.all, function(workOrder) {
           return workOrder.id === id;
         });
-        return wo;
-      }
+      };
 
       // Pagination data.
       self.all.meta = {};

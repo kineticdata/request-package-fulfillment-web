@@ -13,7 +13,7 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
   };
 
   directive.link = function(scope) {
-    $log.info('{DIR} Initializing PaginatedResource directive controller.');
+    $log.info('{SimplePaginatedResource} Executing directive linking.');
 
     scope.hasPrev = false;
     scope.hasNext = false;
