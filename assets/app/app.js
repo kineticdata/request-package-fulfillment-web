@@ -70,8 +70,8 @@ angular.module('kineticdata.fulfillment', [
 
 ]);
 
-angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'flashProvider', 'cfpLoadingBarProvider', 'RestangularProvider', '$injector',
-  function($stateProvider, $urlRouterProvider, $httpProvider, flashProvider, cfpLoadingBarProvider, RestangularProvider, $injector) {
+angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'flashProvider', 'cfpLoadingBarProvider', 'RestangularProvider', 'ConfigServiceProvider',
+  function($stateProvider, $urlRouterProvider, $httpProvider, flashProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
     'use strict';
 
     var filters = {
@@ -79,7 +79,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
       controller: 'MainController'
     };
 
-    RestangularProvider.setBaseUrl('http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1');
+    RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
       if(typeof params.refresh !== 'undefined' && params.refresh === true) {
         //$injector.invoke(['$cacheFactory', function($cacheFactory) {
