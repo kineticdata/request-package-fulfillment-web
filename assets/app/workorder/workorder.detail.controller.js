@@ -181,6 +181,13 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         }
       };
 
+      $scope.isMine = function(workOrder) {
+        if(BUNDLE.config.user === $scope.workOrder.assignedId) {
+          return true;
+        }
+        return false;
+      };
+
       $scope.doWorkIt = function() {
         if(BUNDLE.config.user === $scope.workOrder.assignedId) {
           // Work it, just change the tab.
