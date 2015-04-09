@@ -58,14 +58,9 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.services.assignments'
 ]);
 
-angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'flashProvider', 'cfpLoadingBarProvider', 'RestangularProvider', 'ConfigServiceProvider',
-  function($stateProvider, $urlRouterProvider, $httpProvider, flashProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
+angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'cfpLoadingBarProvider', 'RestangularProvider', 'ConfigServiceProvider',
+  function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
     'use strict';
-
-    var filters = {
-      templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
-      controller: 'MainController'
-    };
 
     RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
@@ -92,8 +87,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
       };
     });
 
-    flashProvider.errorClassnames.push('alert-danger');
-
     cfpLoadingBarProvider.includeSpinner = false;
 
     $urlRouterProvider.otherwise('/workorder/default');
@@ -119,11 +112,34 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   return filters.getFilter($stateParams.id);
                 }
               },
-              workOrders: function(WorkOrdersService, currentFilter) {
+              defaultSorting: function() {
+                return {
+                  direction: false,
+                  sortBy: 'id'
+                }
+              },
+              defaultListParams: function(defaultSorting, currentFilter) {
+                var direction = (defaultSorting.direction ? 'ASC' : 'DESC');
+                var order = defaultSorting.sortBy + ' ' + direction;
+                var listParams = {
+                  filter: currentFilter.name,
+                  order: order
+                };
+
                 if(typeof currentFilter.terms !== 'undefined') {
-                  return WorkOrdersService.Search().getList({query: currentFilter.terms});
+                  listParams.query = currentFilter.terms
+                }
+
+                return listParams;
+              },
+              workOrders: function(WorkOrdersService, currentFilter, defaultListParams) {
+                if(typeof currentFilter.terms !== 'undefined') {
+                  // When searching we
+                  var params = angular.copy(defaultListParams);
+                  delete params.filter;
+                  return WorkOrdersService.Search().getList(params);
                 } else {
-                  return WorkOrdersService.WorkOrders(true).getList({filter: currentFilter.name});
+                  return WorkOrdersService.WorkOrders(true).getList(defaultListParams);
                 }
               }
             }

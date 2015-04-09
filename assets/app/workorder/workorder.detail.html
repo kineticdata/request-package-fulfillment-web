@@ -6,13 +6,11 @@
     <li role="presentation">
       <a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">
         NOTES
-        <i ng-show="workOrderNotesLoading" class="fa fa-spinner fa-spin"></i>
       </a>
     </li>
     <li role="presentation">
       <a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">
         LOGS
-        <i ng-show="workOrderLogsLoading" class="fa fa-spinner fa-spin"></i>
       </a>
     </li>
   </ul>
@@ -25,8 +23,11 @@
         <dl class="dl-horizontal">
           <dt>Assigned To</dt>
           <dd>
-            <i class="fa fa-users"></i> {{workOrder.getGroupPath()}} <br />
-            <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
+            <i class="fa fa-users fa-fw"></i> {{workOrder.getGroupPath()}}
+          </dd>
+          <dt></dt>
+          <dd>
+            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i> {{workOrder.getAssignedName()}}
           </dd>
         </dl>
       </div>

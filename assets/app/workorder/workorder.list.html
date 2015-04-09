@@ -1,29 +1,32 @@
 <div class="row">
   <div class="col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
     <span>
-        <!--<div class="dropdown">
-          <button class="btn btn-default btn-md" type="button" data-toggle="dropdown" aria-expander="true" id="workOrderListSort">
-            <i class="fa fa-sort"></i>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">ID</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Request</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Work Order</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Requested For</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Status</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Priority</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Due Date</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="">Assigned To</a></li>
-          </ul>
-        </div>-->
+      <h3 class="text-center">
+        <button class="btn btn-default pull-left" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
+        {{currentFilter.name}}
+        <!--<div class="btn-group" role="group">-->
 
-        <h3>
-          {{currentFilter.name}}
-          <button class="btn btn-default" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
-          <i class="fa fa-spinner fa-spin" ng-if="workOrdersLoading"></i>
-        </h3>
-      </span>
-
+          <div class="dropdown pull-right">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sorting.direction), 'fa-sort-amount-desc': (!sorting.direction) }"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
+              <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sorting.direction" class="fa fa-check"></i></a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sorting.direction" class="fa fa-check"></i></a></li>
+              <li role="presentation" class="divider"></li>
+              <li role="presentation" ng-repeat="sort in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sort.field)">{{sort.name}} <i ng-if="sorting.sortBy === sort.field" class="fa fa-check"></i></a></li>
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Request</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Work Order</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Requested For</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Status</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Priority</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Due Date</a></li>-->
+              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Assigned To</a></li>-->
+            </ul>
+          </div>
+        <!--</div>-->
+      </h3>
+    </span>
 
     <div class="row row-workorder-list" row-hover ng-repeat="workOrder in workOrders">
       <div class="col-md-12" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
@@ -41,15 +44,15 @@
         </div>
 
         <div class="row">
-          <div class="col-md-6 col-xs-6"><i class="fa fa-user"></i>{{workOrder.getGroupName()}}</div>
-          <div class="col-md-6 col-xs-6"><i class="fa fa-bookmark"></i>{{workOrder.status}}</div>
+          <div class="col-md-6 col-xs-6"><i class="fa fa-group fa-fw"></i> {{workOrder.getGroupName()}}</div>
+          <div class="col-md-6 col-xs-6"><i class="fa fa-bookmark fa-fw"></i> {{workOrder.status}}</div>
         </div>
 
         <div class="row">
           <div class="col-md-6 col-xs-6">
-            <i class="fa fa-user" ng-class="{ 'text-danger': workOrder.isUnassigned() }">{{workOrder.getAssignedName()}}</i>
+            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i> {{workOrder.getAssignedName()}}
           </div>
-          <div class="col-md-6 col-xs-6" ng-class="{ 'text-danger': workOrder.isOverdue() }"><i class="fa fa-calendar" ></i>{{workOrder.getNiceDueDate()}}</div>
+          <div class="col-md-6 col-xs-6" ng-class="{ 'text-danger': workOrder.isOverdue() }"><i class="fa fa-calendar fa-fw" ></i> {{workOrder.getNiceDueDate()}}</div>
         </div>
       </div>
     </div>
