@@ -4,27 +4,18 @@
       <h3 class="text-center">
         <button class="btn btn-default pull-left" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
         {{currentFilter.name}}
-        <!--<div class="btn-group" role="group">-->
 
-          <div class="dropdown pull-right">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-              <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sorting.direction), 'fa-sort-amount-desc': (!sorting.direction) }"></i>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
-              <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sorting.direction" class="fa fa-check"></i></a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sorting.direction" class="fa fa-check"></i></a></li>
-              <li role="presentation" class="divider"></li>
-              <li role="presentation" ng-repeat="sort in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sort.field)">{{sort.name}} <i ng-if="sorting.sortBy === sort.field" class="fa fa-check"></i></a></li>
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Request</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Work Order</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Requested For</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Status</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Priority</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Due Date</a></li>-->
-              <!--<li role="presentation"><a role="menuitem" tabindex="-1" href="">Assigned To</a></li>-->
-            </ul>
-          </div>
-        <!--</div>-->
+        <div class="dropdown pull-right">
+          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sorting.direction), 'fa-sort-amount-desc': (!sorting.direction) }"></i>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
+            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sorting.direction" class="fa fa-check"></i></a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sorting.direction" class="fa fa-check"></i></a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation" ng-repeat="sort in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sort.field)">{{sort.name}} <i ng-if="sorting.sortBy === sort.field" class="fa fa-check"></i></a></li>
+          </ul>
+        </div>
       </h3>
     </span>
 
@@ -36,7 +27,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12"><p><strong>{{workOrder.requestName}} / {{workOrder.workOrder}}</strong></p></div>
+          <div class="col-md-12"><p><strong>{{workOrder.workOrder}}</strong></p></div>
         </div>
 
         <div class="row">

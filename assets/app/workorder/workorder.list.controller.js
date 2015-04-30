@@ -20,7 +20,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
 
     $scope.sortOptions = [
       { name: 'ID', field: 'id' },
-      { name: 'Request Name', field: 'requestName' },
       { name: 'Work Order Name', field: 'workOrder' },
       { name: 'Requested For', field: 'requestedFor' },
       { name: 'Status', field: 'status' },
