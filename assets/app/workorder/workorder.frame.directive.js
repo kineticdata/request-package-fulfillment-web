@@ -13,8 +13,9 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
         },
         completed: function() {
           var injector = angular.element($('[ng-app]')).injector();
-          injector.invoke(['$log', '$state', '$timeout', 'WorkOrdersService', function($log, $state, $timeout, wos) {
-            wos.markAllFiltersAsDirty();
+          injector.invoke(['$log', '$state', '$timeout', '$cacheFactory', 'WorkOrdersService', function($log, $state, $timeout, $cacheFactory, wos) {
+            $cacheFactory.get('$http').removeAll();
+
             var filter = (wos.activeFilter===''?'default':wos.activeFilter);
             $timeout(function() {
               $state.go('workorders', { id: filter });
@@ -28,7 +29,7 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
           return;
         }
 
-        $log.debug("Updating work frame URL: " + dest);
+        $log.info('{WorkFrame} Updating work frame URL: ' + dest);
         var frame = $('iframe#workFrame');
         frame.attr('src', dest);
         frame.on('load', function(){

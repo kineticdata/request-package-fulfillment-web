@@ -24,12 +24,17 @@ $(function() {
 });
 
 angular.module('kineticdata.fulfillment', [
+  // Angular
+  'ngAnimate',
+
   // Third Party Dependencies.
   'ui.router',
   'angularMoment',
   'angular-flash.service',
   'angular-flash.flash-alert-directive',
+  'angular-loading-bar',
   'ui.bootstrap',
+  'restangular',
 
   // // Models.
   'kineticdata.fulfillment.models.workorder',
@@ -37,7 +42,7 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.models.assignments',
 
   // // Directives
-  'kineticdata.fulfillment.directives.paginator',
+  'kineticdata.fulfillment.directives.simplepaginator',
   'kineticdata.fulfillment.directives.workframe',
   'kineticdata.fulfillment.directives.rowhover',
   'kineticdata.fulfillment.directives.worktab',
@@ -47,33 +52,42 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.controllers.workorderlist',
   'kineticdata.fulfillment.controllers.workorderdetail',
   'kineticdata.fulfillment.controllers.workorderassign',
-  //'kineticdata.fulfillment.controllers.debug',
-  // 'kineticdata.fulfillment.controllers.login',
-  //
+
   // Services
-  // 'kineticdata.fulfillment.services.auth',
-  // 'kineticdata.fulfillment.services.httpinterceptorfactory'
-  'kineticdata.fulfillment.services.paginateddataprovider',
-  'kineticdata.fulfillment.services.cache',
-  'kineticdata.fulfillment.services.dataproviderfactory',
   'kineticdata.fulfillment.interceptors.auth',
-  'kineticdata.fulfillment.services.assignments',
-
-  // Data Providers
-  'kineticdata.fulfillment.dataproviders.restfuldataresource'
-
+  'kineticdata.fulfillment.services.assignments'
 ]);
 
-angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'flashProvider',
-  function($stateProvider, $urlRouterProvider, $httpProvider, flashProvider) {
+angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterProvider', '$httpProvider', 'cfpLoadingBarProvider', 'RestangularProvider', 'ConfigServiceProvider',
+  function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
     'use strict';
 
-    var filters = {
-      templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
-      controller: 'MainController'
-    };
+    RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
+    RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
+      if(typeof params.refresh !== 'undefined' && params.refresh === true) {
+        delete params.refresh;
+      }
 
-    flashProvider.errorClassnames.push('alert-danger');
+      if(operation === 'getList') {
+        if(typeof params !== 'string') {
+          if(typeof params.limit === 'undefined') {
+            params.limit = 5;
+          }
+          if(typeof params.offset === 'undefined') {
+            params.offset = 0;
+          }
+        }
+      }
+
+      return {
+        element: element,
+        headers: headers,
+        params: params,
+        httpConfig: httpConfig
+      };
+    });
+
+    cfpLoadingBarProvider.includeSpinner = false;
 
     $urlRouterProvider.otherwise('/workorder/default');
     $stateProvider
@@ -82,9 +96,63 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         views: {
           '@': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
-            controller: 'WorkOrderListController'
+            controller: 'WorkOrderListController',
+            resolve: {
+              filters: function(FiltersService) {
+                return FiltersService.api().getList();
+              },
+              currentFilter: function(filters, $stateParams) {
+                if(typeof $stateParams.id === 'undefined') {
+                  return filters.getDefault();
+                } else if($stateParams.id === 'default') {
+                  return filters.getDefault();
+                } else if($stateParams.id === 'search') {
+                  return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
+                } else {
+                  return filters.getFilter($stateParams.id);
+                }
+              },
+              defaultSorting: function() {
+                return {
+                  direction: false,
+                  sortBy: 'id'
+                }
+              },
+              defaultListParams: function(defaultSorting, currentFilter) {
+                var direction = (defaultSorting.direction ? 'ASC' : 'DESC');
+                var order = defaultSorting.sortBy + ' ' + direction;
+                var listParams = {
+                  filter: currentFilter.name,
+                  order: order
+                };
+
+                if(typeof currentFilter.terms !== 'undefined') {
+                  listParams.query = currentFilter.terms
+                }
+
+                return listParams;
+              },
+              workOrders: function(WorkOrdersService, currentFilter, defaultListParams) {
+                if(typeof currentFilter.terms !== 'undefined') {
+                  // When searching we
+                  var params = angular.copy(defaultListParams);
+                  delete params.filter;
+                  return WorkOrdersService.Search().getList(params);
+                } else {
+                  return WorkOrdersService.WorkOrders(true).getList(defaultListParams);
+                }
+              }
+            }
           },
-          'filters@': filters
+          'filters@': {
+            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            controller: 'MainController',
+            resolve: {
+              filters: function(FiltersService) {
+                return FiltersService.api().getList();
+              }
+            }
+          }
         },
 
         module: 'private'
@@ -94,9 +162,25 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         views: {
           '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
-            controller: 'WorkOrderDetailController'
+            controller: 'WorkOrderDetailController',
+            resolve: {
+              workOrderId: function($stateParams) {
+                return $stateParams.workOrderId;
+              },
+              workOrder: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.WorkOrder(workOrderId).get();
+              }
+            }
           },
-          'filters@': filters
+          'filters@': {
+            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            controller: 'MainController',
+            resolve: {
+              filters: function(FiltersService) {
+                return FiltersService.api().getList();
+              }
+            }
+          }
         },
 
         module: 'private'
@@ -106,9 +190,25 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         views: {
           '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
-            controller: 'WorkOrderAssignController'
+            controller: 'WorkOrderAssignController',
+            resolve: {
+              workOrderId: function($stateParams) {
+                return $stateParams.workOrderId;
+              },
+              workOrder: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.WorkOrder(workOrderId).get();
+              }
+            }
           },
-          'filters@': filters
+          'filters@': {
+            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            controller: 'MainController',
+            resolve: {
+              filters: function(FiltersService) {
+                return FiltersService.api().getList();
+              }
+            }
+          }
         }
       })
       .state('debug', {
@@ -130,15 +230,4 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('AuthInterceptor');
-  }])
-  .run(['$log', '$rootScope', '$state', '$stateParams', function($log, $rootScope, $state, $stateParams) {
-    'use strict';
-
-    //$rootScope.$on('$stateChangeStart', function(event, toState) {
-      //if(toState.module == 'private' && !AuthService.authorized()) {
-      //  $log.debug('Private module requiring authentication and not authenticated: ' + toState.name);
-      //  event.preventDefault();
-      //  $state.go('login');
-      //}
-    //});
   }]);

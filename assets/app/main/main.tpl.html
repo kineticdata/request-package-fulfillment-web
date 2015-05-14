@@ -1,5 +1,5 @@
 <ul class="nav nav-pills">
-  <li role="presentation" ng-repeat="filter in filtersProvider.cache.data.all" ng-class="{active: isActiveFilter(filter)}">
+  <li role="presentation" ng-repeat="filter in filters" ng-class="{active: isActiveFilter(filter)}">
     <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
   </li>
 </ul>
