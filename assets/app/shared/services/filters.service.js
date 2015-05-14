@@ -1,22 +1,30 @@
 angular.module('kineticdata.fulfillment.services.filter', [
-  'kineticdata.fulfillment.services.config',
-  'kineticdata.fulfillment.services.dataproviderfactory'
+  'kineticdata.fulfillment.services.config'
 ])
-  .service('FiltersService', ['$q', '$http', '$log', 'ConfigService', 'DataProviderFactory', function($q, $http, $log, ConfigService, DataProviderFactory) {
+  .service('FiltersService', ['$q', '$log', 'ConfigService', 'Restangular', 'ModelFactory', function($q, $log, ConfigService, Restangular, ModelFactory) {
     'use strict';
 
-    //var filterProvider = PaginatedDataProviderFactory.getResourceProvider('/work-orders/filters', 'FilterCollection');
-    var filterProvider = new DataProviderFactory.get('PaginatedRestfulDataResource', {
-      url: '/work-orders/filters',
-      model: 'FilterCollection'
-    });
+    $log.info('{FiltersService} Initializing service.');
 
-    /// Retrieves all filters from the KR server.
-    var getFilters = function() {
-      return filterProvider;
+    var factory = ModelFactory.get('FilterCollection');
+
+    var api = function() {
+      return Restangular.withConfig(function(RestangularConfigurer) {
+        // Set the filters base URL.
+        RestangularConfigurer.setBaseUrl(ConfigService.getBaseUrl() + '/work-orders');
+        RestangularConfigurer.setDefaultHttpFields({cache: true});
+        RestangularConfigurer.addResponseInterceptor(function(data, operation) {
+          if(operation === 'getList') {
+            var newData = new factory.factoryObject(data.filters);
+            return newData.all;
+          }
+
+          return result;
+        });
+      }).service('filters');
     };
 
     return {
-      getFilters: getFilters
+      api: api
     };
   }]);

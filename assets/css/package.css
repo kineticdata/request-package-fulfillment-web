@@ -329,4 +329,11 @@ iframe#workFrame {
 
 .active-workorder {
   background-color: #f5f5f5;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: #428bca;
+}
+
+.white-space {
+  white-space: pre-line;
 }
