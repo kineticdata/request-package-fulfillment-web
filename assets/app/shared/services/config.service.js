@@ -2,8 +2,8 @@ angular.module('kineticdata.fulfillment.services.config', [])
   .provider('ConfigService', function() {
     var self = this;
     self.configs = {};
-    //self.baseUrl = BUNDLE.config.displayPageUrlSlug + 'FulfillmentAPI&call=/api/v1';
-    self.baseUrl = 'http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1';
+    self.baseUrl = BUNDLE.config.displayPageUrlSlug + 'FulfillmentAPI&call=/api/v1';
+    //self.baseUrl = 'http://localhost:8080/kinetic/DisplayPage?name=ACME2-FulfillmentAPI&call=/api/v1';
 
     var service = {
       set: set,
