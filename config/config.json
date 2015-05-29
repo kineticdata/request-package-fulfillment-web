@@ -1,20 +1,20 @@
 {
-    "package": "Package Scaffold",
+    "package": "Fulfillment",
     "languages": {
       "en_US" : "English"
     },
     "views": {
-        "example": {
-            "content": "interface/views/package/exampleView.jsp",
+        "fulfillment_api": {
+            "content": "interface/views/fulfilllment/fulfillment_api.jsp",
             "title": "Example View"
         },
         "workorder": {
-            "content": "interface/views/package/workorder.jsp",
+            "content": "interface/views/fulfillment/workorder.jsp",
             "title": "Workorder View"
         },
         "default": {
-            "content": "interface/views/package/package.jsp",
-            "title": "Fulfillment NG"
+            "content": "interface/views/fulfillment/fulfillment.jsp",
+            "title": "Fulfillment"
         }
     },
     "callbacks": {
@@ -23,13 +23,13 @@
         }
     },
     "links": {
-        "scaffoldPackage": {
+        "fulfillment": {
             "type": "main-menu",
-            "label": "Fulfillment NG",
+            "label": "Fulfillment",
             "class": "package",
-            "description": "Fulfillment NG - Next generation fulfillment.",
+            "description": "Fulfillment",
             "icon": "<i class=\"fa fa-support\"></i>",
-            "displayName": "FulfillmentNG"
+            "displayName": "Fulfillment"
         }
     }
 }

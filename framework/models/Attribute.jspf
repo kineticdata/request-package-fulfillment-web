@@ -1,0 +1,30 @@
+
+<%!
+    public static class Attribute {
+        public static final String FORM_NAME = "KS_ATT_AttributeInstance";
+        public static final String FIELD_PARENT_INSTANCE_ID = "710000078";
+        public static final String FIELD_ATTRIBUTE_TYPE = "710000069";
+        public static final String FIELD_VALUE_VIEWER = "710000073";
+
+        public static final String[] FIELD_IDS = new String[] {
+        	FIELD_PARENT_INSTANCE_ID, FIELD_ATTRIBUTE_TYPE, FIELD_VALUE_VIEWER
+        };
+
+        public static Attribute find(HelperContext context, String qualification) {
+            Attribute result = null;
+            SimpleEntry attributeEntry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
+			if (attributeEntry != null){
+                result = new Attribute(attributeEntry);
+            }
+            return result;
+        }
+		
+        private SimpleEntry entry = null;
+
+        public Attribute(SimpleEntry entry) {
+            this.entry = entry;
+        }
+
+    public String getAttributeValue() {return entry.getEntryFieldValue(FIELD_VALUE_VIEWER);}
+    }
+%>

@@ -1,0 +1,132 @@
+<%!
+    public static class WorkOrderLog {
+        public static final String FORM_NAME = "KAPP_Fulfillment_WorkOrder_LogEntry";
+        public static final String FIELD_WORKORDER_ID = "740000020";
+        public static final String FIELD_CREATE_DATE = "3";
+        public static final String FIELD_STATUS = "7";
+        public static final String FIELD_START_DATE = "740000023";
+        public static final String FIELD_END_DATE = "740000024";
+        public static final String FIELD_ASSIGNEE_ID = "740000022";
+        public static final String FIELD_LOG_TYPE = "740000025";
+        public static final String FIELD_ASSIGNMENT_STATUS = "740000026";
+        public static final String FIELD_LOG = "740000021";
+        public static final String FIELD_LOG_ID = "1";
+        public static final String[] FIELD_IDS = new String[] {
+            FIELD_CREATE_DATE,FIELD_WORKORDER_ID,FIELD_ASSIGNEE_ID,FIELD_LOG,FIELD_LOG_TYPE,
+            FIELD_ASSIGNMENT_STATUS,FIELD_START_DATE,FIELD_END_DATE,FIELD_LOG_ID
+        };
+
+        private SimpleEntry entry = null;
+        
+        public static int count(HelperContext context, String workOrderId) {
+            String qualification = "'Work Order ID'=\""+workOrderId+"\"";
+            return ArsBase.count(context, FORM_NAME, qualification);
+        }
+
+        public static WorkOrderLog[] findByWorkOrderID(HelperContext context, String workOrderID) {
+            WorkOrderLog[] results = new WorkOrderLog[0];
+            String qualification = "'Work Order ID'=\""+workOrderID+"\"";
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLog[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLog(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static WorkOrderLog findOpenByWorkOrderIDandType(HelperContext context, String workOrderID, String logType) {
+            WorkOrderLog result = null;
+            String qualification = "'Work Order ID'=\""+workOrderID+"\" AND 'Log Type' = \""+ logType+"\" AND 'Status' = \"Open\"";
+            SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entry != null) {
+                result = new WorkOrderLog(entry);
+            }
+            return result;
+        }
+
+        public static WorkOrderLog[] find(HelperContext context, String workOrderID, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            WorkOrderLog[] results = new WorkOrderLog[0];
+            String qualification = "'Work Order ID'=\""+workOrderID+"\"";
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLog[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLog(entries[i]);
+                }
+            }
+
+            return results;
+        }
+        
+        public WorkOrderLog(SimpleEntry entry) {
+            this.entry = entry;
+        }
+
+    public static void saveLog(HelperContext context, String workOrderID, String assignee, String assignmentStatus, String logDetails, String logType, String startTime) {
+        WorkOrderLog originalRecord = findOpenByWorkOrderIDandType(context, workOrderID, logType);
+        System.out.println("start Date " + startTime);
+
+        // Update The Assignment record with new Assignee
+            SimpleEntry entrySave = new SimpleEntry();
+            entrySave.setSchemaName(FORM_NAME);
+            entrySave.setEntryItems(new Hashtable());
+            entrySave.setEntryFieldValue(FIELD_WORKORDER_ID, workOrderID);
+            entrySave.setEntryFieldValue(FIELD_ASSIGNEE_ID, assignee);
+            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_STATUS, assignmentStatus);
+            entrySave.setEntryFieldValue(FIELD_LOG, logDetails);
+            entrySave.setEntryFieldValue(FIELD_LOG_TYPE, logType);
+            entrySave.setEntryFieldValue(FIELD_START_DATE, startTime);
+            if (logType == "Assignment" || logType == "Status") {
+                entrySave.setEntryFieldValue(FIELD_STATUS, "Open");
+            } else {
+                entrySave.setEntryFieldValue(FIELD_STATUS, "Closed");
+            }
+
+            // Build the helper
+            ArsHelper helper = null;
+            try {
+                helper = new ArsHelper(context, FORM_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
+            }
+
+            try {
+                helper.doSetSimpleEntry(entrySave);
+            } catch (Exception e) {
+                throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
+            }
+
+            //if this is an assignment, update the open record to closed
+            // Retrieve Current log record
+            if (logType == "Assignment" || logType == "Status") {
+
+            if (originalRecord != null) {
+                SimpleEntry entryUpdate = new SimpleEntry(); 
+                entryUpdate.setSchemaName(FORM_NAME);
+                entryUpdate.setEntryItems(new Hashtable());
+                entryUpdate.setEntryFieldValue("1", originalRecord.getLogID());
+                entryUpdate.setEntryFieldValue(FIELD_STATUS, "Closed");
+                entryUpdate.setEntryFieldValue(FIELD_END_DATE, startTime);
+
+                try {
+                    helper.doSetSimpleEntry(entryUpdate);
+                } catch (Exception e) {
+                    throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
+                }
+            }
+        }
+    }    
+        
+
+        public String getDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getStartDate() {return entry.getEntryFieldValue(FIELD_START_DATE);}
+        public String getEndDate() {return entry.getEntryFieldValue(FIELD_END_DATE);}
+        public String getAssigneeID() {return entry.getEntryFieldValue(FIELD_ASSIGNEE_ID);}
+        public String getLog() {return entry.getEntryFieldValue(FIELD_LOG);}
+        public String getLogID() {return entry.getEntryFieldValue(FIELD_LOG_ID);}
+        public String getLogType() {return entry.getEntryFieldValue(FIELD_LOG_TYPE);}
+    }
+%>

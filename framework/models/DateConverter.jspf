@@ -1,0 +1,101 @@
+<%!
+    public static class DateConverter {
+        private String dateString;
+
+        public DateConverter(String dateString) {
+            this.dateString = dateString;
+        }
+
+
+        public static String getIso8601(String dateString) {
+            // Using regexes to determine what type of date format the inputted date string is
+            String iso8601;
+            
+            // First check for the valid formats for dates with no time
+            if (dateString.matches("\\d{4}-\\d{1,2}-\\d{1,2}")) {
+                // Format = MM-DD-YYYY
+                iso8601 = getIso8601Date(dateString, "yyy-MM-dd");
+            } 
+            else if (dateString.matches("\\d{4}\\/\\d{1,2}\\/\\d{1,2}")) {
+                // Format = MM/DD/YYYY
+                iso8601 = getIso8601Date(dateString, "yyyy/MM/dd");
+            } 
+            // Next, checking for valid formats of both date and time, where the
+            // time only has hours and minutes (no seconds)
+            else if (dateString.matches("\\d{1,2}-\\d{1,2}-\\d{4} \\d{1,2}:\\d{2}")) {
+                // Format = MM-DD-YYYY
+                iso8601 = getIso8601DateAndTime(dateString, "MM-dd-yyyy HH:mm");
+            } 
+            else if (dateString.matches("\\d{1,2}-\\d{1,2}-\\d{2} \\d{1,2}:\\d{2}")) {
+                // Format = MM-DD-YY
+                iso8601 = getIso8601DateAndTime(dateString, "MM-dd-yy HH:mm");
+            } 
+            else if (dateString.matches("\\d{1,2}\\/\\d{1,2}\\/\\d{4} \\d{1,2}:\\d{2}")) {
+                // Format = MM/DD/YYYY
+                iso8601 = getIso8601DateAndTime(dateString, "MM/dd/yyyy HH:mm");
+            } 
+            else if (dateString.matches("\\d{1,2}\\/\\d{1,2}\\/\\d{2} \\d{1,2}:\\d{2}")) {
+                // Format = MM/DD/YY
+                iso8601 = getIso8601DateAndTime(dateString, "MM/dd/yyyy HH:mm");
+            }
+            // Next checking for valid formats of both date and time, where the
+            // time has hour, minutes and seconds
+            else if (dateString.matches("\\d{1,2}-\\d{1,2}-\\d{4} \\d{1,2}:\\d{2}:\\d{2}")) {
+                // Format = MM-DD-YYYY
+                iso8601 = getIso8601DateAndTime(dateString, "MM-dd-yyyy HH:mm:ss");
+            } 
+            else if (dateString.matches("\\d{1,2}-\\d{1,2}-\\d{2} \\d{1,2}:\\d{2}:\\d{2}")) {
+                // Format = MM-DD-YY
+                iso8601 = getIso8601DateAndTime(dateString, "MM-dd-yy HH:mm:ss");
+            } 
+            else if (dateString.matches("\\d{1,2}\\/\\d{1,2}\\/\\d{4} \\d{1,2}:\\d{2}:\\d{2}")) {
+                // Format = MM/DD/YYYY
+                iso8601 = getIso8601DateAndTime(dateString, "MM/dd/yyyy HH:mm:ss");
+            } 
+            else if (dateString.matches("\\d{1,2}\\/\\d{1,2}\\/\\d{2} \\d{1,2}:\\d{2}:\\d{2}")) {
+                // Format = MM/DD/YY
+                iso8601 = getIso8601DateAndTime(dateString, "MM/dd/yyyy HH:mm:ss");
+            }
+            // Finally, throw an error if it doesn't match any of these
+            else {
+                iso8601 = dateString;
+            }
+            
+            return iso8601;
+        }
+        
+        public String getIso8601() {
+            return getIso8601(this.dateString);
+        }
+
+        private static String getIso8601Date(String dateString, String dateFormat) {
+            SimpleDateFormat parser = new SimpleDateFormat(dateFormat);
+
+            Date date = null;
+            try {
+                date = parser.parse(dateString);
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T00:00:00.000Z'");
+
+            return formatter.format(date);
+        }
+
+        private static String getIso8601DateAndTime(String dateString, String dateFormat) {
+            SimpleDateFormat parser = new SimpleDateFormat(dateFormat);
+                        
+            Date date = null;
+            try {
+                date = parser.parse(dateString);
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            
+            return formatter.format(date);
+        }
+    }
+%>

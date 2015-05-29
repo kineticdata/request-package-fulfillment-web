@@ -1,0 +1,327 @@
+<%!
+    /**
+     * Custom KAPP_Fulfillment_WorkOrder_CustomerSurvey_join model to satisfy the requirements of the fulfillment console
+     */
+    public static class FulfillmentConsole {
+        public static final String SAVE_FORM_NAME = "KAPP_Fulfillment_WorkOrder";
+        public static final String FORM_NAME = "KAPP_Fulfillment_WorkOrder_CustomerSurvey_join";
+        public static final String FIELD_CREATE_DATE = "3";
+        public static final String FIELD_MODIFIED_DATE = "6";
+        public static final String FIELD_REQUEST_SUBMISSION_DATE = "740000009";
+        public static final String FIELD_DATE_ONLY = "740000015";
+        public static final String FIELD_PRIORITY = "740000016";
+        public static final String FIELD_STATUS = "7";
+        public static final String FIELD_ASSIGNMENT_STATUS = "740000017";
+		public static final String FIELD_BASE_STATUS = "536870916";
+        public static final String FIELD_NAME = "8";
+        public static final String FIELD_ASSIGNMENT_ID = "536870914";
+                
+        // Username
+        public static final String FIELD_ASSIGNED_INDIVIDUAL_ID = "740000001";
+        public static final String FIELD_ASSIGNED_INDIVIDUAL_FIRST_NAME = "740000002";
+        public static final String FIELD_ASSIGNED_INDIVIDUAL_LAST_NAME = "740000014";
+        public static final String FIELD_ASSIGNED_GROUP_ID = "740000003";
+        public static final String FIELD_ASSIGNED_GROUP_NAME = "740000004";
+        // Application
+        public static final String FIELD_SYSTEM = "740000006";
+        // Usually the request ID
+        public static final String FIELD_SOURCE_ID = "740000007";
+        // Usually the instance ID of the request
+        public static final String FIELD_SOURCE_GUID = "740000008";
+        // Usually the template name of the request
+        public static final String FIELD_WORK_ORDER_NAME = "740000013";
+        public static final String FIELD_ORGANIZATION = "740000011";
+        public static final String FIELD_COMPANY = "740000010";
+        public static final String FIELD_CATALOG = "740000012";
+        public static final String FIELD_SUBMITTER = "2";
+        public static final String FIELD_ASSIGNED_TO = "4";
+        public static final String FIELD_LAST_MODIFIED_BY = "5";
+        public static final String FIELD_FIRST_NAME = "400007300";
+        public static final String FIELD_LAST_NAME = "400007500";
+        public static final String FIELD_CONTACT_ID = "400068300";
+        public static final String FIELD_ORIGINATING_FORM = "600000300";
+        public static final String FIELD_ORIGINATING_ID_DISPLAY = "700088607";
+        public static final String FIELD_SUMMARY = "740000019";
+        public static final String FIELD_INFORMATION = "740000020";
+        //Attributes
+        public static final String FIELD_ATTRIBUTE1 = "300299400";
+        public static final String FIELD_ATTRIBUTE2 = "300299500";
+        public static final String FIELD_ATTRIBUTE3 = "300299600";
+        public static final String FIELD_ATTRIBUTE4 = "300299700";
+        public static final String FIELD_ATTRIBUTE5 = "300299800";
+        public static final String FIELD_ATTRIBUTE6 = "700001806";
+        public static final String FIELD_ATTRIBUTE7 = "700001807";
+        public static final String FIELD_ATTRIBUTE8 = "700001808";
+        public static final String FIELD_ATTRIBUTE9 = "700001809";
+        public static final String FIELD_ATTRIBUTE10 = "700001810";
+        public static final String FIELD_ATTRIBUTE11 = "700001811";
+        public static final String FIELD_ATTRIBUTE12 = "700001812";
+        public static final String FIELD_ATTRIBUTE13 = "700001813";
+        public static final String FIELD_ATTRIBUTE14 = "700001814";
+        public static final String FIELD_ATTRIBUTE15 = "700001815";
+        public static final String FIELD_ATTRIBUTE16 = "700001816";
+        public static final String FIELD_ATTRIBUTE17 = "700001817";
+        public static final String FIELD_ATTRIBUTE18 = "700001818";
+        public static final String FIELD_ATTRIBUTE19 = "700001819";
+        public static final String FIELD_ATTRIBUTE20 = "700001820";
+        public static final String FIELD_ATTRIBUTE21 = "700001821";
+        public static final String FIELD_ATTRIBUTE22 = "700001822";
+        public static final String FIELD_ATTRIBUTE23 = "700001823";
+        public static final String FIELD_ATTRIBUTE24 = "700001824";
+        public static final String FIELD_ATTRIBUTE25 = "700001825";
+        public static final String FIELD_ATTRIBUTE26 = "700001826";
+        public static final String FIELD_ATTRIBUTE27 = "700001827";
+        public static final String FIELD_ATTRIBUTE28 = "700001828";
+        public static final String FIELD_ATTRIBUTE29 = "700001829";
+        public static final String FIELD_ATTRIBUTE30 = "700001830";
+        public static final String FIELD_ATTRIBUTE31 = "700001831";
+        public static final String FIELD_ATTRIBUTE32 = "700001832";
+        public static final String FIELD_ATTRIBUTE33 = "700001833";
+        public static final String FIELD_ATTRIBUTE34 = "700001834";
+        public static final String FIELD_ATTRIBUTE35 = "700001835";
+        public static final String FIELD_ATTRIBUTE36 = "700001836";
+        public static final String FIELD_ATTRIBUTE37 = "700001837";
+        public static final String FIELD_ATTRIBUTE38 = "700001838";
+        public static final String FIELD_ATTRIBUTE39 = "700001839";
+        public static final String FIELD_ATTRIBUTE40 = "700001840";
+        public static final String FIELD_ATTRIBUTE41 = "700001841";
+        public static final String FIELD_ATTRIBUTE42 = "700001842";
+        public static final String FIELD_ATTRIBUTE43 = "700001843";
+        public static final String FIELD_ATTRIBUTE44 = "700001844";
+        public static final String FIELD_ATTRIBUTE45 = "700001845";
+        public static final String FIELD_ATTRIBUTE46 = "700001846";
+        public static final String FIELD_ATTRIBUTE47 = "700001847";
+        public static final String FIELD_ATTRIBUTE48 = "700001848";
+        public static final String FIELD_ATTRIBUTE49 = "700001849";
+        public static final String FIELD_ATTRIBUTE50 = "700001850";
+        public static final String FIELD_ATTRIBUTE51 = "700001851";
+        public static final String FIELD_ATTRIBUTE52 = "700001852";
+        public static final String FIELD_ATTRIBUTE53 = "700001853";
+        public static final String FIELD_ATTRIBUTE54 = "700001854";
+        public static final String FIELD_ATTRIBUTE55 = "700001855";
+        public static final String FIELD_ATTRIBUTE56 = "700001856";
+        public static final String FIELD_ATTRIBUTE57 = "700001857";
+        public static final String FIELD_ATTRIBUTE58 = "700001858";
+        public static final String FIELD_ATTRIBUTE59 = "536870977";
+        public static final String FIELD_ATTRIBUTE60 = "700001860";
+        public static final String FIELD_ATTRIBUTE61 = "700001861";
+        public static final String FIELD_ATTRIBUTE62 = "700001862";
+        public static final String FIELD_ATTRIBUTE63 = "700001863";
+        public static final String FIELD_ATTRIBUTE64 = "700001864";
+
+        // Used to retrieve desired fields
+        public static final String[] FIELD_IDS = new String[] {FIELD_CREATE_DATE, FIELD_MODIFIED_DATE, FIELD_REQUEST_SUBMISSION_DATE, FIELD_DATE_ONLY, FIELD_STATUS, FIELD_BASE_STATUS, FIELD_ASSIGNMENT_STATUS, FIELD_PRIORITY,
+            FIELD_NAME, FIELD_ASSIGNMENT_ID, FIELD_ASSIGNED_INDIVIDUAL_ID, FIELD_ASSIGNED_INDIVIDUAL_FIRST_NAME, FIELD_ASSIGNED_INDIVIDUAL_LAST_NAME,
+            FIELD_ASSIGNED_GROUP_ID, FIELD_ASSIGNED_GROUP_NAME, FIELD_SYSTEM, FIELD_SOURCE_ID, FIELD_SOURCE_GUID, FIELD_WORK_ORDER_NAME,
+            FIELD_ORGANIZATION, FIELD_COMPANY, FIELD_CATALOG, FIELD_SUBMITTER, FIELD_ASSIGNED_TO, FIELD_LAST_MODIFIED_BY, FIELD_FIRST_NAME, FIELD_LAST_NAME, FIELD_ORIGINATING_FORM, FIELD_ORIGINATING_ID_DISPLAY, FIELD_SUMMARY, FIELD_INFORMATION,
+            FIELD_ATTRIBUTE1, FIELD_ATTRIBUTE2, FIELD_ATTRIBUTE3, FIELD_ATTRIBUTE4, FIELD_ATTRIBUTE5, FIELD_ATTRIBUTE6, FIELD_ATTRIBUTE7, FIELD_ATTRIBUTE8, FIELD_ATTRIBUTE9, FIELD_ATTRIBUTE10, FIELD_ATTRIBUTE11, FIELD_ATTRIBUTE12, 
+			FIELD_ATTRIBUTE13, FIELD_ATTRIBUTE14, FIELD_ATTRIBUTE15, FIELD_ATTRIBUTE16, FIELD_ATTRIBUTE17, FIELD_ATTRIBUTE18, FIELD_ATTRIBUTE19, FIELD_ATTRIBUTE20, FIELD_ATTRIBUTE21, FIELD_ATTRIBUTE22, FIELD_ATTRIBUTE23, FIELD_ATTRIBUTE24, 
+			FIELD_ATTRIBUTE25, FIELD_ATTRIBUTE26, FIELD_ATTRIBUTE27, FIELD_ATTRIBUTE28, FIELD_ATTRIBUTE29, FIELD_ATTRIBUTE30, FIELD_ATTRIBUTE31, FIELD_ATTRIBUTE32, FIELD_ATTRIBUTE33, FIELD_ATTRIBUTE34, FIELD_ATTRIBUTE35, FIELD_ATTRIBUTE36, 
+			FIELD_ATTRIBUTE37, FIELD_ATTRIBUTE38, FIELD_ATTRIBUTE39, FIELD_ATTRIBUTE40, FIELD_ATTRIBUTE41, FIELD_ATTRIBUTE42, FIELD_ATTRIBUTE43, FIELD_ATTRIBUTE44, FIELD_ATTRIBUTE45, FIELD_ATTRIBUTE46, FIELD_ATTRIBUTE47, FIELD_ATTRIBUTE48, 
+			FIELD_ATTRIBUTE49, FIELD_ATTRIBUTE50, FIELD_ATTRIBUTE51, FIELD_ATTRIBUTE52, FIELD_ATTRIBUTE53, FIELD_ATTRIBUTE54, FIELD_ATTRIBUTE55, FIELD_ATTRIBUTE56, FIELD_ATTRIBUTE57, FIELD_ATTRIBUTE58, FIELD_ATTRIBUTE59, FIELD_ATTRIBUTE60, 
+			FIELD_ATTRIBUTE61, FIELD_ATTRIBUTE62, FIELD_ATTRIBUTE63, FIELD_ATTRIBUTE64};
+
+        private SimpleEntry entry = null;
+        private Task[] tasks;
+        private Map<String,List<Task>> taskTreeExecutions;
+
+        // Constructor
+        public FulfillmentConsole(SimpleEntry entry) { this.entry = entry; }
+
+        public static FulfillmentConsole[] find(HelperContext context, String qualification, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            FulfillmentConsole[] results = new FulfillmentConsole[0];
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new FulfillmentConsole[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new FulfillmentConsole(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static FulfillmentConsole findByInstanceId(HelperContext context, String id) {
+            FulfillmentConsole result = null;
+
+            SimpleEntry entry = ArsBase.findByInstanceId(context, FORM_NAME, id, FIELD_IDS);
+            if (entry != null) {
+                result = new FulfillmentConsole(entry);
+            }
+
+            return result;
+        }
+
+        /**
+         * Save the loginName as the new assignee for the assignment record. 
+         */ 
+        public static boolean saveAssignee(HelperContext context, String assignmentId, String loginId, String groupId, String groupName) {
+            // Assume save fails
+            boolean result = false;
+			PersonBridge personInfo = PersonBridge.findbyUserId(context, "KS3cb8f26b156644dce76230da85e45aa5c", loginId);
+
+            // Retrieve Current Assignment record
+            FulfillmentConsole originalRecord = FulfillmentConsole.findByInstanceId(context, assignmentId);
+
+            // Update The Assignment record with new Assignee
+            SimpleEntry entrySave = new SimpleEntry();
+            entrySave.setSchemaName(SAVE_FORM_NAME);
+            entrySave.setEntryItems(new Hashtable());
+            entrySave.setEntryFieldValue("1", assignmentId);
+            entrySave.setEntryFieldValue(FIELD_STATUS, "Assigned"); 
+            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_STATUS, "Assigned");          
+            entrySave.setEntryFieldValue(FIELD_ASSIGNED_INDIVIDUAL_ID, loginId);
+            entrySave.setEntryFieldValue(FIELD_ASSIGNED_INDIVIDUAL_FIRST_NAME, personInfo.getFirstName());
+            entrySave.setEntryFieldValue(FIELD_ASSIGNED_INDIVIDUAL_LAST_NAME, personInfo.getLastName());
+             
+            if (groupId != null && groupId.length() > 0) {
+                entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, groupId);
+                entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, groupName);
+            }       
+            // Build the helper
+            ArsHelper helper = null;
+            try {
+                helper = new ArsHelper(context, SAVE_FORM_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
+            }
+
+            try {
+                helper.doSetSimpleEntry(entrySave);
+            } catch (Exception e) {
+                throw new RuntimeException("There was a problem saving the " + SAVE_FORM_NAME + " record.", e);
+            }
+            
+            result = true;
+            
+            return result;
+       }
+
+        public String getCreateDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getModifiedDate() {return entry.getEntryFieldValue(FIELD_MODIFIED_DATE);}
+        public String getDateOnly() {return entry.getEntryFieldValue(FIELD_DATE_ONLY);}
+        public String getStatus() {return entry.getEntryFieldValue(FIELD_STATUS);}
+        public String getPriority() {return entry.getEntryFieldValue(FIELD_PRIORITY);}
+        public String getAssignmentStatus() {return entry.getEntryFieldValue(FIELD_ASSIGNMENT_STATUS);}
+		public String getBaseStatus() {return entry.getEntryFieldValue(FIELD_BASE_STATUS);}
+        public String getName() {return entry.getEntryFieldValue(FIELD_NAME);}
+        public String getFirstName() {return entry.getEntryFieldValue(FIELD_FIRST_NAME);}
+        public String getLastName() {return entry.getEntryFieldValue(FIELD_LAST_NAME);}
+
+        private static Map<String, String> JSON_FIELDMAP = new HashMap<String, String>() {{
+            put("Created", FIELD_CREATE_DATE);
+            put("Modified", FIELD_MODIFIED_DATE);
+            put("Request", FIELD_ORIGINATING_FORM);
+            put("Work Order Name", FIELD_WORK_ORDER_NAME);
+            put("Request Submission Date", FIELD_REQUEST_SUBMISSION_DATE);
+            put("Due Date", FIELD_DATE_ONLY);
+            put("Priority", FIELD_PRIORITY);
+            put("Assigned Group", FIELD_ASSIGNED_GROUP_NAME);
+            put("Assigned To", FIELD_ASSIGNED_INDIVIDUAL_FIRST_NAME);
+            put("Status", FIELD_STATUS);
+            put("Assignment Status", FIELD_ASSIGNMENT_STATUS);
+			put("Base Status", FIELD_BASE_STATUS);
+            put("Originating Request Id", FIELD_ORIGINATING_ID_DISPLAY);
+            put("Assignment Id", FIELD_ASSIGNMENT_ID);
+            put("Assigned Group Id", FIELD_ASSIGNED_GROUP_ID);
+            put("Assigned Individual Id", FIELD_ASSIGNED_INDIVIDUAL_ID);
+            put("Assigned Individual Last Name", FIELD_ASSIGNED_INDIVIDUAL_LAST_NAME);
+            put("Source GUID", FIELD_SOURCE_GUID);
+            put("Requested For", FIELD_FIRST_NAME);
+            put("Request For Last Name", FIELD_LAST_NAME);
+            put("Request For Username", FIELD_CONTACT_ID);
+            put("Summary", FIELD_SUMMARY);
+            put("Information", FIELD_INFORMATION);
+            put("Attribute1", FIELD_ATTRIBUTE1);
+            put("Attribute2", FIELD_ATTRIBUTE2);
+            put("Attribute3", FIELD_ATTRIBUTE3);
+            put("Attribute4", FIELD_ATTRIBUTE4);
+            put("Attribute5", FIELD_ATTRIBUTE5);
+            put("Attribute6", FIELD_ATTRIBUTE6);
+            put("Attribute7", FIELD_ATTRIBUTE7);
+            put("Attribute8", FIELD_ATTRIBUTE8);
+            put("Attribute9", FIELD_ATTRIBUTE9);
+            put("Attribute10", FIELD_ATTRIBUTE10);
+            put("Attribute11", FIELD_ATTRIBUTE11);
+            put("Attribute12", FIELD_ATTRIBUTE12);
+            put("Attribute13", FIELD_ATTRIBUTE13);
+            put("Attribute14", FIELD_ATTRIBUTE14);
+            put("Attribute15", FIELD_ATTRIBUTE15);
+            put("Attribute16", FIELD_ATTRIBUTE16);
+            put("Attribute17", FIELD_ATTRIBUTE17);
+            put("Attribute18", FIELD_ATTRIBUTE18);
+            put("Attribute19", FIELD_ATTRIBUTE19);
+            put("Attribute20", FIELD_ATTRIBUTE20);
+            put("Attribute21", FIELD_ATTRIBUTE21);
+            put("Attribute22", FIELD_ATTRIBUTE22);
+            put("Attribute23", FIELD_ATTRIBUTE23);
+            put("Attribute24", FIELD_ATTRIBUTE24);
+            put("Attribute25", FIELD_ATTRIBUTE25);
+            put("Attribute26", FIELD_ATTRIBUTE26);
+            put("Attribute27", FIELD_ATTRIBUTE27);
+            put("Attribute28", FIELD_ATTRIBUTE28);
+            put("Attribute29", FIELD_ATTRIBUTE29);
+            put("Attribute30", FIELD_ATTRIBUTE30);
+            put("Attribute31", FIELD_ATTRIBUTE31);
+            put("Attribute32", FIELD_ATTRIBUTE32);
+            put("Attribute33", FIELD_ATTRIBUTE33);
+            put("Attribute34", FIELD_ATTRIBUTE34);
+            put("Attribute35", FIELD_ATTRIBUTE35);
+            put("Attribute36", FIELD_ATTRIBUTE36);
+            put("Attribute37", FIELD_ATTRIBUTE37);
+            put("Attribute38", FIELD_ATTRIBUTE38);
+            put("Attribute39", FIELD_ATTRIBUTE39);
+            put("Attribute40", FIELD_ATTRIBUTE40);
+            put("Attribute41", FIELD_ATTRIBUTE41);
+            put("Attribute42", FIELD_ATTRIBUTE42);
+            put("Attribute43", FIELD_ATTRIBUTE43);
+            put("Attribute44", FIELD_ATTRIBUTE44);
+            put("Attribute45", FIELD_ATTRIBUTE45);
+            put("Attribute46", FIELD_ATTRIBUTE46);
+            put("Attribute47", FIELD_ATTRIBUTE47);
+            put("Attribute48", FIELD_ATTRIBUTE48);
+            put("Attribute49", FIELD_ATTRIBUTE49);
+            put("Attribute50", FIELD_ATTRIBUTE50);
+            put("Attribute51", FIELD_ATTRIBUTE51);
+            put("Attribute52", FIELD_ATTRIBUTE52);
+            put("Attribute53", FIELD_ATTRIBUTE53);
+            put("Attribute54", FIELD_ATTRIBUTE54);
+            put("Attribute55", FIELD_ATTRIBUTE55);
+            put("Attribute56", FIELD_ATTRIBUTE56);
+            put("Attribute57", FIELD_ATTRIBUTE57);
+            put("Attribute58", FIELD_ATTRIBUTE58);
+            put("Attribute59", FIELD_ATTRIBUTE59);
+            put("Attribute60", FIELD_ATTRIBUTE60);
+            put("Attribute61", FIELD_ATTRIBUTE61);
+            put("Attribute62", FIELD_ATTRIBUTE62);
+            put("Attribute63", FIELD_ATTRIBUTE63);
+            put("Attribute64", FIELD_ATTRIBUTE64);
+        }};
+
+        public String toJson() {
+            // Build linked hash map for JSON conversion
+            Map<String, String> result = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> element : JSON_FIELDMAP.entrySet()) {
+                String fieldAlias = element.getKey();
+                String fieldId = element.getValue();
+                String fieldValue = null;
+                if(fieldAlias.equals("Requested For")) {
+                    // Append first name and last name for requested for
+                    fieldValue = this.getFirstName() + " " + this.getLastName();
+                } else {
+                    if(!entry.getEntryFieldValue(fieldId).equals("")) {
+                        fieldValue = entry.getEntryFieldValue(fieldId);
+                    }
+                }
+                result.put(fieldAlias, fieldValue);
+            }
+            result.put("assignedFullName", entry.getEntryFieldValue(FIELD_ASSIGNED_INDIVIDUAL_FIRST_NAME) + " " + entry.getEntryFieldValue(FIELD_ASSIGNED_INDIVIDUAL_LAST_NAME));
+            return JSONValue.toJSONString(result);
+        }
+
+        public static String getSortFieldId(String fieldName) {
+            return JSON_FIELDMAP.get(fieldName);
+        }
+    }
+%>

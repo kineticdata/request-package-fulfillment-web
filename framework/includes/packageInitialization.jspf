@@ -30,6 +30,7 @@
       <%@include file="../helpers/LanguageHelper.jspf
       <%@include file="../helpers/PackageHelper.jspf
 --%>
+<%@include file="../helpers/PackageHelper.jspf" %>
 <%@include file="../../../../common/framework/helpers/PathHelper.jspf" %>
 
 <%--
@@ -50,6 +51,7 @@
     package URL paths can be made relative to the current bundle/package without
     hard coding in the name of the bundle or package).
 --%>
+<% PackageHelper packageHelper = new PackageHelper(bundle); %>
 <% PathHelper pathHelper = new PathHelper(bundle); %>
 
 <%--
@@ -59,3 +61,42 @@
 
 <%-- Include the package language initialization file. --%>
 <%@include file="languageInitialization.jspf" %>
+
+<%--
+    Import the classes that will be used for fulfillment API
+--%>
+<%@page import="org.json.simple.JSONObject" %>
+<%@page import="org.json.simple.JSONValue" %>
+<%@page import="org.json.simple.JSONArray" %>
+<%@page import="org.apache.commons.io.IOUtils" %>
+<%@page import="java.net.URLDecoder" %>
+<%@page import="java.util.Map" %>
+<%@page import="java.util.LinkedHashMap" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="java.util.regex.Matcher" %>
+<%@page import="java.util.regex.Pattern" %>
+<%@page import="java.text.SimpleDateFormat" %>
+<%@page import="com.kineticdata.core.v1.utils.JsonUtils"%>
+<%@page import="org.apache.commons.fileupload.FileItem"%>
+<%@page import="org.apache.commons.fileupload.servlet.ServletFileUpload"%>
+<%@page import="org.apache.commons.fileupload.disk.DiskFileItemFactory"%>
+<%@page import="org.apache.commons.fileupload.FileUploadException"%>
+<%@page import="org.apache.commons.io.FilenameUtils"%>
+
+<%--
+    Import the models that will be used for fulfillment API
+--%>
+<%@include file="../models/DateConverter.jspf" %>
+<%@include file="../models/WorkOrder.jspf"%>
+<%@include file="../models/WorkOrderLog.jspf"%>
+<%@include file="../models/Attribute.jspf" %>
+<%@include file="../models/FulfillmentConsole.jspf"%>
+<%@include file="../models/PersonBridge.jspf" %>
+<%@include file="../models/SubmissionLock.jspf" %>
+<%@include file="../models/WorkOrderLock.jspf" %>
+<%@include file="../models/SupportMemberBridge.jspf"%>
+<%@include file="../models/WorkInformation.jspf"%>
+<%@include file="../models/WorkOrderFilter.jspf"%>
+<%@include file="../models/CompanyBridge.jspf" %>
+<%@include file="../models/OrganizationBridge.jspf" %>
+<%@include file="../models/GroupBridge.jspf" %>

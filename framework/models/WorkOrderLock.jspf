@@ -1,0 +1,195 @@
+<%!
+    public static class WorkOrderLock {
+        public static final String FORM_NAME = "KAPP_Fulfillment_WorkOrder_Lock_join";
+        public static final String SAVE_FORM_NAME = "KS_RQT_Lock";
+        public static final String FIELD_CATALOG_NAME = "740000012";
+        public static final String FIELD_CREATE_DATE = "3";
+        public static final String FIELD_ID = "179";
+        public static final String FIELD_WORKORDER_ID = "536870913";
+        public static final String FIELD_REQUEST_ID = "536870916";
+        public static final String FIELD_SUBMITTER = "2";
+        public static final String FIELD_SOURCE_ID = "740000007";
+        public static final String FIELD_SOURCE_INSTANCE_ID = "740000008";
+        public static final String FIELD_SOURCE_SYSTEM = "740000006";
+		public static final String FIELD_WORKORDER_NAME = "740000013";
+		public static final String FIELD_LOCK_TYPE = "700000178";
+		public static final String FIELD_LOCK_ACTION = "700000177";
+		public static final String FIELD_LOCKED_ID = "700000179";
+		public static final String FIELD_LOCKED_AT = "700000181";
+		//This is only for get, for save, locked by is the submitter
+		public static final String FIELD_LOCKED_BY = "536870917";
+		public static final String FIELD_LOCK_INSTANCE_ID = "536870921";
+
+
+        // Represents the status of the Work Order Record.
+        public static final String FIELD_STATUS = "7";
+		// Visual representation of status to customer/fulfiller
+        public static final String FIELD_ASSIGNMENT_STATUS = "740000017";
+       
+
+        public static final String[] FIELD_IDS = new String[] {
+            FIELD_CATALOG_NAME, FIELD_CREATE_DATE, FIELD_ID, FIELD_REQUEST_ID, FIELD_LOCK_INSTANCE_ID,
+            FIELD_WORKORDER_ID, FIELD_SOURCE_ID, FIELD_SUBMITTER, FIELD_SOURCE_INSTANCE_ID,
+            FIELD_SOURCE_SYSTEM, FIELD_STATUS, FIELD_ASSIGNMENT_STATUS,  FIELD_WORKORDER_NAME,
+			FIELD_LOCK_TYPE,FIELD_LOCK_ACTION,FIELD_LOCKED_ID,FIELD_LOCKED_AT,FIELD_LOCKED_BY};
+
+
+        public static WorkOrderLock[] find(HelperContext context, String qualification) {
+            WorkOrderLock[] results = new WorkOrderLock[0];
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLock[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLock(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static WorkOrderLock[] find(HelperContext context, String qualification, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            WorkOrderLock[] results = new WorkOrderLock[0];
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLock[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLock(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static WorkOrderLock findByInstanceId(HelperContext context, String id) {
+            WorkOrderLock result = null;
+
+            SimpleEntry entry = ArsBase.findByInstanceId(context, FORM_NAME, id, FIELD_IDS);
+            if (entry != null) {
+                result = new WorkOrderLock(entry);
+            }
+
+            return result;
+        }
+		
+		public static WorkOrderLock findSingle(HelperContext context, String qualification) {
+            WorkOrderLock result = null;
+
+            SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
+            if(entry != null) {
+                result = new WorkOrderLock(entry);
+            }
+
+            return result;
+        }
+
+        public static WorkOrderLock[] findRecentByCatalogName(HelperContext context, String catalogName, Integer number) {
+            WorkOrderLock[] results = new WorkOrderLock[0];
+
+            String qualification =
+                "'"+FIELD_CATALOG_NAME+"' = \""+catalogName+"\" AND "+
+                "'"+FIELD_SUBMITTER+"' = \""+context.getUserName()+"\"";
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, number);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLock[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLock(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+       
+
+        public static WorkOrderLock[] findLockedbyUser(HelperContext context, String user) {
+            WorkOrderLock[] results = new WorkOrderLock[0];
+            String qualification =  "'"+FIELD_LOCKED_BY+"' = \""+context.getUserName()+"\" ";
+            
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entries != null && entries.length > 0) {
+                results = new WorkOrderLock[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new WorkOrderLock(entries[i]);
+                }
+            }
+
+            return results;
+        }
+        
+       
+		public static WorkOrderLock getLockRecord(HelperContext context, String lockID) {
+            WorkOrderLock lockRecord = null;
+
+        	String qualification = "'"+FIELD_REQUEST_ID+"'=\""+lockID+"\"";
+            java.util.Date now = new java.util.Date();
+            System.out.println(now.toString()+" WorkOrderLock#getLockRecord: finding lock using qual: "+qualification);
+            try {
+                lockRecord = findSingle(context, qualification);
+            }
+            catch (Exception e) {
+                System.out.println(now.toString()+" WorkOrderLock#getLockRecord: exception finding the lock record: "+e.getCause());
+            }
+
+            if (lockRecord == null) {
+                System.out.println(now.toString()+" WorkOrderLock#getLockRecord: no lock found");
+            }
+            else {
+                System.out.println(now.toString()+" WorkOrderLock#getLockRecord: existing lock found");
+            }
+
+            return lockRecord;
+        }
+		
+		public static void deleteLock(HelperContext context, String lockID) {
+			WorkOrderLock originalRecord = getLockRecord(context, lockID);
+
+            // Update The WorkOrderLock record with new Action
+            SimpleEntry entryUpdate =  new SimpleEntry();   
+            entryUpdate.setSchemaName(SAVE_FORM_NAME);
+            entryUpdate.setEntryItems(new Hashtable());
+            entryUpdate.setEntryId(lockID);
+			entryUpdate.setEntryFieldValue(FIELD_STATUS, "Delete");
+			
+
+            // Build the helper
+            ArsHelper helper = null;
+            try {
+                helper = new ArsHelper(context, SAVE_FORM_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
+            }
+
+            try {
+	            helper.doSetSimpleEntry(entryUpdate);
+            } catch (Exception e) {
+                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
+            }
+
+        }
+
+        private SimpleEntry entry = null;
+
+        public WorkOrderLock(SimpleEntry entry) {
+            this.entry = entry;
+        }
+
+		public SimpleEntry getEntry() {return entry;}
+        public String getCatalogName() {return entry.getEntryFieldValue(FIELD_CATALOG_NAME);}
+        public String getCreateDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getId() {return entry.getEntryFieldValue(FIELD_ID);}
+        public String getLockRequestId() {return entry.getEntryFieldValue(FIELD_REQUEST_ID);}
+        public String getWorkOrderName() {return entry.getEntryFieldValue(FIELD_WORKORDER_NAME);}
+        public String getStatus() {return entry.getEntryFieldValue(FIELD_STATUS);}
+        public String getAssignmentStatus() {return entry.getEntryFieldValue(FIELD_ASSIGNMENT_STATUS);}
+		public String getLockedBy() {return entry.getEntryFieldValue(FIELD_LOCKED_BY);}
+		public String getLockedAt() {return entry.getEntryFieldValue(FIELD_LOCKED_AT);}
+		public String getLockedID() {return entry.getEntryFieldValue(FIELD_LOCKED_ID);}
+		public String getLockedType() {return entry.getEntryFieldValue(FIELD_LOCK_TYPE);}
+		public String getLockInstanceId() {return entry.getEntryFieldValue(FIELD_LOCK_INSTANCE_ID);}
+		public String getLockAction() {return entry.getEntryFieldValue(FIELD_LOCK_ACTION);}
+    }
+%>
