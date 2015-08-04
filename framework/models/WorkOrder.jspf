@@ -1,84 +1,57 @@
 <%!
     public static class WorkOrder {
-      // WorkOrder_CustomerSurvey_join fields
-      public static final String FIELD_ASSIGNMENT_ID = "1";
-      public static final String FIELD_STATUS = "7";
+      public static final String FLD_REQUEST_ID = "1"; // CustomerSurvey Id
+      public static final String FLD_INSTANCE_ID = "179"; // Instance Id
+      public static final String FLD_STATUS = "7"; // Status
 
-      // WorkOrder fields
-      public static final String FIELD_CREATE_DATE = "3";
-      public static final String FIELD_MODIFIED_DATE = "6";
-      public static final String FIELD_NAME = "8";
+      public static final String FLD_WORK_ORDER = "600000300"; // Originating Form
+      public static final String FLD_REQUEST_NAME = "700001000"; // Survey Template Name
 
-      public static final String FIELD_WORK_ORDER_ID = "536870914";
-      public static final String FIELD_REQUEST_SUBMISSION_DATE = "740000009";
-      public static final String FIELD_WORK_ORDER_DUE_DATE = "740000015";
-      public static final String FIELD_PRIORITY = "740000016";
-      public static final String FIELD_ASSIGNMENT_STATUS = "740000017";
+      public static final String FLD_ORIGINATING_ID = "600000310"; // Originating Id
+      public static final String FLD_ORIGINATING_SOURCE = "700006300"; // Source
 
-      public static final String FIELD_ASSIGNED_IND_ID = "740000001";
-      public static final String FIELD_ASSIGNED_IND_FIRST_NAME = "740000002";
-      public static final String FIELD_ASSIGNED_IND_LAST_NAME = "740000014";
+      public static final String FLD_REQUESTED_FOR_ID = "770001011"; // Requested For
+      public static final String FLD_REQUESTED_FOR_NAME = "770001015"; // Requested For Display Name
+      public static final String FLD_ASSIGNEE_ID = "770001009"; // Assigned Individual
+      public static final String FLD_ASSIGNEE_NAME = "770001013"; // Assigned Individual Display Name
 
-      public static final String FIELD_CATALOG = "740000012";
-      public static final String FIELD_ASSIGNED_COMPANY = "740000010";
-      public static final String FIELD_ASSIGNED_ORGANIZATION = "740000011";
-      public static final String FIELD_ASSIGNED_GROUP_ID = "740000003";
-      public static final String FIELD_ASSIGNED_GROUP_NAME = "740000004";
+      public static final String FLD_DUE_DATE = "770001018"; // Due Date
+      public static final String FLD_DETAILS = "600003021"; // NotesForCustomer
+      public static final String FLD_SUMMARY = "600000115"; // Multi-Purpose Info
+      public static final String FLD_ASSIGNED_GROUPS = "770001008"; // Assigned Group
+      public static final String FLD_ASSIGNED_GROUP_NAMES = "770001012"; // Assigned Group Display Names
 
-      public static final String FIELD_SOURCE = "740000006";
-      public static final String FIELD_SOURCE_ID = "740000007";
-      public static final String FIELD_SOURCE_GUID = "740000008";
+      public static final String FLD_CREATED_DATE = "3"; // Create Date
+      public static final String FLD_MODIFIED_DATE = "6"; // Modified Date
 
-      public static final String FIELD_WORK_ORDER_NAME = "740000013";
-      public static final String FIELD_NOTE_FOR_CUSTOMER = "740000020";
-      public static final String FIELD_SUMMARY = "740000019";
-      public static final String FIELD_ASSIGNED_TO = "4";
-
-      // CustomerSurvey fields
-      public static final String FIELD_INSTANCE_ID = "179";
-      public static final String FIELD_REQUESTER_FIRST_NAME = "400007300";
-      public static final String FIELD_REQUESTER_LAST_NAME = "400007500";
-      //public static final String FIELD_NOTE_FOR_CUSTOMER = "600003021";
+      public static final String FLD_SUBMIT_TYPE = "700088475"; // Submit Type
 
       public static final Map<String,String> SORTABLE_FIELDS = new HashMap<String,String>();
       static {
-        SORTABLE_FIELDS.put("requestName",FIELD_NAME);
-        SORTABLE_FIELDS.put("workOrder",FIELD_WORK_ORDER_NAME);
-        SORTABLE_FIELDS.put("requestedFor",FIELD_REQUESTER_LAST_NAME);
-        SORTABLE_FIELDS.put("requestedUser.firstName", FIELD_REQUESTER_FIRST_NAME);
-        SORTABLE_FIELDS.put("requestedUser.lastName", FIELD_REQUESTER_LAST_NAME);
-        SORTABLE_FIELDS.put("assignee.firstName", FIELD_ASSIGNED_IND_FIRST_NAME);
-        SORTABLE_FIELDS.put("assignee.lastName", FIELD_ASSIGNED_IND_LAST_NAME);
-        SORTABLE_FIELDS.put("assignee.loginId", FIELD_ASSIGNED_IND_ID);
-        SORTABLE_FIELDS.put("requestId",FIELD_SOURCE_ID);
-        SORTABLE_FIELDS.put("assignedName",FIELD_ASSIGNED_IND_LAST_NAME);
-        SORTABLE_FIELDS.put("status",FIELD_STATUS);
-        SORTABLE_FIELDS.put("priority",FIELD_PRIORITY);
-        SORTABLE_FIELDS.put("due",FIELD_WORK_ORDER_DUE_DATE);
-        SORTABLE_FIELDS.put("id",FIELD_WORK_ORDER_ID);
-        SORTABLE_FIELDS.put("assignedId",FIELD_ASSIGNED_IND_ID);
-        SORTABLE_FIELDS.put("createdDate",FIELD_CREATE_DATE);
-        SORTABLE_FIELDS.put("modifiedDate",FIELD_MODIFIED_DATE);
-        SORTABLE_FIELDS.put("summary",FIELD_SUMMARY);
+        SORTABLE_FIELDS.put("requestName",FLD_REQUEST_NAME);
+        SORTABLE_FIELDS.put("workOrder",FLD_WORK_ORDER);
+        SORTABLE_FIELDS.put("originatingId",FLD_ORIGINATING_ID);
+        SORTABLE_FIELDS.put("status",FLD_STATUS);
+        SORTABLE_FIELDS.put("due",FLD_DUE_DATE);
+        SORTABLE_FIELDS.put("id",FLD_REQUEST_ID);
+        SORTABLE_FIELDS.put("createdDate",FLD_CREATED_DATE);
+        SORTABLE_FIELDS.put("modifiedDate",FLD_MODIFIED_DATE);
       }
 
       public static final String[] FIELD_IDS = new String[] {
-          FIELD_ASSIGNMENT_ID, FIELD_CREATE_DATE, FIELD_MODIFIED_DATE, FIELD_STATUS, FIELD_NAME,
-          FIELD_ASSIGNED_IND_ID, FIELD_ASSIGNED_IND_FIRST_NAME, FIELD_ASSIGNED_IND_LAST_NAME,
-          FIELD_ASSIGNED_COMPANY, FIELD_ASSIGNED_ORGANIZATION, FIELD_ASSIGNED_GROUP_ID,
-          FIELD_ASSIGNED_GROUP_NAME, FIELD_CATALOG, FIELD_INSTANCE_ID, FIELD_ASSIGNMENT_STATUS,
-          FIELD_REQUEST_SUBMISSION_DATE, FIELD_WORK_ORDER_DUE_DATE, FIELD_PRIORITY,
-          FIELD_SOURCE, FIELD_SOURCE_ID, FIELD_SOURCE_GUID, FIELD_WORK_ORDER_NAME, FIELD_SUMMARY,
-          FIELD_REQUESTER_FIRST_NAME, FIELD_REQUESTER_LAST_NAME, FIELD_NOTE_FOR_CUSTOMER,FIELD_WORK_ORDER_ID
+        FLD_REQUEST_ID,FLD_ORIGINATING_ID,FLD_ORIGINATING_SOURCE,FLD_STATUS,FLD_WORK_ORDER,
+        FLD_REQUEST_NAME,FLD_REQUESTED_FOR_NAME,FLD_REQUESTED_FOR_ID,FLD_ASSIGNEE_ID,
+        FLD_ASSIGNEE_NAME,FLD_DUE_DATE,FLD_DETAILS,FLD_SUMMARY,FLD_ASSIGNED_GROUPS,
+        FLD_CREATED_DATE,FLD_MODIFIED_DATE,FLD_SUBMIT_TYPE,FLD_ASSIGNED_GROUP_NAMES,
+        FLD_INSTANCE_ID
       };
-        
-        public static final String FORM_NAME = "KAPP_Fulfillment_WorkOrder_CustomerSurvey_join";
-        public static final String SAVE_FORM_NAME = "KAPP_Fulfillment_WorkOrder";
+
+        public static final String FORM_NAME = "KS_SRV_CustomerSurvey_base";
 
         public static int count(HelperContext context, String qualification) {
             return ArsBase.count(context, FORM_NAME, qualification);
         }
-        
+
         public static WorkOrder[] find(HelperContext context, String qualification) {
             WorkOrder[] results = new WorkOrder[0];
 
@@ -89,14 +62,14 @@
                     results[i] = new WorkOrder(context, entries[i]);
                 }
             }
-            
+
             return results;
         }
 
         public static WorkOrder findSingleById(HelperContext context, String workOrderId) {
             WorkOrder result = null;
 
-            String qualification = "'" + FIELD_ASSIGNMENT_ID + "'=\"" + workOrderId + "\""; 
+            String qualification = "'" + FLD_REQUEST_ID + "'=\"" + workOrderId + "\"";
             SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
             if(entry != null) {
                 result = new WorkOrder(context, entry);
@@ -118,295 +91,6 @@
             return results;
         }
 
-        // public static WorkOrder getWorkOrderRecord(HelperContext context, String workOrderID) {
-        //     WorkOrder assignment = null;
-
-        //     String qualification = "'1'=\""+workOrderID+"\"";
-        //     java.util.Date now = new java.util.Date();
-        //     System.out.println(now.toString()+" WorkOrder#getWorkOrderRecord: finding assignment using qual: "+qualification);
-        //     try {
-        //         assignment = findSingle(context, qualification);
-        //     }
-        //     catch (Exception e) {
-        //         System.out.println(now.toString()+" WorkOrder#getWorkOrderRecord: exception finding the assignment record: "+e.getCause());
-        //     }
-
-        //     if (assignment == null) {
-        //         System.out.println(now.toString()+" WorkOrder#getWorkOrderRecord: no assignment found");
-        //     }
-        //     else {
-        //         System.out.println(now.toString()+" WorkOrder#getWorkOrderRecord: existing assignment found");
-        //     }
-
-        //     return assignment;
-        // }
-
-       //  public static void saveStatus(HelperContext context, String workOrderID, String status, String assignmentStatus) {
-       //      // Retrieve Current WorkOrder record
-       //      WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-
-       //      // Update The WorkOrder record with new Assignee
-       //      SimpleEntry entrySave = new SimpleEntry();
-       //      entrySave.setSchemaName(SAVE_FORM_NAME);
-       //      entrySave.setEntryItems(new Hashtable());
-       //      entrySave.setEntryFieldValue("1", workOrderID);
-       //      entrySave.setEntryFieldValue(FIELD_STATUS, status);
-       //      entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_STATUS, assignmentStatus);
-
-       //      // Build the helper
-       //      ArsHelper helper = null;
-       //      try {
-       //          helper = new ArsHelper(context, SAVE_FORM_NAME);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-       //      }
-
-       //      try {
-       //          helper.doSetSimpleEntry(entrySave);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-       //      }
-
-       //  }
-
-       //  public static void savePriority(HelperContext context, String workOrderID, String priority) {
-       //      // Retrieve Current WorkOrder record
-       //      WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-
-       //      // Update The WorkOrder record with new priority
-       //      SimpleEntry entrySave = new SimpleEntry();
-       //      entrySave.setSchemaName(SAVE_FORM_NAME);
-       //      entrySave.setEntryItems(new Hashtable());
-       //      entrySave.setEntryFieldValue("1", workOrderID);
-       //      entrySave.setEntryFieldValue(FIELD_PRIORITY, priority);
-
-       //      // Build the helper
-       //      ArsHelper helper = null;
-       //      try {
-       //          helper = new ArsHelper(context, SAVE_FORM_NAME);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-       //      }
-
-       //      try {
-       //          helper.doSetSimpleEntry(entrySave);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-       //      }
-
-       //  }
-
-       //  public static void saveAcknowledged(HelperContext context, String workOrderID, String acknowledged) {
-       //      // Retrieve Current WorkOrder record
-       //      WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-
-       //      // Update The WorkOrder record with new acknowledged state
-       //      SimpleEntry entrySave = new SimpleEntry();
-       //      entrySave.setSchemaName(SAVE_FORM_NAME);
-       //      entrySave.setEntryItems(new Hashtable());
-       //      entrySave.setEntryFieldValue("1", workOrderID);
-       //      entrySave.setEntryFieldValue(FIELD_ACK, acknowledged);
-
-       //      // Build the helper
-       //      ArsHelper helper = null;
-       //      try {
-       //          helper = new ArsHelper(context, SAVE_FORM_NAME);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-       //      }
-
-       //      try {
-       //          helper.doSetSimpleEntry(entrySave);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-       //      }
-
-       //  }
-
-       //  public static void saveWorkOrderDueDate(HelperContext context, String workOrderID, String workOrderDueDate) {
-       //      // Retrieve Current WorkOrder record
-       //      WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-
-       //      // Update The WorkOrder record with new work Order Due Date
-       //      SimpleEntry entrySave = new SimpleEntry();
-       //      entrySave.setSchemaName(SAVE_FORM_NAME);
-       //      entrySave.setEntryItems(new Hashtable());
-       //      entrySave.setEntryFieldValue("1", workOrderID);
-       //      entrySave.setEntryFieldValue(FIELD_WORK_ORDER_DUE_DATE, workOrderDueDate);
-
-       //      // Build the helper
-       //      ArsHelper helper = null;
-       //      try {
-       //          helper = new ArsHelper(context, SAVE_FORM_NAME);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-       //      }
-
-       //      try {
-       //          helper.doSetSimpleEntry(entrySave);
-       //      } catch (Exception e) {
-       //          throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-       //      }
-
-       //  }
-
-       //  /* Save the loginName as the new assignee for the assignment record.
-       //  */
-       //  public static void saveAssignee(HelperContext context, String workOrderID, String loginID, String groupID, String groupName, String assignmentStatus, String Company, String Organization) {
-       //      java.util.Date now = new java.util.Date();
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: workOrderID - "+workOrderID);
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: loginID - "+loginID);
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: groupID - "+groupID);
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: groupName - "+groupName);
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: Company - "+Company);
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: Organization - "+Organization);
-       //      if (context != null) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: context - "+context.getUserName());
-       //      }
-       //      else {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: context is null");
-       //      }
-
-
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: finding original assignment record");
-
-       //      // Retrieve Current WorkOrder record
-       //      WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-       //      if (originalRecord == null) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: original assignment record was not found");
-       //      }
-       //      else {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: original assignment record was found");
-       //      }
-
-       //      // Retrieve Person record
-       //      PersonBridge person = PersonBridge.findbyUserId(context, "KS3cb8f26b156644dce76230da85e45aa5c", loginID);
-       //      String first_name = "";
-       //      String last_name = ""; 
-       //      if (!person.isNull()) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: Retrieved Person record for " + first_name + " " + last_name + "(" + loginID + ")");
-       //          first_name = person.getFirstName();
-       //          last_name = person.getLastName();
-       //      } else {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: Unable to retrieve Person record for " + loginID);
-       //      }
-
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: update the assignment record with new Assignee");
-
-
-       //      // Update The WorkOrder record with new Assignee
-       //      SimpleEntry entrySave = null;
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: building the assignment SimpleEntry");
-       //      try {
-       //          entrySave = new SimpleEntry();
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: instantiated the assignment SimpleEntry");
-       //          entrySave.setSchemaName(SAVE_FORM_NAME);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry schema name");
-       //          entrySave.setEntryItems(new Hashtable());
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry entryitems");
-       //          entrySave.setEntryFieldValue("1", workOrderID);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: 1: "+workOrderID);
-       //          entrySave.setEntryFieldValue(FIELD_STATUS, "Assigned");
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: 1: "+workOrderID);
-       //          entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_STATUS, assignmentStatus);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_STATUS+": Assigned");
-       //          entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_ID, loginID);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_IND_ID+": "+loginID);
-       //          entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_FIRST_NAME, first_name);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_IND_FIRST_NAME+": "+first_name);
-       //          entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_LAST_NAME, last_name);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_IND_LAST_NAME+": "+last_name);
-
-       //          if (groupID != null && groupID.length()>0){
-       //              entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, groupID);
-       //              System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_GROUP_ID+": "+groupID);
-       //              entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, groupName);
-       //              System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_GROUP_NAME+": "+groupName);
-       //              entrySave.setEntryFieldValue(FIELD_ASSIGNED_COMPANY, Company);
-       //              System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+FIELD_ASSIGNED_COMPANY+": "+Company);
-       //              entrySave.setEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION, Organization);
-       //              System.out.println(now.toString()+" WorkOrder#saveAssignee: set the assignment SimpleEntry field: "+Organization+": "+FIELD_ASSIGNED_ORGANIZATION);
-       //          }
-                
-       //      }
-       //      catch (Exception e) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: failed to build the assignment SimpleEntry: "+e.getCause());
-       //          throw new RuntimeException("Unable to initialize the assignment SimpleEntry.", e);
-       //      }
-
-
-       //      // Build the helper
-       //      ArsHelper helper = null;
-       //      System.out.println(now.toString()+" WorkOrder#saveAssignee: building the assignment ArsHelper");
-       //      try {
-       //          helper = new ArsHelper(context, SAVE_FORM_NAME);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: instantiated the assignment ArsHelper");
-       //      } catch (Exception e) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: failed to initialize an ArsHelper instance: "+e.getCause());
-       //          throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-       //      }
-
-
-       //      try {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: saving the assignment SimpleEntry");
-       //          String id = helper.doSetSimpleEntry(entrySave, true);
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: saved assignment record: "+id);
-
-       //      } catch (Exception e) {
-       //          System.out.println(now.toString()+" WorkOrder#saveAssignee: failed to save the assignment record: "+e.getCause());
-       //          throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-       //      }
-
-
-       //      // Create a Log Entry
-       //      //WorkOrderLog.createLogEntry(context, originalRecord, new WorkOrder(entrySave]);
-       //      // Log entry is created as Filter against KAPP_Fulfillment_WorkOrder.
-       //      // This is easier for now, since it allows us to capture a new Assignemnt log event created by a Task Handler
-
-       //      //return personInfo;
-       //      return;
-       // }
-//
-//       public static void saveGroupWorkOrder(HelperContext context, String workOrderID, String groupID, String groupName) {
-//
-//            // Retrieve Current WorkOrder record
-//            WorkOrder originalRecord = getWorkOrderRecord(context, workOrderID);
-//
-//            String nullString = null; /* Used to assign a null value to a string within Remedy.  Setting the value directly to null doesn't work and setting the value to "" sets it to an empty string. */
-//
-//            // Update The WorkOrder record with new Assignee
-//            SimpleEntry entrySave = new SimpleEntry();
-//            entrySave.setSchemaName(SAVE_FORM_NAME);
-//            entrySave.setEntryItems(new Hashtable());
-//            entrySave.setEntryFieldValue("1", workOrderID);
-//            entrySave.setEntryFieldValue(FIELD_STATUS, "Assigned");
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_STATUS, "Assigned");
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, groupID);
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, groupName);
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_ID, nullString);
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_FIRST_NAME, nullString);
-//            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_LAST_NAME, nullString);
-//
-//            // Build the helper
-//            ArsHelper helper = null;
-//            try {
-//                helper = new ArsHelper(context, SAVE_FORM_NAME);
-//            } catch (Exception e) {
-//                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-//            }
-//
-//            try {
-//                helper.doSetSimpleEntry(entrySave);
-//            } catch (Exception e) {
-//                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-//            }
-//
-//            // Create a Log Entry
-//            //WorkOrderLog.createLogEntry(context, originalRecord, new WorkOrder(entrySave]);
-//            // Log entry is created as Filter against KAPP_Fulfillment_WorkOrder.
-//            // This is easier for now, since it allows us to capture a new Assignemnt log event created by a Task Handler
-//       }
-
         private SimpleEntry entry = null;
         private HelperContext context = null;
 
@@ -418,82 +102,22 @@
             this.context = context;
         }
 
-        public void saveCompany(HelperContext context, String company) {
-            String nullString = null; /* Used to assign a null value to a string within Remedy.  Setting the value directly to null doesn't work and setting the value to "" sets it to an empty string. */
-            
+        public void saveGroup(HelperContext context, String group) {
             SimpleEntry entrySave = new SimpleEntry();
-            entrySave.setSchemaName(SAVE_FORM_NAME);
+            entrySave.setSchemaName(FORM_NAME);
             entrySave.setEntryItems(new Hashtable());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_ID, getId());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_COMPANY, company);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION, nullString);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, nullString);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, nullString);
 
-            // Build the helper
-            ArsHelper helper = null;
-            try {
-                helper = new ArsHelper(context, SAVE_FORM_NAME);
-            } catch (Exception e) {
-                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-            }
-
-            try {
-                helper.doSetSimpleEntry(entrySave);
-            } catch (Exception e) {
-                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-            }
-        }
-
-        public void saveOrganization(HelperContext context, String company, String organization) {
-            String nullString = null; /* Used to assign a null value to a string within Remedy.  Setting the value directly to null doesn't work and setting the value to "" sets it to an empty string. */
-            
-            SimpleEntry entrySave = new SimpleEntry();
-            entrySave.setSchemaName(SAVE_FORM_NAME);
-            entrySave.setEntryItems(new Hashtable());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_ID, getId());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_COMPANY, company);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION, organization);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, nullString);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, nullString);
-
-            // Build the helper
-            ArsHelper helper = null;
-            try {
-                helper = new ArsHelper(context, SAVE_FORM_NAME);
-            } catch (Exception e) {
-                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
-            }
-
-            try {
-                helper.doSetSimpleEntry(entrySave);
-            } catch (Exception e) {
-                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
-            }
-        }
-
-        public void saveGroup(HelperContext context, String company, String organization, String groupId, String groupName) {
-            SimpleEntry entrySave = new SimpleEntry();
-            entrySave.setSchemaName(SAVE_FORM_NAME);
-            entrySave.setEntryItems(new Hashtable());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_ID, getId());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_COMPANY, company);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION, organization);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, groupName);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, groupId);
+            entrySave.setEntryFieldValue(FLD_REQUEST_ID, getRequestId());
+            entrySave.setEntryFieldValue(FLD_ASSIGNED_GROUPS, group);
 
             // Also set the values in this.entry so that the WO can be retrieved
             // without a second call to the database
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_COMPANY, company);
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION, organization);
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME, groupName);
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_GROUP_ID, groupId);
-
+            this.entry.setEntryFieldValue(FLD_ASSIGNED_GROUPS, group);
 
             // Build the helper
             ArsHelper helper = null;
             try {
-                helper = new ArsHelper(context, SAVE_FORM_NAME);
+                helper = new ArsHelper(context, FORM_NAME);
             } catch (Exception e) {
                 throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
             }
@@ -501,29 +125,27 @@
             try {
                 helper.doSetSimpleEntry(entrySave);
             } catch (Exception e) {
-                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
+                throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
             }
         }
 
-        public void saveMember(HelperContext context, String loginId, String firstName, String lastName) {
+        public void saveMember(HelperContext context, String loginId, String name) {
             SimpleEntry entrySave = new SimpleEntry();
-            entrySave.setSchemaName(SAVE_FORM_NAME);
+            entrySave.setSchemaName(FORM_NAME);
             entrySave.setEntryItems(new Hashtable());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNMENT_ID, getId());
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_ID, loginId);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_FIRST_NAME, firstName);
-            entrySave.setEntryFieldValue(FIELD_ASSIGNED_IND_LAST_NAME, lastName);
+            entrySave.setEntryFieldValue(FLD_REQUEST_ID, getRequestId());
+            entrySave.setEntryFieldValue(FLD_ASSIGNEE_ID, loginId);
+            entrySave.setEntryFieldValue(FLD_ASSIGNEE_NAME, name);
 
             // Also set the values in this.entry so that the WO can be retrieved
             // without a second call to the database
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_IND_ID, loginId);
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_IND_FIRST_NAME, firstName);
-            this.entry.setEntryFieldValue(FIELD_ASSIGNED_IND_LAST_NAME, lastName);
+            this.entry.setEntryFieldValue(FLD_ASSIGNEE_ID, loginId);
+            this.entry.setEntryFieldValue(FLD_ASSIGNEE_NAME, name);
 
             // Build the helper
             ArsHelper helper = null;
             try {
-                helper = new ArsHelper(context, SAVE_FORM_NAME);
+                helper = new ArsHelper(context, FORM_NAME);
             } catch (Exception e) {
                 throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
             }
@@ -531,68 +153,57 @@
             try {
                 helper.doSetSimpleEntry(entrySave);
             } catch (Exception e) {
-                throw new RuntimeException("There was a problem saving the "+SAVE_FORM_NAME+" record.", e);
+                throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
             }
         }
 
-        public String getName() {return entry.getEntryFieldValue(FIELD_NAME);}
-// getId needs to return the WORK ORDER ID  ... not the JOIN ID -- which was three IDs in one
-// this is a result of moving to the join table
-//        public String getId() {return entry.getEntryFieldValue(FIELD_ASSIGNMENT_ID);}
-        public String getId() {return entry.getEntryFieldValue(FIELD_WORK_ORDER_ID);}
-        public String getWorkOrderName() {return entry.getEntryFieldValue(FIELD_WORK_ORDER_NAME);}
-        public String getAssignedFirstName() {return entry.getEntryFieldValue(FIELD_ASSIGNED_IND_FIRST_NAME);}
-        public String getAssignedLastName() {return entry.getEntryFieldValue(FIELD_ASSIGNED_IND_LAST_NAME);}
-        public String getAssignedFullName() {return StringUtils.stripToEmpty(getAssignedFirstName() +" "+getAssignedLastName());}
-        public String getAssignedLoginId() {return entry.getEntryFieldValue(FIELD_ASSIGNED_IND_ID);}
-        public String getWorkOrderStatus() {return entry.getEntryFieldValue(FIELD_STATUS);}
-        public String getPriority() {return entry.getEntryFieldValue(FIELD_PRIORITY);}
-        public String getWorkOrderDueDate() {return entry.getEntryFieldValue(FIELD_WORK_ORDER_DUE_DATE);}
-        public String getWorkOrderInstanceID() {return entry.getEntryFieldValue(FIELD_INSTANCE_ID);}
-        public String getSourceID() {return entry.getEntryFieldValue(FIELD_SOURCE_ID);}
-        public String getRefID() {return entry.getEntryFieldValue(FIELD_SOURCE_GUID);}
-         public String getNoteForCustomer() {return entry.getEntryFieldValue(FIELD_NOTE_FOR_CUSTOMER);}
-        //public String getNoteForCustomer() {return "Connect to KAPP_Fulfillment_WorkOrder_CustomerSurvey_join";}
-        public String getRequesterFirstName() {return entry.getEntryFieldValue(FIELD_REQUESTER_FIRST_NAME);}
-        public String getRequesterLastName() {return entry.getEntryFieldValue(FIELD_REQUESTER_LAST_NAME);}
-         public String getRequesterFullName() {return entry.getEntryFieldValue(FIELD_REQUESTER_FIRST_NAME)+" "+entry.getEntryFieldValue(FIELD_REQUESTER_LAST_NAME);}
-        //public String getRequesterFullName() {return "Connect to KAPP_Fulfillment_WorkOrder_CustomerSurvey_join";}
-        public String getCompany() {return entry.getEntryFieldValue(FIELD_ASSIGNED_COMPANY);}
-        public String getOrganization() {return entry.getEntryFieldValue(FIELD_ASSIGNED_ORGANIZATION);}
-        public String getGroupID() {return entry.getEntryFieldValue(FIELD_ASSIGNED_GROUP_ID);}
-        public String getGroupName() {return entry.getEntryFieldValue(FIELD_ASSIGNED_GROUP_NAME);}
-        public String getSummary() {return entry.getEntryFieldValue(FIELD_SUMMARY);}
+        public String getRequestId() {return entry.getEntryFieldValue(FLD_REQUEST_ID);}
+        public String getInstanceId() {return entry.getEntryFieldValue(FLD_INSTANCE_ID);}
+        public String getOriginatingId() {return entry.getEntryFieldValue(FLD_ORIGINATING_ID);}
+        public String getOriginatingSource() {return entry.getEntryFieldValue(FLD_ORIGINATING_SOURCE);}
+        public String getAssigneeId() {return entry.getEntryFieldValue(FLD_ASSIGNEE_ID);}
+        public String getAssigneeName() {return entry.getEntryFieldValue(FLD_ASSIGNEE_NAME);}
+        public String getRequestedForId() {return entry.getEntryFieldValue(FLD_REQUESTED_FOR_ID);}
+        public String getRequestedForName() {return entry.getEntryFieldValue(FLD_REQUESTED_FOR_NAME);}
+        public String getWorkOrderName() {return entry.getEntryFieldValue(FLD_WORK_ORDER);}
+        public String getRequestName() {return entry.getEntryFieldValue(FLD_REQUEST_NAME);}
+        public String getStatus() {return entry.getEntryFieldValue(FLD_STATUS);}
+        public String getSummary() {return entry.getEntryFieldValue(FLD_SUMMARY);}
+        public String getDetails() {return entry.getEntryFieldValue(FLD_DETAILS);}
+        public String getDueDate() {return entry.getEntryFieldValue(FLD_DUE_DATE); }
+        public String getAssignedGroups() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUPS);}
+        public String getAssignedGroupNames() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUP_NAMES);}
 
         public Map<String,Object> toJsonObject(HttpServletRequest request) {
             Map<String,Object> jsonObject = new LinkedHashMap<String,Object>();
-            jsonObject.put("requestName",StringUtils.stripToNull(getName()));
+            jsonObject.put("id",StringUtils.stripToNull(getRequestId()));
+            jsonObject.put("requestName",StringUtils.stripToNull(getRequestName()));
             jsonObject.put("workOrder",StringUtils.stripToNull(getWorkOrderName()));
             Map<String,String> requestedFor = new LinkedHashMap<String,String>();
-            requestedFor.put("firstName", getRequesterFirstName());
-            requestedFor.put("lastName", getRequesterLastName());
-            requestedFor.put("fullName", getRequesterFullName());
-            if (!requestedFor.get("fullName").isEmpty()) {
-                jsonObject.put("requestedUser", requestedFor);
-            } else {jsonObject.put("requestedUser",null);}
-            
+            requestedFor.put("name", getRequestedForName());
+            requestedFor.put("loginId", getRequestedForId());
+            if (!requestedFor.get("name").isEmpty() || !requestedFor.get("loginId").isEmpty()) {
+                jsonObject.put("requestedFor", requestedFor);
+            } else {jsonObject.put("requestedFor",null);}
+
             Map<String,String> assignee = new LinkedHashMap<String,String>();
-            assignee.put("firstName",getAssignedFirstName());
-            assignee.put("lastName",getAssignedLastName());
-            assignee.put("fullName",getAssignedFullName());
-            assignee.put("loginId",getAssignedLoginId());
-            if (!assignee.get("loginId").isEmpty() && !assignee.get("fullName").isEmpty()) {
+            assignee.put("name",getAssigneeName());
+            assignee.put("loginId",getAssigneeId());
+            if (!assignee.get("loginId").isEmpty() || !assignee.get("name").isEmpty()) {
                 jsonObject.put("assignee",assignee);
             } else {jsonObject.put("assignee",null);}
-            
-            jsonObject.put("requestId",StringUtils.stripToNull(getSourceID()));
-            jsonObject.put("status",StringUtils.stripToNull(getWorkOrderStatus()));
-            jsonObject.put("priority",StringUtils.stripToNull(getPriority()));
-            jsonObject.put("due",DateConverter.getIso8601(getWorkOrderDueDate()));
-            jsonObject.put("id",StringUtils.stripToNull(getId()));
-            jsonObject.put("requestedFor",StringUtils.stripToNull(getRequesterFullName())); 
-            jsonObject.put("assignedName",StringUtils.stripToNull(getAssignedFullName()));
-            jsonObject.put("assignedId",StringUtils.stripToNull(getAssignedLoginId()));
-          
+
+            Map<String,String> originator = new LinkedHashMap<String,String>();
+            originator.put("id", getOriginatingId());
+            originator.put("source", getOriginatingSource());
+            originator.put("url", "http://still-needs-to-be-implemented.io");
+            jsonObject.put("originator", originator);
+
+            jsonObject.put("status",StringUtils.stripToNull(getStatus()));
+            jsonObject.put("due",DateConverter.getIso8601(getDueDate()));
+            jsonObject.put("details",StringUtils.stripToNull(getDetails()));
+            jsonObject.put("summary", StringUtils.stripToNull(getSummary()));
+
             // Build up the Work Order Url
             String patternStr="(\\A.*?/kinetic/)";
             Pattern p = Pattern.compile(patternStr);
@@ -601,42 +212,17 @@
             String baseRequestUrl = "";
             if (m.find()) {
                  baseRequestUrl = m.group(1);
-            } 
-            jsonObject.put("workOrderURL",  baseRequestUrl + "DisplayPage?csrv=" + getRefID() + "&mobile=true");
+            }
+            jsonObject.put("workOrderURL",  baseRequestUrl + "DisplayPage?csrv=" + getInstanceId() + "&mobile=true");
 
           // Build groups
-          ArrayList<Map<String,Object>> groups = new ArrayList<Map<String,Object>>();
-          if (!getCompany().isEmpty()) {
-              Map<String,Object> company = new LinkedHashMap<String,Object>();
-              company.put("label","Company");
-              company.put("id",getCompany());
-              company.put("name",getCompany());
-              groups.add(company);
+          String[] groups = getAssignedGroups().split("::");
+          if (groups[0] == "") {
+            jsonObject.put("groups",null);
+          } else {
+            jsonObject.put("groups", Arrays.asList(groups));
           }
-          
-          if (!getOrganization().isEmpty()) {
-              Map<String,Object> org = new LinkedHashMap<String,Object>();
-              org.put("label","Organization");
-              org.put("id",getOrganization());
-              org.put("name",getOrganization());
-              groups.add(org);
-          }
-          
-          if (!getGroupID().isEmpty()) {
-            Map<String,Object> group = new LinkedHashMap<String,Object>();
-            group.put("label","Group");
-            group.put("id",getGroupID());
-            group.put("name",getGroupName());
-            groups.add(group);
-          }
-
-          if (groups.size() == 0) {
-            groups = null;
-          }
-          
-          jsonObject.put("groups",groups);
-          jsonObject.put("details",StringUtils.stripToNull(getNoteForCustomer())); 
-          jsonObject.put("summary", StringUtils.stripToNull(getSummary()));
+          // String[] groupNames = getAssignedGroupNames().split("::");
 
           return jsonObject;
         }

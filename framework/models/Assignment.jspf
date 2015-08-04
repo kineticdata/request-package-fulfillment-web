@@ -1,0 +1,283 @@
+<%!
+    public static class Assignment {
+        public static final String MEMBER_GROUP_ASSIGN_FORM = "KAPP_Assignment_GroupAssoc";
+        public static final String MEMBER_FORM = "KAPP_Assignment_People";
+        public static final String GROUP_FORM = "KAPP_Assignment_Group";
+
+        public static List<Group> findGroupsByParent(HelperContext context, String parentGroup) {
+          List<Group> results = new ArrayList<Group>();
+          HashMap<String,Integer> groupMap = new LinkedHashMap<String,Integer>();
+
+          parentGroup = StringUtils.stripToEmpty(parentGroup);
+
+          int nextLevel = 1;
+          if (parentGroup != "") {
+            nextLevel = parentGroup.split("::").length + 1;
+          }
+
+          String qualification;
+          if (parentGroup == "") {
+            qualification = "'536870917'=\"1\" OR '536870917'=\"2\"";
+          } else {
+            qualification = String.format("'536870913' LIKE \"%s%%\" AND ('536870917'=\"%s\"OR '536870917'=\"%s\")",parentGroup,nextLevel,nextLevel+1);
+          }
+          String[] fieldIds = new String[] {
+            "536870917", // Organization (will be used for Group Level)
+            "536870913"  // Group Name (also used as id)
+          };
+
+          SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
+          if (entries != null && entries.length > 0) {
+            for(int i=0;i<entries.length;i++) {
+              String name = entries[i].getEntryFieldValue("536870913");
+              String level = entries[i].getEntryFieldValue("536870917");
+              if (level.equals(String.valueOf(nextLevel))) {
+                if (!groupMap.containsKey(name)) { groupMap.put(name,0); };
+              } else if (level.equals(String.valueOf(nextLevel+1))) {
+                String parentName = name.substring(0,name.lastIndexOf("::"));
+                if (groupMap.containsKey(parentName)) {
+                  groupMap.put(parentName, groupMap.get(parentName) + 1 );
+                } else {
+                  groupMap.put(parentName, 1);
+                }
+              }
+            }
+          }
+
+          for (Map.Entry<String,Integer> entry : groupMap.entrySet()) {
+            results.add(new Group(entry.getKey(), entry.getValue()));
+          }
+
+          return results;
+        }
+
+        public static Boolean doesGroupExist(HelperContext context, String group) {
+          String qualification = "'536870913' = \"" + group + "\"";
+          int count = ArsBase.count(context, GROUP_FORM, qualification);
+
+          if (count == 1) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        public static Boolean isMemberInGroup(HelperContext context, String member, String group) {
+          String personId = getPersonId(context, member);
+          String groupId = getGroupId(context, group);
+
+          String qualification = String.format("'536870913' = \"%s\" AND '536870914' = \"%s\"", groupId, personId);
+          int count = ArsBase.count(context, MEMBER_GROUP_ASSIGN_FORM, qualification);
+
+          if (count == 1) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        public static String getGroupId(HelperContext context, String group) {
+          String groupId = null;
+
+          String[] fieldIds = new String[] {
+            "1", // Group Id
+            "536870913"  // Group Name
+          };
+
+          String qualification = "'536870913' = \"" + group + "\"";
+
+          SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
+          if (entries.length != 0) {
+            groupId = entries[0].getEntryFieldValue("1");
+          }
+
+          return groupId;
+        }
+
+        public static String getPersonName(HelperContext context, String loginId) {
+          String[] fieldIds = new String[] {
+            "536870913",  // First Name
+            "536870914"   // Last Name
+          };
+
+          String qualification = "'536870917' = \"" + loginId + "\"";
+
+          SimpleEntry[] entries = ArsBase.find(context, MEMBER_FORM, qualification, fieldIds);
+
+          String firstName = "";
+          String lastName = "";
+          if (entries.length != 0) {
+            firstName = entries[0].getEntryFieldValue("536870913");
+            lastName = entries[0].getEntryFieldValue("536870914");
+          }
+
+          return firstName + " " + lastName;
+        }
+
+        public static String getPersonId(HelperContext context, String loginId) {
+          String personId = null;
+
+          String[] fieldIds = new String[] {
+            "1", // Person Id
+            "536870917"  // Login Id
+          };
+
+          String qualification = "'536870917' = \"" + loginId + "\"";
+
+          SimpleEntry[] entries = ArsBase.find(context, MEMBER_FORM, qualification, fieldIds);
+          if (entries.length != 0) {
+            personId = entries[0].getEntryFieldValue("1");
+          }
+
+          return personId;
+        }
+
+        public static List<Group> findGroupsByPersonId(HelperContext context, String personId) {
+          List<Group> results = new ArrayList<Group>();
+
+          String[] fieldIds = new String[] {
+            "536870913", // Group Id
+            "536870914"  // Person Id
+          };
+
+          String qualification = "'536870914' = \"" + personId + "\"";
+
+          SimpleEntry[] entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, fieldIds);
+          for (int i=0; i<entries.length; i++) {
+            results.add(new Group(entries[i].getEntryFieldValue("536870913"),-1));
+          }
+
+          return results;
+        }
+
+        public static List<String> findGroupNamesByIds(HelperContext context, String[] groupIds) {
+          List<String> groupNames = new ArrayList<String>();
+
+          ExecutorService groupsPool = Executors.newFixedThreadPool(groupIds.length);
+          Set<Future<String>> groupsFutureSet = new HashSet<Future<String>>();
+
+          for (int i = 0; i < groupIds.length; i++) {
+            Callable<String> groupsCallable = new GetGroupName(context, groupIds[i]);
+            Future<String> groupFuture = groupsPool.submit(groupsCallable);
+            groupsFutureSet.add(groupFuture);
+          }
+
+          try {
+            for (Future<String> future : groupsFutureSet) {
+              groupNames.add(future.get());
+            }
+          } catch (Exception e) {
+              throw new RuntimeException(e);
+          }
+
+          return groupNames;
+        }
+
+        public static String[] findMemberIdsByGroup(HelperContext context, String group) {
+          String[] fieldIds = new String[] {
+            "1", // Group Id
+            "536870913"  // Group Name
+          };
+
+          String qualification = "'536870913'=\"" + group + "\"";
+          SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
+
+          String groupId = entries[0].getEntryFieldValue("1");
+
+          qualification = "'536870913'=\"" + groupId + "\"";
+          entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, new String[] {"536870913","536870914"});
+
+          String[] memberIds = new String[entries.length];
+          for (int i = 0; i < entries.length; i++) {
+            memberIds[i] = entries[i].getEntryFieldValue("536870914");
+          }
+
+          return memberIds;
+        }
+
+        public static List<Member> findMembersByIds(HelperContext context, String[] memberIds) {
+          List<Member> members = new ArrayList<Member>();
+
+          ExecutorService memberPool = Executors.newFixedThreadPool(memberIds.length);
+          Set<Future<Member>> memberFutureSet = new HashSet<Future<Member>>();
+
+          for (int i = 0; i < memberIds.length; i++) {
+            Callable<Member> memberCallable = new GetMember(context, memberIds[i]);
+            Future<Member> memberFuture = memberPool.submit(memberCallable);
+            memberFutureSet.add(memberFuture);
+          }
+
+          try {
+            for (Future<Member> future : memberFutureSet) {
+              members.add(future.get());
+            }
+          } catch (Exception e) {
+              throw new RuntimeException(e);
+          }
+
+          return members;
+        }
+    }
+
+    // Used to get the requester's phone number and email
+    static class GetGroupName implements Callable<String> {
+        private String groupId;
+        private HelperContext context;
+
+        protected GetGroupName(HelperContext context, String groupId) {
+            this.context = context;
+            this.groupId = groupId;
+        }
+
+        @Override
+        public String call() {
+            String result = "";
+
+            String[] fieldIds = new String[] {
+              "1", // Group Id
+              "536870913"  // Group Name
+            };
+
+            String qualification = "'1'=\"" + this.groupId + "\"";
+            SimpleEntry[] entries = ArsBase.find(this.context, Assignment.GROUP_FORM, qualification, fieldIds);
+
+            result = entries[0].getEntryFieldValue("536870913");
+
+            return result;
+        }
+    }
+
+    // Used to get the requester's phone number and email
+    static class GetMember implements Callable<Member> {
+        private String memberId;
+        private HelperContext context;
+
+        protected GetMember(HelperContext context, String memberId) {
+            this.context = context;
+            this.memberId = memberId;
+        }
+
+        @Override
+        public Member call() {
+            String result = "";
+
+            String[] fieldIds = new String[] {
+              "1", // Person Id
+              "536870913", // First Name
+              "536870914", // Last Name
+              "536870917", // Login Id
+              "536870918"  // Email
+            };
+
+            String qualification = "'1'=\"" + this.memberId + "\"";
+            SimpleEntry[] entries = ArsBase.find(this.context, Assignment.MEMBER_FORM, qualification, fieldIds);
+
+            String firstName = entries[0].getEntryFieldValue("536870913");
+            String lastName = entries[0].getEntryFieldValue("536870914");
+            String loginId = entries[0].getEntryFieldValue("536870917");
+            String email = entries[0].getEntryFieldValue("536870918");
+
+            return new Member(loginId, firstName, lastName, email);
+        }
+    }
+%>

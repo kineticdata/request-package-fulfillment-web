@@ -1,0 +1,35 @@
+<%!
+    public static class Member {
+        public String id;
+        public String email;
+        public String firstName;
+        public String lastName;
+
+        public Member(String id, String firstName, String lastName, String email) {
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public String getId() { return this.id; }
+        public String getFirstName() { return this.firstName; }
+        public String getLastName() { return this.lastName; }
+        public String getEmail() { return this.email; }
+
+        public void setId(String id) { this.id = id; }
+        public void setFirstName(String firstName) { this.firstName = firstName; }
+        public void setLastName(String lastName) { this.lastName = lastName; }
+        public void setEmail(String email) { this.email = email; }
+
+        public Map<String,Object> getJsonObject() {
+          Map<String,Object> json = new LinkedHashMap<String,Object>();
+          json.put("id", getId());
+          json.put("firstName", getFirstName());
+          json.put("lastName", getLastName());
+          json.put("email", getEmail());
+
+          return json;
+        }
+    }
+%>

@@ -15,7 +15,7 @@
         public static final String FIELD_WORK_ORDER_ID = "740000007";
 
         public static final String[] FIELD_IDS = new String[] {
-            FIELD_ID, FIELD_CREATE_DATE, FIELD_ATTACHMENTNAME, FIELD_INFORMATION, 
+            FIELD_ID, FIELD_CREATE_DATE, FIELD_ATTACHMENTNAME, FIELD_INFORMATION,
             FIELD_VISIBILITY_FLAG, FIELD_ATTACHMENT, FIELD_SUBMITTER, FIELD_MODIFY_DATE
         };
 
@@ -24,7 +24,7 @@
             int count = ArsBase.count(context, FORM_NAME, qualification);
             return (count>0)? true : false;
         }
-        
+
         public static int count(HelperContext context, String qualification) {
             return ArsBase.count(context, FORM_NAME, qualification);
         }
@@ -49,7 +49,7 @@
 
             return result;
         }
-        
+
         public static WorkInformation findSingleById(HelperContext context, String workOrderId) {
             String qualification = "'" + FIELD_ID + "'=\"" + workOrderId + "\"";
             SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
@@ -71,7 +71,7 @@
 
             return results;
         }
-        
+
         public static String saveWorkInformation(HelperContext context, String sessionID, String workOrderID,
             String notes, String visibilityFlag, String attachmentID, String fileName) {
             String createdId = null;
@@ -81,26 +81,6 @@
             entrySave.setEntryItems(new Hashtable());
             entrySave.setEntryFieldValue(FIELD_WORK_ORDER_ID, workOrderID);
             entrySave.setEntryFieldValue(FIELD_INFORMATION, notes);
-            entrySave.setEntryFieldValue(FIELD_VISIBILITY_FLAG, visibilityFlag);
-
-            // if (attachmentID != null && attachmentID.length()>0 && fileName != null && fileName.length() > 0) {
-            //     entrySave.setEntryFieldValue(FIELD_ATTACHMENTNAME, fileName);
-            //     File 
-            //     // File uploadedFiles = new File(RemedyHandler.FULL_PATH_TO_CONTEXT + File.separatorChar + "work" +
-            //     //         File.separatorChar + sessionID + File.separatorChar + attachmentID);
-            //     if (uploadedFiles.exists()) {
-            //         File[] attachments = uploadedFiles.listFiles();
-            //         if (attachments != null && attachments.length > 0) {
-            //             try {
-            //                 com.bmc.arsys.api.AttachmentValue aValue = new com.bmc.arsys.api.AttachmentValue(fileName, attachments[0].getAbsolutePath());
-            //                 entrySave.setEntryFieldValue(FIELD_ATTACHMENT, new com.bmc.arsys.api.Value(aValue));
-            //             }
-            //             catch (Exception e) {
-            //                 throw new RuntimeException("Unable to create attachment value.", e);
-            //             }
-            //         }
-            //     }
-            // }
 
             // Build the helper
             ArsHelper helper = null;
@@ -119,7 +99,7 @@
         }
 
         public static String saveWorkInformationWithAttachment(HelperContext context, String workOrderID,
-            String notes, String visibilityFlag, String fileName, byte[] attachmentContent) {
+            String notes, String fileName, byte[] attachmentContent) {
             String createdId = null;
 
             SimpleEntry entrySave = new SimpleEntry();
@@ -127,7 +107,6 @@
             entrySave.setEntryItems(new Hashtable());
             entrySave.setEntryFieldValue(FIELD_WORK_ORDER_ID, workOrderID);
             entrySave.setEntryFieldValue(FIELD_INFORMATION, notes);
-            entrySave.setEntryFieldValue(FIELD_VISIBILITY_FLAG, visibilityFlag);
 
             if (attachmentContent != null && attachmentContent.length > 0 &&
                 fileName != null && fileName.length() > 0) {
@@ -181,15 +160,15 @@
             String baseRequestUrl = "";
             if (m.find()) {
                  baseRequestUrl = m.group(1);
-            } 
-            
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append(baseRequestUrl);
             sb.append("DownloadAttachment/");
             sb.append(FORM_NAME).append("/");
             sb.append(FIELD_ATTACHMENT).append("/");
             sb.append(getId());
-            
+
             return sb.toString();
         }
     }

@@ -1,0 +1,16 @@
+<%!
+    public static class Group {
+        public String name;
+        public Integer childrenCount;
+
+        public Group(String name, Integer childrenCount) {
+            this.name = name;
+            this.childrenCount = childrenCount;
+        }
+
+        public String getName() {return this.name;}
+        public Integer getChildrenCount() {return this.childrenCount;}
+
+        public void setName(String name) { this.name = name; }
+    }
+%>

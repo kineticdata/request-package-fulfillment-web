@@ -40,13 +40,13 @@ if (request.getMethod() == "GET") {
     if (ksr != null) {
         // If the input query was able to be translated to a valid KSR, add a
         // check for that to the qualification
-        qualification.append(String.format("'%s'=\"%s\"", WorkOrder.FIELD_SOURCE_ID, ksr));
+        qualification.append(String.format("'%s'=\"%s\"", WorkOrder.FLD_REQUEST_ID, ksr));
         qualification.append(" OR ");
     }
-    qualification.append("('").append(WorkOrder.FIELD_WORK_ORDER_NAME).append("'");
+    qualification.append("('").append(WorkOrder.FLD_WORK_ORDER).append("'");
     qualification.append(" LIKE \"%").append(query).append("%\" ");
     qualification.append("OR");
-    qualification.append("'").append(WorkOrder.FIELD_ASSIGNED_IND_ID).append("'");
+    qualification.append("'").append(WorkOrder.FLD_ASSIGNEE_ID).append("'");
     qualification.append(" LIKE \"%").append(query).append("%\")");
     
     System.out.println(qualification.toString());
