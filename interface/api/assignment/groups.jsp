@@ -39,7 +39,8 @@ if (request.getParameter("loginId") != null) {
 
   for (Group group : groups) {
     Map<String,Object> item = new LinkedHashMap<String,Object>();
-    item.put("name", group.getName());
+    String[] groupNames = group.getName().split("::");
+    item.put("name", groupNames[groupNames.length-1]);
     item.put("childrenCount", group.getChildrenCount());
     items.add(item);
   }
