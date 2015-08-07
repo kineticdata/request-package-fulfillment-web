@@ -174,22 +174,27 @@
         }
 
         public static String[] findMemberIdsByGroup(HelperContext context, String group) {
+          String[] memberIds = null;
+
           String[] fieldIds = new String[] {
             "1", // Group Id
             "536870913"  // Group Name
           };
 
-          String qualification = "'536870913'=\"" + group + "\"";
+          Integer groupLevel = group.split("::").length;
+          String qualification = "'536870913'=\"" + group + "\" AND '536870917'=\"" + groupLevel + "\"";
           SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
 
-          String groupId = entries[0].getEntryFieldValue("1");
+          if (entries.length > 0) {
+            String groupId = entries[0].getEntryFieldValue("1");
 
-          qualification = "'536870913'=\"" + groupId + "\"";
-          entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, new String[] {"536870913","536870914"});
+            qualification = "'536870913'=\"" + groupId + "\"";
+            entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, new String[] {"536870913","536870914"});
 
-          String[] memberIds = new String[entries.length];
-          for (int i = 0; i < entries.length; i++) {
-            memberIds[i] = entries[i].getEntryFieldValue("536870914");
+            memberIds = new String[entries.length];
+            for (int i = 0; i < entries.length; i++) {
+              memberIds[i] = entries[i].getEntryFieldValue("536870914");
+            }
           }
 
           return memberIds;
@@ -197,22 +202,26 @@
 
         public static List<Member> findMembersByIds(HelperContext context, String[] memberIds) {
           List<Member> members = new ArrayList<Member>();
+          if (memberIds != null) {
+            if (memberIds.length != 0) {
+              System.out.println("Inside If Statement");
+              ExecutorService memberPool = Executors.newFixedThreadPool(memberIds.length);
+              Set<Future<Member>> memberFutureSet = new HashSet<Future<Member>>();
 
-          ExecutorService memberPool = Executors.newFixedThreadPool(memberIds.length);
-          Set<Future<Member>> memberFutureSet = new HashSet<Future<Member>>();
+              for (int i = 0; i < memberIds.length; i++) {
+                Callable<Member> memberCallable = new GetMember(context, memberIds[i]);
+                Future<Member> memberFuture = memberPool.submit(memberCallable);
+                memberFutureSet.add(memberFuture);
+              }
 
-          for (int i = 0; i < memberIds.length; i++) {
-            Callable<Member> memberCallable = new GetMember(context, memberIds[i]);
-            Future<Member> memberFuture = memberPool.submit(memberCallable);
-            memberFutureSet.add(memberFuture);
-          }
-
-          try {
-            for (Future<Member> future : memberFutureSet) {
-              members.add(future.get());
+              try {
+                for (Future<Member> future : memberFutureSet) {
+                  members.add(future.get());
+                }
+              } catch (Exception e) {
+                  throw new RuntimeException(e);
+              }
             }
-          } catch (Exception e) {
-              throw new RuntimeException(e);
           }
 
           return members;
