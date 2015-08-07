@@ -49,13 +49,10 @@
           <dd>{{workOrder.workOrder}}</dd>
 
           <dt>Requested For</dt>
-          <dd>{{workOrder.requestedFor}}</dd>
-
-          <dt>Priority</dt>
-          <dd>{{workOrder.priority}}</dd>
+          <dd>{{workOrder.getRequestedFor()}}</dd>
 
           <dt>ID</dt>
-          <dd>{{workOrder.getNiceRequestId()}}</dd>
+          <dd>{{workOrder.getNiceId()}}</dd>
 
           <dt>Status</dt>
           <dd>{{workOrder.status}}</dd>

@@ -5,12 +5,8 @@ angular.module('kineticdata.fulfillment.services.assignments', [])
     var groupsUrl = ConfigService.getBaseUrl() + '/assignment/groups';
 
     var buildParentParams = function(parents) {
-      var parentParams = '';
-      _.forEach(parents, function(parent) {
-        parentParams += '&parent[]='+parent;
-      });
-
-      return parentParams;
+      var parentParam = '&parent=' +parents.join('::');
+      return (parents.length > 0 ? parentParam : '');
     };
 
     var getAssignmentsByParents = function(parents) {
@@ -28,11 +24,13 @@ angular.module('kineticdata.fulfillment.services.assignments', [])
       return deferred.promise;
     };
 
-    var getMembersByGroup = function(group) {
+    var getMembersByGroup = function(groups) {
       var deferred = $q.defer();
       var factory = ModelFactory.get('Member');
+      var group = groups.join('::');
 
-      $http.get(membersUrl + '&group=' + group.id).then(
+
+      $http.get(membersUrl + '&group=' + group).then(
         function(data) {
           var newData = new factory.factoryObject(data.data);
           deferred.resolve(newData);

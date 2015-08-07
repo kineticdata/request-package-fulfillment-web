@@ -22,8 +22,7 @@
     <div class="row row-workorder-list" row-hover ng-repeat="workOrder in workOrders">
       <div class="col-md-12" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
         <div class="row">
-          <div class="col-md-6 col-xs-6">{{workOrder.getNiceRequestId()}}</div>
-          <div class="col-md-6 col-xs-6">{{workOrder.priority}}</div>
+          <div class="col-md-6 col-xs-6">{{workOrder.getNiceId()}}</div>
         </div>
 
         <div class="row">
@@ -31,7 +30,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12">requested for {{workOrder.requestedFor}}</p></div>
+          <div class="col-md-12">requested for {{workOrder.getRequestedFor()}}</p></div>
         </div>
 
         <div class="row">

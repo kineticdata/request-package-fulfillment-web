@@ -13,14 +13,14 @@
     <ul class="list-group">
       <!-- List off all of the assigned groups. -->
       <li class="list-group-item" ng-repeat="group in workOrder.groups">
-        <strong>{{group.label}}:</strong> {{group.name}}
+        {{group}}
       <span class="pull-right">
         <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment($index)"><i class="fa fa-chevron-right"></i></button>
       </span>
       </li>
 
       <!-- If applicable, show the next group assignment -->
-      <li class="list-group-item" ng-if="showChildSelect()">
+      <li class="list-group-item" ng-if="showGroupSelect()">
         <strong>{{getChildLabel()}}</strong>
         <span class="pull-right">
         <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment(currentGroupStructure.length)"><i class="fa fa-chevron-right"></i></button>
@@ -28,7 +28,7 @@
       </li>
 
       <!-- If applicable, show the members row. -->
-      <li class="list-group-item" ng-if="!showChildSelect()">
+      <li class="list-group-item" ng-if="!showGroupSelect()">
         <strong>Member:</strong> {{workOrder.getAssignedName()}}
         <span class="pull-right"><button class="btn btn-default btn-xs" ng-click="clickOverviewMemberAssignment()"><i class="fa fa-arrow-right"></i></button></span>
       </li>
@@ -40,7 +40,7 @@
     <ul class="list-group">
       <!-- List the already selected assignments -->
       <li class="list-group-item" ng-repeat="group in currentGroupStructure">
-        <strong>{{group.label}}:</strong> {{group.name}}
+        {{group}}
       </li>
 
       <!-- Show the loading spinner is loading assignment information -->
@@ -51,7 +51,7 @@
       <!-- Select group, if group selection state is active -->
       <li class="list-group-item" ng-if="state.selectGroups && !state.loadingData">
 
-        <p class="lead text-center">{{possibleAssignments.label}}</p>
+        <p class="lead text-center">Group</p>
         <div class="btn-group-vertical btn-block" role="group" >
           <button ng-repeat="item in possibleAssignments.items" class="btn btn-default" ng-click="assignLevel(item)">{{item.name}}</button>
         </div>
@@ -61,7 +61,7 @@
       <li class="list-group-item" ng-if="state.selectMembers && !state.loadingData">
         <p class="lead text-center">Member</p>
         <div class="btn-group-vertical btn-block" role="group" >
-          <button ng-repeat="member in possibleAssignments.members" class="btn btn-default" ng-click="assignMember(member)">{{member.fullName}}</button>
+          <button ng-repeat="member in possibleAssignments.members" class="btn btn-default" ng-click="assignMember(member)">{{member.firstName}} {{member.lastName}}</button>
         </div>
       </li>
     </ul>

@@ -29,45 +29,31 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       ////////////////////////////////////////////
       // Decorate the data with helper methods. //
       ////////////////////////////////////////////
-      self.getGroup = function(label) {
-        label = typeof label !== 'undefined' ? label : 'Group';
-        return _.find(self.groups, function(wog) {
-          return wog.label == label;
-        });
+      self.getGroup = function() {
+        return self.groups[self.groups.length-1];
       };
 
-      self.getGroupName = function(label) {
-        var group = self.getGroup(label);
-        if(group === undefined || group.name === undefined) {
-          return 'None';
-        }
-        return group.name;
+      self.getGroupName = function() {
+        return self.getGroup();
       };
 
       self.getGroupPath = function() {
-        var path = '';
-
-        _.forEach(self.groups, function(wog) {
-          path += wog.name + ' :: ';
-        });
-        path = path.replace(/ :: $/, '');
-
-        return path;
+        return self.groups.join(' :: ');;
       };
 
       self.isUnassigned = function() {
-        return (self.assignedName === undefined || self.assignedName === null)
+        return (self.assignee === null || self.assignee.loginId === null)
       };
 
       self.getAssignedName = function() {
         if(self.isUnassigned()) {
           return 'Unassigned';
         }
-        return self.assignedName;
+        return self.assignee.name;
       };
 
-      self.getNiceRequestId = function() {
-        return self.requestId.replace(/KSR0+/, 'KSR-');
+      self.getNiceId = function() {
+        return self.id.replace(/KSR0+/, 'KSR-');
       };
 
       self.getNiceDueDate = function() {
@@ -81,6 +67,13 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       self.isOverdue = function() {
         var due = new Date(self.due);
         return (due < new Date());
+      };
+
+      self.getRequestedFor = function() {
+        if(self.requestedFor === null || typeof self.requestedFor.name === 'undefined') {
+          return 'Nobody';
+        }
+        return self.requestedFor.name;
       }
 
     };
