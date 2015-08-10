@@ -100,7 +100,7 @@ if (request.getMethod() == "POST") {
     results.put("created",DateConverter.getIso8601(createdNote.getCreateDate()));
     results.put("modified",DateConverter.getIso8601(createdNote.getModifyDate()));
     results.put("userId",createdNote.getSubmittedBy());
-    results.put("entry",createdNote.getInformation());
+    results.put("note",createdNote.getInformation());
 
     // If there is no attachment, the attachment map will be set to null.
     Map<String,Object> attachment = null;
@@ -143,7 +143,7 @@ if (request.getMethod() == "POST") {
         workInformation.put("created",DateConverter.getIso8601(wi.getCreateDate()));
         workInformation.put("modified",DateConverter.getIso8601(wi.getModifyDate()));
         workInformation.put("submittedBy",wi.getSubmittedBy());
-        workInformation.put("information",wi.getInformation());
+        workInformation.put("note",wi.getInformation());
 
         // If there is no attachment, the attachment map will be set to null.
         Map<String,Object> attachment = null;
