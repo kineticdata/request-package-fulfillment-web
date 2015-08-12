@@ -1,6 +1,6 @@
 <div class="row">
-  <div class="col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
-    <span>
+  <div class="sidebar col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
+    <span class="sidebar-title">
       <h3 class="text-center">
         <button class="btn btn-default pull-left" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
         {{currentFilter.name}}
@@ -19,11 +19,10 @@
       </h3>
     </span>
 
-    <div class="row row-workorder-list" row-hover ng-repeat="workOrder in workOrders">
-      <div class="col-md-12" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
+    <div class="row row-workorder-list" ng-repeat="workOrder in workOrders" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
+      <div class="col-md-12">
         <div class="row">
-          <div class="col-md-6 col-xs-6">{{workOrder.getNiceRequestId()}}</div>
-          <div class="col-md-6 col-xs-6">{{workOrder.priority}}</div>
+          <div class="col-md-6 col-xs-6">{{workOrder.getNiceId()}}</div>
         </div>
 
         <div class="row">
@@ -31,7 +30,7 @@
         </div>
 
         <div class="row">
-          <div class="col-md-12">requested for {{workOrder.requestedFor}}</p></div>
+          <div class="col-md-12">requested for {{workOrder.getRequestedFor()}}</p></div>
         </div>
 
         <div class="row">
@@ -57,7 +56,7 @@
 
   </div>
 
-  <div class="col-md-8 col-xs-12">
+  <div class="col-md-8 col-xs-12 main-content">
     <div ui-view></div>
   </div>
 </div>
