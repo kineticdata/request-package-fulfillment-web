@@ -9,62 +9,28 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
     $scope.currentGroup = {};
     $scope.possibleAssignments = {};
     $scope.workOrder = workOrder;
-    $scope.modified = false;
-    $scope.parents = [];
+    $scope.currentGroupStructure = $scope.workOrder.groups;
+
+
 
     $scope.state = {};
     $scope.state.overview = true;
     $scope.state.selecting = false;
     $scope.state.selectGroups = false;
     $scope.state.selectMembers = false;
-    $scope.state.loading = true;
+    $scope.state.loading = false;
     $scope.state.loadingData = false;
 
-    /// Retrieve the work order to get all group information.
-    $scope.getGroups = function() {
-      $scope.state.loading = true;
-      $scope.currentGroupStructure = $scope.workOrder.groups;
-      $scope.modified = false;
-
-      var parents = $scope.buildParentsArray($scope.currentGroupStructure);
-      parents.pop();
-
-      AssignmentsService.getAssignmentsByParents(parents).then(
-        function(group) {
-          var lastGroup = $scope.currentGroupStructure[$scope.currentGroupStructure.length-1];
-          var groupDesc = _.find(group.items, function(item) {
-            return item.id === lastGroup.id;
-          });
-
-          lastGroup.childrenCount = groupDesc.childrenCount;
-          AssignmentsService.getAssignmentsByParents($scope.buildParentsArray($scope.currentGroupStructure)).then(
-            function(nextGroup) {
-              lastGroup.nextLabel = nextGroup.label;
-              $scope.state.loading = false;
-              $scope.state.loadingData = false;
-            },
-            function() {
-              toastr.error('There wsa a problem retrieving groups!');
-            });
-
-        }, function() {
-          toastr.error('There was a problem retrieving groups!');
-        });
-    };
-
-    $scope.showChildSelect = function() {
-      return $scope.currentGroupStructure[$scope.currentGroupStructure.length-1].childrenCount > 0;
+    $scope.showGroupSelect = function() {
+      return workOrder.isUnassigned();
     };
 
     $scope.getChildLabel = function() {
-      return $scope.currentGroupStructure[$scope.currentGroupStructure.length-1].nextLabel;
-    };
-
-    $scope.buildParentsArray = function(structure) {
-      return _.reduce(structure, function(groups, group) {
-        groups.push(group.id);
-        return groups;
-      }, []);
+      var hasMoreGroups = false;
+      if(typeof $scope.possibleAssignments.items !== 'undefined' && $scope.possibleAssignments.items.length > 0) {
+        hasMoreGroups = true;
+      }
+      return 'Assign ' + (hasMoreGroups===false ? 'Member' : 'Group');
     };
 
     $scope.doStartGroupAssignment = function(index) {
@@ -76,8 +42,11 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       $scope.state.loadingData = true;
 
       $scope.currentGroupStructure = $scope.currentGroupStructure.slice(0, index);
-      var parents = $scope.buildParentsArray($scope.currentGroupStructure);
-      AssignmentsService.getAssignmentsByParents(parents).then(
+      $scope.fetchPossibleAssignments($scope.currentGroupStructure);
+    };
+
+    $scope.fetchPossibleAssignments = function(groups) {
+      AssignmentsService.getAssignmentsByParents(groups).then(
         function(group) {
           $scope.possibleAssignments = group;
           $scope.state.loadingData = false;
@@ -85,17 +54,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         function() {
           toastr.error('There was a problem loading groups.');
         });
-    };
+    }
 
     /// Start member selection - given a group retrieve a list of possible members.
-    $scope.doStartMemberAssignment = function(group) {
+    $scope.doStartMemberAssignment = function() {
       $scope.state.overview = false;
       $scope.state.selecting = true;
       $scope.state.selectGroups = false;
       $scope.state.selectMembers = true;
       $scope.state.loadingData = true;
 
-      AssignmentsService.getMembersByGroup(group).then(
+      AssignmentsService.getMembersByGroup($scope.currentGroupStructure).then(
         function(members) {
           $scope.possibleAssignments = members;
           $scope.state.loadingData = false;
@@ -115,23 +84,18 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       $scope.state.selecting = false;
       $scope.state.selectGroups = false;
       $scope.state.selectMembers = false;
-      $scope.state.loadingData = false;
+      $scope.state.loadingData = true;
 
-      $scope.getGroups();
+      $scope.fetchPossibleAssignments($scope.currentGroupStructure);
     };
 
     /// Given an assignment item, assign it to the parents and cascade to next step.
     $scope.assignLevel = function(item) {
-      var newGroup = {
-        label: $scope.possibleAssignments.label,
-        id: item.id,
-        name: item.name
-      };
-      $scope.currentGroupStructure.push(newGroup);
+      $scope.currentGroupStructure.push(item.name);
 
-      if(item.childrenCount === "0") {
+      if(item.childrenCount === 0) {
         // Get members, there are no more children.
-        $scope.doStartMemberAssignment(item);
+        $scope.doStartMemberAssignment();
       } else {
         $scope.doStartGroupAssignment($scope.currentGroupStructure.length);
       }
@@ -140,10 +104,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
 
     $scope.assignMember = function(member) {
       var payload = {};
-      _.forEach($scope.currentGroupStructure, function(parent) {
-        payload[parent.label] = parent.id;
-      });
-      payload['Member'] = member.loginId;
+
+      payload['group'] = $scope.currentGroupStructure.join('::');
+      payload['member'] = member.id;
 
       $scope.state.loadingData = true;
       WorkOrdersService.postAssignments($scope.workOrder.id, payload).then(
@@ -162,9 +125,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
     $scope.savePartial = function() {
       var payload = {};
 
-      _.forEach($scope.currentGroupStructure, function(parent) {
-        payload[parent.label] = parent.id;
-      });
+      payload['group'] = $scope.currentGroupStructure.join('::');
 
       $scope.state.loadingData = true;
       WorkOrdersService.postAssignments($scope.workOrder.id, payload).then(
@@ -180,8 +141,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       )
     };
 
-    // RUNTIME
 
-    $scope.getGroups();
+    $scope.fetchPossibleAssignments($scope.currentGroupStructure);
 
   }]);
