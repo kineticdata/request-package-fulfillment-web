@@ -38,6 +38,25 @@
         SORTABLE_FIELDS.put("modifiedDate",FLD_MODIFIED_DATE);
       }
 
+      public static final Map<String,String> FILTER_FIELDS = new HashMap<String,String>();
+      static {
+        FILTER_FIELDS.put("id",FLD_REQUEST_ID);
+        FILTER_FIELDS.put("requestName", FLD_REQUEST_NAME);
+        FILTER_FIELDS.put("workOrder", FLD_WORK_ORDER);
+        FILTER_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
+        FILTER_FIELDS.put("requestedFor.loginId", FLD_REQUESTED_FOR_ID);
+        FILTER_FIELDS.put("assignee.name", FLD_ASSIGNEE_NAME);
+        FILTER_FIELDS.put("assignee.loginId", FLD_ASSIGNEE_ID);
+        FILTER_FIELDS.put("originator.id", FLD_ORIGINATING_ID);
+        FILTER_FIELDS.put("originator.source", FLD_ORIGINATING_SOURCE);
+        FILTER_FIELDS.put("status", FLD_STATUS);
+        FILTER_FIELDS.put("due", FLD_DUE_DATE);
+        FILTER_FIELDS.put("details", FLD_DETAILS);
+        FILTER_FIELDS.put("summary", FLD_SUMMARY);
+        FILTER_FIELDS.put("groups", FLD_ASSIGNED_GROUPS);
+        FILTER_FIELDS.put("submitType", FLD_SUBMIT_TYPE);
+      }
+
       public static final String[] FIELD_IDS = new String[] {
         FLD_REQUEST_ID,FLD_ORIGINATING_ID,FLD_ORIGINATING_SOURCE,FLD_STATUS,FLD_WORK_ORDER,
         FLD_REQUEST_NAME,FLD_REQUESTED_FOR_NAME,FLD_REQUESTED_FOR_ID,FLD_ASSIGNEE_ID,

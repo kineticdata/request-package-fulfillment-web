@@ -55,7 +55,8 @@ if (request.getMethod() == "GET") {
     Object searchQualification = request.getAttribute("qualification");
     if (request.getParameter("filter") != null) {
         String filterName = request.getParameter("filter");
-        WorkOrderFilter filter = WorkOrderFilter.getFilterByName(context, filterName, bundle.getProperty("catalogName"));
+        String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
+        Filter filter = Filter.getFilter(context, contextualPackagePath, filterName);
         if (filter != null) {
             // sorting by 1 is ASC, sorting by 0 is DESC. Currently automatically searching by modified date ASC.
             workOrderObjects = WorkOrder.find(tzFreeContext, filter.getQualification(), orderList, limit, offset, sortDirection);

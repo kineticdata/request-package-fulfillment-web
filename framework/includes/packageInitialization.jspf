@@ -75,6 +75,7 @@
 <%@page import="java.util.ArrayList" %>
 <%@page import="java.util.regex.Matcher" %>
 <%@page import="java.util.regex.Pattern" %>
+<%@page import="java.util.Properties" %>
 <%@page import="java.text.SimpleDateFormat" %>
 <%@page import="com.kineticdata.core.v1.utils.JsonUtils"%>
 <%@page import="org.apache.commons.fileupload.FileItem"%>
@@ -82,6 +83,7 @@
 <%@page import="org.apache.commons.fileupload.disk.DiskFileItemFactory"%>
 <%@page import="org.apache.commons.fileupload.FileUploadException"%>
 <%@page import="org.apache.commons.io.FilenameUtils"%>
+
 
 <%--
     Import the models that will be used for fulfillment API
@@ -91,7 +93,7 @@
 <%@include file="../models/WorkOrder.jspf"%>
 <%@include file="../models/WorkOrderLog.jspf"%>
 <%@include file="../models/WorkInformation.jspf"%>
-<%@include file="../models/WorkOrderFilter.jspf"%>
+<%@include file="../models/Filter.jspf"%>
 <%@include file="../models/Group.jspf" %>
 <%@include file="../models/Member.jspf" %>
 <%@include file="../models/Assignment.jspf" %>
