@@ -4,7 +4,7 @@ angular.module('kineticdata.fulfillment.models.assignments', [
 .run(['$log', 'ModelFactory', function($log, ModelFactory) {
     var Group = function(group) {
       var self = this;
-      _.assign(self, group);
+      self.items = group;
     };
 
     var Member = function(member) {
