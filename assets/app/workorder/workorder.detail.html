@@ -5,12 +5,12 @@
     <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work" work-tab>WORK</a></li>
     <li role="presentation">
       <a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">
-        NOTES
+        NOTES <span data-ng-if="!workOrderNotesLoading">({{workOrderNotes.length}})</span>
       </a>
     </li>
     <li role="presentation">
       <a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">
-        LOGS
+        HISTORY
       </a>
     </li>
   </ul>
@@ -63,6 +63,19 @@
       </div>
 
       <div class="well well-sm">
+        <h4>Latest Note</h4>
+        <div data-ng-if="!workOrderNotesLoading">
+          <div data-ng-if="workOrderNotes.length > 0">
+            By <strong>{{workOrderNotes[0].submittedBy}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
+            <p class="white-space">{{workOrderNotes[0].note}}</p>
+          </div>
+          <div data-ng-if="workOrderNotes.length === 0">
+            Work Order has no notes.
+          </div>
+        </div>
+      </div>
+
+      <div class="well well-sm">
         <h4>Details</h4>
         <p class="white-space">{{workOrder.details}}</p>
       </div>
@@ -85,7 +98,7 @@
       </div>
       <div ng-hide="workOrderNotesLoading">
 
-        <div ng-show="showAddNote">
+        <div ng-if="showAddNote">
           <div class="row">
             <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
               <input type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote"/>
@@ -101,7 +114,7 @@
           </div>
         </div>
 
-        <div ng-hide="showAddNote">
+        <div ng-if="!showAddNote">
           <div class="row">
             <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
               <button class="btn btn-default btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
@@ -110,8 +123,12 @@
         </div>
 
         <div ng-repeat="note in workOrderNotes" class="well-log">
-          <p>{{note.information}}</p>
-          <p>Submitted By: {{note.submittedBy}}</p>
+          <div class="panel panel-default">
+            <div class="panel-heading">By {{note.submittedBy}}, <span am-time-ago="note.created"></span></div>
+            <div class="panel-body">
+              {{note.note}}
+            </div>
+          </div>
         </div>
 
       </div>

@@ -6,12 +6,11 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
 
-    var postNoteById = function(id, message, visibility) {
-      visibility = typeof visibility === 'undefined' ? 'Public' : visibility;
+    var postNoteById = function(id, message) {
       var deferred = $q.defer();
       var url = workOrderUrl + '/' + id + '/notes';
 
-      $http.post(url, {visibilityFlag: visibility, note: message})
+      $http.post(url, {note: message})
         .success(function(data, status, headers) {
           if(headers('content-type') === 'text/html;charset=UTF-8') {
             $log.error('Failure from server: response not in JSON.', data);
