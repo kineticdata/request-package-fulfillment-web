@@ -35,7 +35,7 @@ if (request.getMethod() == "GET") {
     
     // Build Remedy Qualification based off of the input query
     StringBuilder qualification = new StringBuilder();
-    qualification.append(WorkOrderFilter.getOpenWorkOrdersFilter(context, bundle.getProperty("catalogName")).getQualification());
+    qualification.append(Filter.getOpenWorkOrdersFilter(context, bundle.getProperty("catalogName")).getQualification());
     qualification.append(" AND ");
     if (ksr != null) {
         // If the input query was able to be translated to a valid KSR, add a

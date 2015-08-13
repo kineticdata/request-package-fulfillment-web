@@ -10,22 +10,22 @@
             String bDateString;
             Date aDate;
             Date bDate;
-            if (a.getClass() == WorkInformation.class) {
-                aDateString = ((WorkInformation)a).getModifyDate();
+            if (a.getClass() == Note.class) {
+                aDateString = ((Note)a).getModifyDate();
             } else {
                 aDateString = ((WorkOrderLog)a).getDate();
             }
             
-            if (b.getClass() == WorkInformation.class) {
-                bDateString = ((WorkInformation)b).getModifyDate();
+            if (b.getClass() == Note.class) {
+                bDateString = ((Note)b).getModifyDate();
             } else {
                 bDateString = ((WorkOrderLog)b).getDate();
             }
 
             // Have run into problems where modify date hasn't populated for
             // notes before. So fail over to create date if modify date is empty
-            if (aDateString == "") { aDateString =  ((WorkInformation)a).getCreateDate();}
-            if (bDateString == "") { bDateString =  ((WorkInformation)b).getCreateDate();}
+            if (aDateString == "") { aDateString =  ((Note)a).getCreateDate();}
+            if (bDateString == "") { bDateString =  ((Note)b).getCreateDate();}
             
             SimpleDateFormat parser = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
             try {
@@ -78,8 +78,8 @@ if (request.getMethod() == "GET") {
     int offset = request.getParameter("offset") == null ? 0 : Integer.parseInt(request.getParameter("offset"));
     
     WorkOrderLog[] workOrderLogs = WorkOrderLog.find(tzFreeContext,id,new String[] {WorkOrderLog.FIELD_CREATE_DATE},0,0,1);
-    String qualification = "'" + WorkInformation.FIELD_WORK_ORDER_ID + "'=\"" + id + "\"";
-    WorkInformation[] notes = WorkInformation.find(tzFreeContext,qualification,new String[] {WorkInformation.FIELD_MODIFY_DATE},0,0,1);
+    String qualification = "'" + Note.FIELD_WORK_ORDER_ID + "'=\"" + id + "\"";
+    Note[] notes = Note.find(tzFreeContext,qualification,new String[] {Note.FIELD_MODIFY_DATE},0,0,1);
         
     List historyCollection = new ArrayList();
     historyCollection.addAll(Arrays.asList(workOrderLogs));
@@ -98,8 +98,8 @@ if (request.getMethod() == "GET") {
     List history = new ArrayList();
     for (Object o : historyCollection) {
         Map<String,Object> historyObject = new LinkedHashMap<String,Object>();;
-        if (o.getClass() == WorkInformation.class) {
-            WorkInformation wi = (WorkInformation)o;
+        if (o.getClass() == Note.class) {
+            Note wi = (Note)o;
             historyObject.put("type", "note");
             historyObject.put("id", wi.getId());
             historyObject.put("created",DateConverter.getIso8601(wi.getCreateDate()));

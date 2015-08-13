@@ -92,7 +92,7 @@
 <%@include file="../models/DateConverter.jspf" %>
 <%@include file="../models/WorkOrder.jspf"%>
 <%@include file="../models/WorkOrderLog.jspf"%>
-<%@include file="../models/WorkInformation.jspf"%>
+<%@include file="../models/Note.jspf"%>
 <%@include file="../models/Filter.jspf"%>
 <%@include file="../models/Group.jspf" %>
 <%@include file="../models/Member.jspf" %>
