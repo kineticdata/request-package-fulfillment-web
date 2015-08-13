@@ -59,6 +59,9 @@
 
           <dt>Due</dt>
           <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
+
+          <dt>Originator</dt>
+          <dd><a href="{{workOrder.originator.url}}">({{workOrder.originator.source || 'Request'}}) {{workOrder.originator.id}}</a></dd>
         </dl>
       </div>
 
@@ -105,11 +108,14 @@
           <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
           <button class="btn btn-danger" ng-click="addNote()">Save</button>
         </div>
-        
+
         <div ng-if="!showAddNote">
           <div class="no-data">
-            <h3>There are no notes attached to this work order</h3>
-            <p>Click ‘+ New Note’ to create a new note</p>
+            <div data-ng-if="workOrderNotes.length === 0">
+              <h3>There are no notes attached to this work order</h3>
+              <p>Click ‘+ New Note’ to create a new note</p>
+            </div>
+
             <p>
               <button class="btn btn-primary btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
             </p>
