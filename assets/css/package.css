@@ -327,8 +327,8 @@ iframe#workFrame {
   height: 100%;
 }
 
-.active-workorder {
-  background-color: #f5f5f5;
+.row-workorder-list.active-workorder {
+  background-color: #f8f8f8;
   border-left-width: 3px;
   border-left-style: solid;
   border-left-color: #428bca;
@@ -336,4 +336,82 @@ iframe#workFrame {
 
 .white-space {
   white-space: pre-line;
+}
+
+body{
+  background-color: #e3e3e3;
+}
+.nav-tabs{  
+  margin: 1em 0;
+}
+.sidebar{
+  background-color: #fff;
+  border-right: 1px solid #edecec;
+}
+.sidebar-title{
+  margin:1em 0;
+  display: block;
+}
+.main-content{
+  background-color: #f5f5f5;
+}
+.main-content .well{
+  border-radius: 0;
+  background-color: #fff;
+  border:1px solid #edecec;
+  box-shadow: none;
+}
+.main-content .well h4{
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.btn-primary{
+  background-image:none;
+  box-shadow: none;
+  text-shadow:none;
+  background-color: #2F7ED8;
+}
+.btn-warning{
+  background-color:#FFB200;
+  border:none;
+  font-weight: bold;
+}
+.nav-tabs>li>a{
+  border-radius: 0;
+  color:#000;
+}
+.nav-tabs>li>a:hover{
+  border-color: transparent;
+  background-color: transparent;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+  color: #000;
+  font-weight: bold;
+  background-color: transparent;
+  border-color:transparent;
+  border-bottom: 4px solid #FFB200
+}
+/*Empty States outside of tables*/
+.no-data{
+  color: #999999;
+  text-align: center;
+  border: 1px solid #999;
+  border-radius: 3px;
+  line-height: 140%;
+  margin-bottom: 20px;
+  padding: 1em;
+  background-color: #eee;
+  position: relative;
+  border: 1px solid transparent; 
+}
+.no-data h3{color: #666;font-size: 1.4em;}
+.showAddNote{
+  display: block;
+  margin:1em 0;
+}
+.row-workorder-list{
+  background-color: #fff;
+}
+.row-workorder-list:hover{
+  background-color: #f5f5f5;
 }

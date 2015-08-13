@@ -1,0 +1,4 @@
+My\ Work\ Orders='{{assignee.loginId}}'\="{{user.current}}" AND '{{status}}'!\="Completed" AND '{{submitType}}'\="workOrder"
+Open\ Work\ Orders=('{{status}}'\="New" OR '{{status}}'\="In Progress" OR '{{status}}'\="Sent") AND '{{submitType}}'\="workOrder"
+Unassigned\ Work\ Orders='{{assignee.loginId}}'\=null AND '{{status}}'!\="Completed" AND '{{status}}'!\="Expired" AND '{{submitType}}'\="workOrder"
+defaultFilterName=Open Work Orders

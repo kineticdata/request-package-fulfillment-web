@@ -16,8 +16,8 @@
   </ul>
 
   <!-- Tab Content -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="summary">
+  <div class="tab-content clearfix">
+    <div role="tabpanel" class="tab-pane fade in active" id="summary">
       <!-- Assignments details -->
       <div class="well well-sm">
         <dl class="dl-horizontal">
@@ -81,10 +81,10 @@
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="work">
-      <div ng-if="!isMine(workOrder)">
+    <div role="tabpanel" class="tab-pane fade in" id="work">
+      <div class="no-data" ng-if="!isMine(workOrder)">
         <h3>Grab Work Order?</h3>
-        Do you want to assign this to yourself?
+        <p>Do you want to assign this to yourself?</p>
         <button class="btn btn-block btn-primary" ng-click="doWorkIt()">Grab It!</button>
       </div>
       <div ng-if="isMine(workOrder)">
@@ -92,33 +92,27 @@
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="notes">
+    <div role="tabpanel" class="tab-pane fade in" id="notes">
       <div ng-show="workOrderNotesLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
       <div ng-hide="workOrderNotesLoading">
-
-        <div ng-if="showAddNote">
-          <div class="row">
-            <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
-              <input type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote"/>
-            </div>
+        <div class="showAddNote clearfix" ng-if="showAddNote">
+          <div class="form-group">
+            <label for="tmpNote">New Note</label>
+            <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote"/>
           </div>
-          <div class="row">
-            <div class="col-md-offset-2 col-xs-offset-2 col-md-4 col-xs-4">
-              <button class="btn btn-default btn-block" ng-click="cancelNote()">Cancel</button>
-            </div>
-            <div class="col-md-4 col-xs-4">
-              <button class="btn btn-danger btn-block" ng-click="addNote()">Save</button>
-            </div>
-          </div>
+          <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
+          <button class="btn btn-danger" ng-click="addNote()">Save</button>
         </div>
-
+        
         <div ng-if="!showAddNote">
-          <div class="row">
-            <div class="col-md-offset-2 col-xs-offset-2 col-md-8 col-xs-8">
-              <button class="btn btn-default btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
-            </div>
+          <div class="no-data">
+            <h3>There are no notes attached to this work order</h3>
+            <p>Click ‘+ New Note’ to create a new note</p>
+            <p>
+              <button class="btn btn-primary btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
+            </p>
           </div>
         </div>
 
@@ -134,11 +128,14 @@
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="logs">
+    <div role="tabpanel" class="tab-pane fade in" id="logs">
       <div ng-show="workOrderLogsLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
       <div ng-hide="workOrderLogsLoading">
+          <div class="no-data">
+            <h3>There are no logs attached to this work order</h3>
+          </div>
         <div ng-repeat="log in workOrderLogs" class="well-log">
           <p>{{log.id}} {{log.entry}}</p>
           <p>Submitted By: {{log.assigneeId}}</p>

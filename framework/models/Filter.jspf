@@ -1,0 +1,180 @@
+<%!
+    public static class Filter {
+        private String name = null;
+        private String qualification = null;
+        private Boolean defaultFilter = null;
+
+        /* GET methods */
+        public static Filter[] getFilters(String packagePath) {
+          Properties properties = loadProperties(packagePath);
+          List<Filter> filterList = new ArrayList<Filter>();
+          String defaultFilterName = properties.get("defaultFilterName").toString();
+
+          Boolean isDefault = false;
+          for (Map.Entry<Object,Object> property : properties.entrySet()) {
+            // Ignore the defaultFilterName property because it is not a filter
+            if (!property.getKey().toString().equals("defaultFilterName")) {
+              if (property.getKey().toString().equals(defaultFilterName)) { isDefault = true;}
+              filterList.add(new Filter(property.getKey().toString(), property.getValue().toString(), isDefault));
+              isDefault = false;
+            }
+          }
+
+          // Subtract 1 because of the defaultFilterName property
+          Filter[] filters = new Filter[properties.size()-1];
+          filterList.toArray(filters);
+
+          return filters;
+        }
+
+        public static Filter getFilter(HelperContext context, String packagePath, String name) {
+          Filter filter = null;
+          Properties properties = loadProperties(packagePath);
+
+          String qualification = properties.getProperty(name);
+          qualification = qualification.replaceAll("\\{\\{user.current\\}\\}", context.getUserName());
+          qualification = convertFieldNames(qualification);
+          if (qualification != null) {
+            filter = new Filter(name, qualification, false);
+          }
+
+          return filter;
+        }
+
+        /* POST methods */
+        public static Filter createFilter(String packagePath, String name, String qualification) {
+          Filter createdFilter = null;
+          Properties properties = loadProperties(packagePath);
+
+          // Make sure the qualification is valid
+          convertFieldNames(qualification);
+          
+          if (!properties.containsKey(name)) {
+            properties.setProperty(name, qualification);
+            saveProperties(packagePath, properties);
+          } else {
+            throw new RuntimeException("There was an error creating the filter. A filter with the name of '" + name + "' already exists.");
+          }          
+          return new Filter(name, qualification, false);
+        }
+
+        /* PUT methods */
+        public static Filter modifyFilter(String packagePath, String name, String updatedName, String qualification) {
+          Properties properties = loadProperties(packagePath);
+          Filter filter;
+
+          // Check if the filter exists, if it doesn't thrown an error
+          if (properties.containsKey(name)) {
+            // Make sure the qualification is valid
+            if (qualification != null) { convertFieldNames(qualification); }
+
+            // See if there is a name change
+            if (!name.equals(updatedName) && !StringUtils.stripToEmpty(updatedName).isEmpty()) {
+              // If there is a name change, make sure the new name doesn't
+              // conflict with any name changes
+              if (!properties.containsKey(updatedName)) {
+                if (StringUtils.stripToEmpty(qualification).isEmpty()) {
+                  // If the name is being changed but there is no qualification
+                  // provided, grab the old qualification
+                  properties.setProperty(updatedName, properties.get(name).toString());
+                  filter = new Filter(updatedName, properties.get(name).toString(), false);
+                } else {
+                  properties.setProperty(updatedName, qualification);
+                  filter = new Filter(updatedName, qualification, false);
+                }
+              } else {
+                throw new RuntimeException("There was an error creating the filter. A filter with the name of '" + updatedName + "' already exists.");
+              } 
+              // If that successfully created, delete the old filter
+              properties.remove(name);
+            } else {
+              // If the name hasn't changed, just change the qualification
+              properties.setProperty(name, qualification);
+              filter = new Filter(name, qualification, false);
+            }
+          } else {
+            throw new RuntimeException("There was an error modifying the filter. A filter with the name of '" + name + "' doesn't currently exist.");
+          }
+
+          saveProperties(packagePath, properties);
+
+          return filter;
+        }
+
+        /* DELETE methods */
+        public static void deleteFilter(String packagePath, String name) {
+          Properties properties = loadProperties(packagePath);
+          properties.remove(name);
+          saveProperties(packagePath, properties);
+        }
+
+        /* Helper methods */
+        public static Properties loadProperties(String packagePath) {
+          Properties properties;
+          InputStream filtersLocation;
+
+          // Check if the properties file exists already
+          File f = new File(packagePath + "/config/filters.properties");
+          try {
+            if (f.exists() && !f.isDirectory()) {
+              // If it does exist, set the File Input Stream as the properties file
+              filtersLocation = new FileInputStream(packagePath + "/config/filters.properties");
+            } else {
+              // If it doesn't, set the File Input Stream to filters.default
+              filtersLocation = new FileInputStream(packagePath + "/config/filters.default");
+            }
+          } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+          }
+
+          try {
+            properties = new Properties();
+            properties.load(filtersLocation);
+            filtersLocation.close();
+          } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+          }
+
+          return properties;
+        }
+
+        public static void saveProperties(String packagePath, Properties properties) {
+          try {
+            OutputStream filtersLocation = new FileOutputStream(packagePath + "/config/filters.properties");
+            properties.store(filtersLocation,null);
+            filtersLocation.close();
+          } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+          }
+        }
+
+        public static String convertFieldNames(String qualification) {
+          String result = qualification;
+
+          Pattern p = Pattern.compile("\\{\\{(.*?)\\}\\}");
+          Matcher m = p.matcher(result);
+
+          while (m.find()) {
+              if (!"user.current".equals(m.group(1))) {
+                String fieldId = WorkOrder.FILTER_FIELDS.get(m.group(1));
+                if (fieldId == null) {
+                  throw new RuntimeException("Invalid Filter: The filter field '" + m.group(1) + "' does not map to a valid filterable Work Order field.");
+                } 
+                result = result.replace(m.group(),fieldId);
+              }
+          }
+
+          return result;
+        }
+
+        public Filter(String name, String qualification, Boolean defaultFilter) {
+            this.name = name;
+            this.qualification = qualification;
+            this.defaultFilter = defaultFilter;
+        }
+
+        public String getName() {return this.name;}
+        public String getQualification() {return this.qualification;}
+        public Boolean isDefault() {return this.defaultFilter;}
+    }
+%>

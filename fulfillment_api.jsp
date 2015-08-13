@@ -1,10 +1,10 @@
 <%@page contentType="application/json" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@include file="framework/includes/packageInitialization.jspf" %>
-<% 
+<%
     String call = request.getParameter("call");
 
     String forwardJsp = null;
-    if ("/api/v1/auth/ping".equals(call)) { forwardJsp = "interface/api/auth/ping.jsp";} 
+    if ("/api/v1/auth/ping".equals(call)) { forwardJsp = "interface/api/auth/ping.jsp";}
     else if ("/api/v1/auth/login".equals(call)) { forwardJsp = "interface/api/auth/login.jsp"; }
     else if (call != null) {
         if (context == null) {
@@ -13,7 +13,7 @@
         } else {
             if (call.matches("/api/v1/work-orders/?")) { forwardJsp = "interface/api/work-order/work-orders.jsp";}
             else if (call.matches("/api/v1/work-orders/search/?")) {forwardJsp = "interface/api/work-order/search.jsp";}
-            else if (call.matches("/api/v1/work-orders/filters/?")) {forwardJsp = "interface/api/work-order/filters.jsp";}
+            else if (call.matches("/api/v1/work-orders/filters/?(.*?)(\\z|/)")) {forwardJsp = "interface/api/work-order/filters.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/view/?")) {forwardJsp = "interface/api/work-order/view.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/logs/?")) {forwardJsp = "interface/api/work-order/logs.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/notes/?")) {forwardJsp = "interface/api/work-order/notes.jsp";}
@@ -30,7 +30,7 @@
         }
     }
     else { forwardJsp = "interface/views/fulfillment/fulfillment_api.jsp"; }
-    
+
     if (forwardJsp != null) {
         RequestDispatcher dispatcher = request.getRequestDispatcher(forwardJsp);
         dispatcher.forward(request, response);
