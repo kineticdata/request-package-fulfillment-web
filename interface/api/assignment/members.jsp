@@ -17,7 +17,7 @@ if (request.getParameter("group") == null) {
     ArrayList<Map<String,Object>> memberObjs = new ArrayList<Map<String,Object>>();
 
     for (Member member : members) {
-      memberObjs.add(member.getJsonObject());
+      memberObjs.add(member.toJsonObject());
     }
 
     results.put("count",memberObjs.size());
