@@ -2,7 +2,6 @@
 <%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
-ArrayList<Map<String,Object>> logs = new ArrayList<Map<String,Object>>();
 
 if (request.getMethod() == "GET") {
     // Using a regex to get the work order id. If an id can't be found in the
@@ -30,23 +29,20 @@ if (request.getMethod() == "GET") {
     int limit = request.getParameter("limit") == null ? 0 : Integer.parseInt(request.getParameter("limit"));
     int offset = request.getParameter("offset") == null ? 0 : Integer.parseInt(request.getParameter("offset"));
 
-    WorkOrderLog[] workOrderLogs = WorkOrderLog.find(tzFreeContext,id,new String[] {WorkOrderLog.FIELD_CREATE_DATE},limit,offset,1);
-    int count = WorkOrderLog.count(context, id);
-    for (WorkOrderLog log : workOrderLogs) {
-        Map<String,Object> logObject = new LinkedHashMap<String,Object>();
-        logObject.put("id",log.getLogID());
-        logObject.put("createDate",DateConverter.getIso8601(log.getDate()));
-        logObject.put("assigneeId",log.getAssigneeID());
-        logObject.put("entry",log.getLog());
-        
-        logs.add(logObject);
+    ArrayList<Map<String,Object>> logList = new ArrayList<Map<String,Object>>();
+
+    Log[] logs = Log.find(tzFreeContext,id,new String[] {Log.FLD_CREATED_DATE},limit,offset,1);
+    int count = Log.count(context, id);
+
+    for (Log log : logs) {        
+        logList.add(log.toJsonObject());
     }
 
     // Adding the count, limit, offest and logs to the results.
     results.put("count", count);
     results.put("limit",limit);
     results.put("offset",offset);
-    results.put("logs",logs);
+    results.put("logs",logList);
 
     // Returning the results with a status code of 200 OK
     response.setStatus(HttpServletResponse.SC_OK);
