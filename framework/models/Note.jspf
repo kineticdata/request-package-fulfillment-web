@@ -1,0 +1,149 @@
+<%@page import="java.io.*"%>
+<%@page import="com.kd.kineticSurvey.impl.RemedyHandler"%>
+<%!
+    public static class Note {
+        public static final String FORM_NAME = "KAPP_Fulfillment_WorkInformation";
+
+        public static final String FIELD_ID = "1"; // Request Id
+        public static final String FIELD_CREATE_DATE = "3"; // Created Date
+        public static final String FIELD_MODIFY_DATE = "6"; // Modified Date
+        public static final String FIELD_SUBMITTER = "2"; // Submitter
+        public static final String FIELD_ENTRY = "740000009"; // Information
+        public static final String FIELD_ATTACHMENT = "740000032"; // Attachment
+        public static final String FIELD_ATTACHMENT_NAME = "740000046"; // Attachment Name
+        public static final String FIELD_WORK_ORDER_ID = "740000007"; // Work Order Id
+
+        public static final String[] FIELD_IDS = new String[] {
+            FIELD_ID, FIELD_CREATE_DATE, FIELD_ATTACHMENT_NAME, FIELD_ENTRY,
+            FIELD_ATTACHMENT, FIELD_SUBMITTER, FIELD_MODIFY_DATE
+        };
+
+        public static int count(HelperContext context, String qualification) {
+            return ArsBase.count(context, FORM_NAME, qualification);
+        }
+
+        public static Note retrieveById(HelperContext context, String workOrderId) {
+            String qualification = "'" + FIELD_ID + "'=\"" + workOrderId + "\"";
+            SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
+            Note result = new Note(entry);
+
+            return result;
+        }
+
+        public static Note[] find(HelperContext context, String qualification) {
+            return find(context, qualification, null, null, null, null);
+        }
+
+        public static Note[] find(HelperContext context, String qualification, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            Note[] results = new Note[0];
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new Note[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new Note(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static String saveNote(HelperContext context, String workOrderId, String entry) {
+            return saveNote(context, workOrderId, entry, null, null);
+        }
+
+        public static String saveNote(HelperContext context, String workOrderId, String entry, 
+            String fileName, byte[] attachmentContent) {
+
+            String createdId = null;
+            SimpleEntry entrySave = new SimpleEntry();
+            entrySave.setSchemaName(FORM_NAME);
+            entrySave.setEntryItems(new Hashtable());
+            entrySave.setEntryFieldValue(FIELD_WORK_ORDER_ID, workOrderId);
+            entrySave.setEntryFieldValue(FIELD_ENTRY, entry);
+
+            // If attachmentFileName or a fileName have been passed
+            if (attachmentContent != null && attachmentContent.length > 0 && fileName != null && fileName.length() > 0) {
+                entrySave.setEntryFieldValue(FIELD_ATTACHMENT_NAME, fileName);
+                try {
+                    com.bmc.arsys.api.AttachmentValue aValue = new com.bmc.arsys.api.AttachmentValue(fileName, attachmentContent);
+                    entrySave.setEntryFieldValue(FIELD_ATTACHMENT, new com.bmc.arsys.api.Value(aValue));
+                } catch (Exception e) {
+                    throw new RuntimeException("Error occured when creating an AttachmentValue for the Work Order Note.",e);
+                }
+            }
+
+            // Build the helper
+            ArsHelper helper = null;
+            try {
+                helper = new ArsHelper(context, FORM_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
+            }
+
+            try {
+                createdId = helper.doSetSimpleEntry(entrySave, true);
+            } catch (Exception e) {
+                throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
+            }
+            return createdId;
+        }
+
+        private SimpleEntry entry = null;
+
+        public Note(SimpleEntry entry) {
+            this.entry = entry;
+        }
+
+        public String getId() {return entry.getEntryFieldValue(FIELD_ID);}
+        public String getCreateDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getModifyDate() {return entry.getEntryFieldValue(FIELD_MODIFY_DATE);}
+        public String getSubmittedBy() {return entry.getEntryFieldValue(FIELD_SUBMITTER);}
+        public String getWorkOrderID() {return entry.getEntryFieldValue(FIELD_WORK_ORDER_ID);}
+        public String getEntry() {return entry.getEntryFieldValue(FIELD_ENTRY);}
+        public String getAttachment() {return entry.getEntryFieldValue(FIELD_ATTACHMENT);}
+        public String getAttachmentName() {return entry.getEntryFieldValue(FIELD_ATTACHMENT_NAME);}
+        public String getAttachmentUrl(HttpServletRequest request) {
+            // Build up the Work Order Url
+            String patternStr="(\\A.*?/kinetic/)";
+            Pattern p = Pattern.compile(patternStr);
+            Matcher m = p.matcher(request.getRequestURL());
+
+            String baseRequestUrl = "";
+            if (m.find()) {
+                 baseRequestUrl = m.group(1);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(baseRequestUrl);
+            sb.append("DownloadAttachment/");
+            sb.append(FORM_NAME).append("/");
+            sb.append(FIELD_ATTACHMENT).append("/");
+            sb.append(getId());
+
+            return sb.toString();
+        }
+
+        public Map<String,Object> toJsonObject(HttpServletRequest request) {
+            Map<String,Object> note = new LinkedHashMap<String,Object>();
+            note.put("id",getId());
+            note.put("created",DateConverter.getIso8601(getCreateDate()));
+            note.put("modified",DateConverter.getIso8601(getModifyDate()));
+            note.put("loginId",getSubmittedBy());
+            note.put("entry",getEntry());
+
+            // If there is no attachment, the attachment map will be set to null.
+            Map<String,Object> attachment = null;
+            if (getAttachmentName() != "" || getAttachment() != "") {
+                attachment = new LinkedHashMap<String,Object>();
+                attachment.put("title",getAttachmentName());
+                attachment.put("display", getAttachmentUrl(request) + "?disposition=inline");
+                attachment.put("download", getAttachmentUrl(request));
+            }
+
+            note.put("attachment",attachment);
+
+            return note;
+        }
+    }
+%>

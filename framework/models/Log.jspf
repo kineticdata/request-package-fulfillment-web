@@ -1,0 +1,116 @@
+<%!
+    public static class Log {
+        public static final String FORM_NAME = "KAPP_Fulfillment_WorkOrder_LogEntry";
+        
+        public static final String FLD_ID = "1"; // Log Id
+        public static final String FLD_CREATED_BY = "2"; // Submitter
+        public static final String FLD_CREATED_DATE = "3"; // Create Date
+        public static final String FLD_STATUS = "7"; // Status (Open/Closed)
+        
+        public static final String FLD_WORK_ORDER_ID = "740000020"; // Work Order Id
+        public static final String FLD_TYPE = "740000025"; // Log Type
+        public static final String FLD_ENTRY = "740000021"; // Log
+
+        public static final String FLD_ASSIGNED_ID = "740000022"; // Assignee Id
+
+        public static final String[] FIELD_IDS = new String[] {
+            FLD_ID, FLD_CREATED_DATE, FLD_STATUS, FLD_WORK_ORDER_ID,
+            FLD_TYPE, FLD_ENTRY, FLD_ASSIGNED_ID, FLD_CREATED_BY
+        };
+
+        private SimpleEntry entry = null;
+        
+        public static int count(HelperContext context, String workOrderId) {
+            String qualification = "'Work Order ID'=\""+workOrderId+"\"";
+            return ArsBase.count(context, FORM_NAME, qualification);
+        }
+
+        public static Log[] findByWorkOrderID(HelperContext context, String workOrderID) {
+            Log[] results = new Log[0];
+            String qualification = "'Work Order ID'=\""+workOrderID+"\"";
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entries != null && entries.length > 0) {
+                results = new Log[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new Log(entries[i]);
+                }
+            }
+
+            return results;
+        }
+
+        public static Log findOpenByWorkOrderIDandType(HelperContext context, String workOrderID, String logType) {
+            Log result = null;
+            String qualification = "'Work Order ID'=\""+workOrderID+"\" AND 'Log Type' = \""+ logType+"\" AND 'Status' = \"Open\"";
+            SimpleEntry entry = ArsBase.findSingle(context, FORM_NAME, qualification, FIELD_IDS);
+            if (entry != null) {
+                result = new Log(entry);
+            }
+            return result;
+        }
+
+        public static Log[] find(HelperContext context, String workOrderID, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            Log[] results = new Log[0];
+            String qualification = "'Work Order ID'=\""+workOrderID+"\"";
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new Log[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new Log(entries[i]);
+                }
+            }
+
+            return results;
+        }
+        
+        public Log(SimpleEntry entry) {
+            this.entry = entry;
+        }
+
+        public static void saveLog(HelperContext context, String workOrderID, String entry, String type, String assignedId) {
+            // Update The Assignment record with new Assignee
+            SimpleEntry entrySave = new SimpleEntry();
+            entrySave.setSchemaName(FORM_NAME);
+            entrySave.setEntryItems(new Hashtable());
+            entrySave.setEntryFieldValue(FLD_WORK_ORDER_ID, workOrderID);
+            entrySave.setEntryFieldValue(FLD_ASSIGNED_ID, assignedId);
+            entrySave.setEntryFieldValue(FLD_ENTRY, entry);
+            entrySave.setEntryFieldValue(FLD_TYPE, type);
+            entrySave.setEntryFieldValue(FLD_STATUS, "Closed");
+
+            // Build the helper
+            ArsHelper helper = null;
+            try {
+                helper = new ArsHelper(context, FORM_NAME);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to initialize an ArsHelper instance.", e);
+            }
+
+            try {
+                helper.doSetSimpleEntry(entrySave);
+            } catch (Exception e) {
+                throw new RuntimeException("There was a problem saving the "+FORM_NAME+" record.", e);
+            }
+        }
+
+        public String getId() { return entry.getEntryFieldValue(FLD_ID); }
+        public String getCreatedDate() { return entry.getEntryFieldValue(FLD_CREATED_DATE); }
+        public String getCreatedBy() { return entry.getEntryFieldValue(FLD_CREATED_BY); }
+        public String getAssignedId() { return entry.getEntryFieldValue(FLD_ASSIGNED_ID); }
+        public String getEntry() { return entry.getEntryFieldValue(FLD_ENTRY); }
+        public String getType() { return entry.getEntryFieldValue(FLD_TYPE); }
+
+        public Map<String,Object> toJsonObject() {
+            Map<String,Object> log = new LinkedHashMap<String,Object>();
+            log.put("id", getId());
+            log.put("type", getType());
+            log.put("created", DateConverter.getIso8601(getCreatedDate()));
+            log.put("loginId", getCreatedBy());
+            log.put("assignedId", getAssignedId());
+            log.put("entry", getEntry());
+
+            return log;
+        }
+
+    }
+%>

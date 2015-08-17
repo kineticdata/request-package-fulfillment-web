@@ -22,7 +22,7 @@
         public void setLastName(String lastName) { this.lastName = lastName; }
         public void setEmail(String email) { this.email = email; }
 
-        public Map<String,Object> getJsonObject() {
+        public Map<String,Object> toJsonObject() {
           Map<String,Object> json = new LinkedHashMap<String,Object>();
           json.put("id", getId());
           json.put("firstName", getFirstName());

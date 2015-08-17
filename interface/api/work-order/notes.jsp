@@ -2,7 +2,6 @@
 <%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
-ArrayList<Map<String,Object>> notes = new ArrayList<Map<String,Object>>();
 
 String call = request.getParameter("call");
 
@@ -24,22 +23,22 @@ if (m.find()) {
 
 // If the request method is a POST, create a new note
 if (request.getMethod() == "POST") {
-    String note = null;
+    String entry = null;
     byte[] attachmentContent = null;
     String fileName = null;
     if (request.getContentType().contains("application/json")) {
         // Parsing the POST body to get the input parameters needed for creating a
         // new note
         String body = IOUtils.toString(request.getReader());
-        JSONObject inputJson = (JSONObject)JSONValue.parse(body);
-        if (inputJson == null) {
+        JSONObject json = (JSONObject)JSONValue.parse(body);
+        if (json == null) {
             results.put("message","The input data is not recognized as properly formatted JSON");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(JsonUtils.toJsonString(results));
             return;
         }
 
-        note = inputJson.get("note").toString();
+        if (json.containsKey("entry")) { entry = json.get("entry").toString(); }
     } else if (request.getContentType().contains("multipart/form-data")) {
         try {
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -48,8 +47,8 @@ if (request.getMethod() == "POST") {
                     // Process regular form field
                     String fieldName = item.getFieldName();
                     String fieldValue = item.getString();
-                    if (fieldName.equals("note")) {
-                        note = URLDecoder.decode(fieldValue);
+                    if (fieldName.equals("entry")) {
+                        entry = URLDecoder.decode(fieldValue);
                     }
                 } else {
                     // Process form file field (input type="file").
@@ -69,9 +68,9 @@ if (request.getMethod() == "POST") {
         return;
     }
 
-    if (note == null) {
+    if (entry == null) {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        results.put("message","Creation of Note failed. Cannot create a note without having the 'note' field.");
+        results.put("message","Creation of Note failed. Cannot create a note without having the 'entry' field.");
         response.getWriter().write(JsonUtils.toJsonString(results));
         return;
     }
@@ -80,7 +79,7 @@ if (request.getMethod() == "POST") {
     // and the id for that newly created note will be returned.
     String createdId = null;
     if (WorkOrder.findSingleById(context, workOrderId) != null) {
-        createdId = WorkInformation.saveWorkInformationWithAttachment(context, workOrderId, note, fileName, attachmentContent);
+        createdId = Note.saveNote(context, workOrderId, entry, fileName, attachmentContent);
     } else {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         results.put("message","A Work Order with the id of '" + workOrderId + "' was not found.");
@@ -93,29 +92,11 @@ if (request.getMethod() == "POST") {
     HelperContext tzFreeContext = context.getCopy();
     tzFreeContext.setTimezoneOffset(0);
 
-    WorkInformation createdNote = WorkInformation.findSingleById(tzFreeContext, createdId);
-
-    results.put("type", "note");
-    results.put("id", createdNote.getId());
-    results.put("created",DateConverter.getIso8601(createdNote.getCreateDate()));
-    results.put("modified",DateConverter.getIso8601(createdNote.getModifyDate()));
-    results.put("userId",createdNote.getSubmittedBy());
-    results.put("note",createdNote.getInformation());
-
-    // If there is no attachment, the attachment map will be set to null.
-    Map<String,Object> attachment = null;
-    if (createdNote.getAttachmentName() != "" || createdNote.getAttachment() != "") {
-        attachment = new LinkedHashMap<String,Object>();
-        attachment.put("title",createdNote.getAttachmentName());
-        attachment.put("display", createdNote.getAttachmentUrl(request) + "?disposition=inline");
-        attachment.put("download", createdNote.getAttachmentUrl(request));
-    }
-
-    results.put("attachment",attachment);
+    Note createdNote = Note.retrieveById(tzFreeContext, createdId);
 
     // Return the results with a 201 Created
     response.setStatus(HttpServletResponse.SC_CREATED);
-    response.getWriter().write(JsonUtils.toJsonString(results));
+    response.getWriter().write(JsonUtils.toJsonString(createdNote.toJsonObject(request)));
 
 } else if (request.getMethod().equals("GET")) {
     // If the request to the endpoint is a GET request, get the notes associated
@@ -133,37 +114,20 @@ if (request.getMethod() == "POST") {
     int offset = request.getParameter("offset") == null ? 0 : Integer.parseInt(request.getParameter("offset"));
 
     // Creating the qualification to return the notes for the specified work order id.
-    String qualification = "'" + WorkInformation.FIELD_WORK_ORDER_ID + "'=\"" + workOrderId + "\"";
-    WorkInformation[] workOrderNotes = WorkInformation.find(tzFreeContext,qualification, new String[] {WorkInformation.FIELD_MODIFY_DATE}, limit, offset, 1);
-    int count = WorkInformation.count(context, qualification);
+    String qualification = "'" + Note.FIELD_WORK_ORDER_ID + "'=\"" + workOrderId + "\"";
+    Note[] notes = Note.find(tzFreeContext,qualification, new String[] {Note.FIELD_MODIFY_DATE}, limit, offset, 1);
+    int count = Note.count(context, qualification);
 
-    for (WorkInformation wi : workOrderNotes) {
-        Map<String,Object> workInformation = new LinkedHashMap<String,Object>();
-        workInformation.put("id",wi.getId());
-        workInformation.put("created",DateConverter.getIso8601(wi.getCreateDate()));
-        workInformation.put("modified",DateConverter.getIso8601(wi.getModifyDate()));
-        workInformation.put("submittedBy",wi.getSubmittedBy());
-        workInformation.put("note",wi.getInformation());
-
-        // If there is no attachment, the attachment map will be set to null.
-        Map<String,Object> attachment = null;
-        if (wi.getAttachmentName() != "" || wi.getAttachment() != "") {
-            attachment = new LinkedHashMap<String,Object>();
-            attachment.put("title",wi.getAttachmentName());
-            attachment.put("display", wi.getAttachmentUrl(request) + "?disposition=inline");
-            attachment.put("download", wi.getAttachmentUrl(request));
-        }
-
-        workInformation.put("attachment",attachment);
-
-        notes.add(workInformation);
+    List<Map> notesList = new ArrayList<Map>();
+    for (Note note : notes) {
+        notesList.add(note.toJsonObject(request));
     }
 
     // Adding the count, limit, offset, and notes to the results.
     results.put("count", count);
     results.put("limit",limit);
     results.put("offset",offset);
-    results.put("notes",notes);
+    results.put("notes",notesList);
 
     // Return the results and with a 200 OK
     response.setStatus(HttpServletResponse.SC_OK);
