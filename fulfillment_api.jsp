@@ -20,6 +20,7 @@
             else if (call.matches("/api/v1/work-orders/\\w*/history/?")) {forwardJsp = "interface/api/work-order/history.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/assign/me/?")) {forwardJsp = "interface/api/work-order/assign-me.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/assign/?")) {forwardJsp = "interface/api/work-order/assign.jsp";}
+            else if (call.matches("/api/v1/work-orders/\\w*/related/?")) {forwardJsp = "interface/api/work-order/related.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/?")) {forwardJsp = "interface/api/work-order/work-order.jsp";}
             else if (call.matches("/api/v1/assignment/groups/?")) {forwardJsp = "interface/api/assignment/groups.jsp";}
             else if (call.matches("/api/v1/assignment/members/?")) {forwardJsp = "interface/api/assignment/members.jsp";}
