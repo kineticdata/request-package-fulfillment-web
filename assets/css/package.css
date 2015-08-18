@@ -347,6 +347,7 @@ body{
 .sidebar{
   background-color: #fff;
   border-right: 1px solid #edecec;
+  display: inline-block;
 }
 .sidebar-title{
   margin:1em 0;
@@ -354,6 +355,7 @@ body{
 }
 .main-content{
   background-color: #f5f5f5;
+  display: inline-block;
 }
 .main-content .well{
   border-radius: 0;
@@ -398,7 +400,7 @@ body{
   border: 1px solid #999;
   border-radius: 3px;
   line-height: 140%;
-  margin-bottom: 20px;
+  margin: 1.538461538em 0;
   padding: 1em;
   background-color: #eee;
   position: relative;
@@ -414,4 +416,7 @@ body{
 }
 .row-workorder-list:hover{
   background-color: #f5f5f5;
+}
+.return-back{
+  margin:1em 0;
 }

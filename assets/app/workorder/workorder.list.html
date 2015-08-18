@@ -1,24 +1,67 @@
 <div class="row">
-  <div class="sidebar col-md-4" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
+  <div class="sidebar col-md-4 col-xs-12" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
     <span class="sidebar-title">
       <h3 class="text-center">
         <button class="btn btn-default pull-left" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
         {{currentFilter.name}}
-
-        <div class="dropdown pull-right">
+        
+        <!-- Filter Current Work Orders -->
+        <div class="btn-group  pull-right text-left">
+          <div class="dropdown btn-group">
+          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-filter"></i>
+          </button>
+          <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="workOrderListSort" style="padding:1em;width:280px;">
+            <form action="">
+              <li role="presentation" class="form-group">
+                <label for="workOrder">Work Order ID</label>
+                <input class="form-control"type="text" title="workOrderId" placeholder="Search Work Order ID">
+              </li>
+              <li role="separator" class="divider"></li>
+              <li role="presentation" class="form-group">
+                <label for="workOrderStaus">Status</label>
+                <select name="workOrderStatus" class="form-control">
+                <option selected="true"></option>
+                  <option value="">New</option>
+                  <option value="">complete</option>
+                </select>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li role="presentation" class="form-group">
+                <label for="workOrderName">Name</label>
+                <input class="form-control"type="text" title="workOrderName" placeholder="Search Work Order Name">
+              </li>
+              <li><input class="btn btn-primary" type="submit" value="Filter">
+              </li>
+              </form>
+          </ul>
+        </div>
+        
+        <!-- Sort Work Orders -->
+        <div class="dropdown btn-group">
           <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sorting.direction), 'fa-sort-amount-desc': (!sorting.direction) }"></i>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="workOrderListSort">
+          <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="workOrderListSort">
             <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sorting.direction" class="fa fa-check"></i></a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sorting.direction" class="fa fa-check"></i></a></li>
             <li role="presentation" class="divider"></li>
             <li role="presentation" ng-repeat="sort in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sort.field)">{{sort.name}} <i ng-if="sorting.sortBy === sort.field" class="fa fa-check"></i></a></li>
           </ul>
         </div>
+        </div>
+
+
       </h3>
     </span>
-
+    <div class="row" ng-if="workOrders.length===0">
+      <div class="col-md-12">
+        <div class="no-data">
+          <h3>This list has no work orders.</h3>
+          <p>Grab a work order and it will be shown here.</p>
+        </div> 
+      </div>
+    </div>
     <div class="row row-workorder-list" ng-repeat="workOrder in workOrders" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
       <div class="col-md-12">
         <div class="row">
@@ -46,7 +89,7 @@
         </div>
       </div>
     </div>
-
+    
     <div class="row">
       <div class="col-md-12 col-xs-12">
         <!--<paginated-resource start="loadWorkOrdersStart" success="loadWorkOrdersSuccess" failure="loadWorkOrdersFailure" provider="workOrderProvider"></paginated-resource>-->
@@ -57,6 +100,11 @@
   </div>
 
   <div class="col-md-8 col-xs-12 main-content">
-    <div ui-view></div>
+    <div ui-view>
+      <div class="no-data">
+        <h3>No Work Order to display</h3>
+        <p>Please select a work order to view its details</p>
+      </div>
+    </div>
   </div>
 </div>
