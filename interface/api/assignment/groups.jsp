@@ -44,6 +44,15 @@ if (request.getParameter("loginId") != null) {
     item.put("childrenCount", group.getChildrenCount());
     items.add(item);
   }
+
+  if (items.size() == 0) {
+    if (!Assignment.doesGroupExist(context, parent)) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      results.put("message", "Invalid Group: Could not find the Group '" + parent + "'");
+      response.getWriter().write(JsonUtils.toJsonString(results));
+      return;
+    }
+  }
 }
 
 response.setStatus(HttpServletResponse.SC_OK);
