@@ -1,27 +1,40 @@
 angular.module('kineticdata.fulfillment.services.workorder', [
   'kineticdata.fulfillment.services.config'
 ])
-  .service('WorkOrdersService', ['$q', '$http', '$log', '$rootScope', 'ConfigService', 'ModelFactory', 'Restangular', function($q, $http, $log, $rootScope, ConfigService, ModelFactory, Restangular) {
+  .service('WorkOrdersService', ['$q', '$http', '$log', '$rootScope', 'ConfigService', 'ModelFactory', 'Restangular', 'Upload', function($q, $http, $log, $rootScope, ConfigService, ModelFactory, Restangular, Upload) {
     'use strict';
 
     var workOrderUrl = ConfigService.getBaseUrl() + '/work-orders';
 
-    var postNoteById = function(id, message) {
+    var postNoteById = function(id, note) {
       var deferred = $q.defer();
       var url = workOrderUrl + '/' + id + '/notes';
 
-      $http.post(url, {note: message})
-        .success(function(data, status, headers) {
-          if(headers('content-type') === 'text/html;charset=UTF-8') {
-            $log.error('Failure from server: response not in JSON.', data);
-            deferred.reject(data);
-          } else {
-            deferred.resolve(data);
-          }
-        })
-        .error(function(data) {
+      var successFn = function(data, status, headers) {
+        if(headers('content-type') === 'text/html;charset=UTF-8') {
+          $log.error('Failure from server: response not in JSON.', data);
           deferred.reject(data);
-        });
+        } else {
+          deferred.resolve(data);
+        }
+      };
+
+      var errorFn = function(data) {
+        deferred.reject(data);
+      };
+
+      // If there is no attachment involved then we'll perform a straight HTTP POST.
+      if(typeof note.attachment === 'undefined') {
+        $http.post(url, {entry: note.entry})
+          .success(successFn)
+          .error(errorFn);
+      } else {
+        Upload.upload({
+          url: url,
+          fields: { entry: note.entry },
+          file: note.attachment
+        }).success(successFn).error(errorFn);
+      }
 
       return deferred.promise;
     };

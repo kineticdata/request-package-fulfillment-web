@@ -14,6 +14,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.workOrderLogsApi = WorkOrdersService.Logs(workOrderId);
       $scope.workOrderNotesApi = WorkOrdersService.Notes(workOrderId);
       $scope.showAddNote = false;
+      $scope.tmpNote = {};
 
       /**
        * Starts the note adding process.
@@ -26,21 +27,28 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * Adds a note to the current work order.
        */
       $scope.addNote = function() {
+        if(_.isEmpty($scope.tmpNote.entry)) {
+          return;
+        }
         WorkOrdersService.postNote($scope.currentWorkOrderId, $scope.tmpNote)
           .then($scope.retrieveNotes, function() {
             toastr.warning('There was a problem posting a new note!');
           });
 
         $scope.showAddNote = false;
-        $scope.tmpNote = '';
+        $scope.tmpNote = {};
       };
 
       /**
        * Cancels the note adding process.
        */
       $scope.cancelNote = function() {
-        $scope.tmpNote = '';
+        $scope.tmpNote = {};
         $scope.showAddNote = false;
+      };
+
+      $scope.setNoteAttachment = function(file) {
+        $scope.tmpNote.attachment = file;
       };
 
       /**

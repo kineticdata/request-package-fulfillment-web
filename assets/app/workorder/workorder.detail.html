@@ -70,7 +70,7 @@
         <div data-ng-if="!workOrderNotesLoading">
           <div data-ng-if="workOrderNotes.length > 0">
             By <strong>{{workOrderNotes[0].submittedBy}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
-            <p class="white-space">{{workOrderNotes[0].note}}</p>
+            <p class="white-space">{{workOrderNotes[0].entry}}</p>
           </div>
           <div data-ng-if="workOrderNotes.length === 0">
             Work Order has no notes.
@@ -103,10 +103,21 @@
         <div class="showAddNote clearfix" ng-if="showAddNote">
           <div class="form-group">
             <label for="tmpNote">New Note</label>
-            <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote"/>
+            <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote.entry"/>
           </div>
+          <button
+            class="btn btn-default btn-block"
+            ngf-select
+            ngf-drop
+            ngf-drag-over-class="btn-success"
+            ngf-change="setNoteAttachment($file)">
+            <span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.
+            <p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>
+          </button>
+
           <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
           <button class="btn btn-danger" ng-click="addNote()">Save</button>
+
         </div>
 
         <div ng-if="!showAddNote">
@@ -126,7 +137,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">By {{note.submittedBy}}, <span am-time-ago="note.created"></span></div>
             <div class="panel-body">
-              {{note.note}}
+              {{note.entry}}
             </div>
           </div>
         </div>

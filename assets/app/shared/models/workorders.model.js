@@ -11,6 +11,9 @@ angular.module('kineticdata.fulfillment.models.workorder', [
       //////////////////////////////////
       // GENERATE CONTEXTUAL METADATA //
       //////////////////////////////////
+      if(self.groups === null) {
+        self.groups = [];
+      }
 
       for(var idx=0; idx<self.groups.length; idx++) {
         var group = self.groups[idx];
