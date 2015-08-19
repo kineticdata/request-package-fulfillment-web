@@ -35,6 +35,7 @@ angular.module('kineticdata.fulfillment', [
   'angular-loading-bar',
   'ui.bootstrap',
   'restangular',
+  'ngFileUpload',
 
   // // Models.
   'kineticdata.fulfillment.models.workorder',
@@ -62,7 +63,10 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
   function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
     'use strict';
 
+    // Set the base URL for the API.
     RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
+
+    // Intercept any outgoing requests to the API and fix the request for pagination.
     RestangularProvider.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
       if(typeof params.refresh !== 'undefined' && params.refresh === true) {
         delete params.refresh;
@@ -85,6 +89,18 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         params: params,
         httpConfig: httpConfig
       };
+    });
+
+    // Intercept the response and determine if false-successes are actually HTML failures. If we get back a REST
+    // response that's a 200 but whose content-type starts with text/html then we're going to assume that it is
+    // an error page from Request and reject the response.
+    RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+      var contentType = response.headers('content-type');
+      if(contentType.indexOf('text/html') === 0) {
+        deferred.reject(data);
+      }
+
+      return data;
     });
 
     cfpLoadingBarProvider.includeSpinner = false;
@@ -230,4 +246,14 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('AuthInterceptor');
+  }]).run(['$rootScope', '$state', function($rootScope, $state) {
+
+    // Capture state change errors. This will be triggered whenever one of the state resolutions fails. This shouldn't
+    // normally happen with a functioning API or legit data but will always happen if something 'off' happens on the
+    // the Request side. In the event of a failed state change we're going to assume that it is error related and
+    // forward the user to the data error page.
+    $rootScope.$on('$stateChangeError', function(event, to, from, fromParams, error) {
+      event.preventDefault();
+      $state.go('dataerror')
+    });
   }]);
