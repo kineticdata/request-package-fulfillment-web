@@ -1,0 +1,149 @@
+<%!
+    public static class Source {
+        private String name = null;
+        private String url = null;
+
+        /* GET methods */
+        public static Source[] getSources(String packagePath) {
+          Properties properties = loadProperties(packagePath);
+          List<Source> sourcesList = new ArrayList<Source>();
+
+          for (Map.Entry<Object,Object> property : properties.entrySet()) {
+              sourcesList.add(new Source(property.getKey().toString(), property.getValue().toString()));
+          }
+
+          Source[] sources = new Source[properties.size()];
+          sourcesList.toArray(sources);
+
+          return sources;
+        }
+
+        public static Source getSource(String packagePath, String name) {
+          Source source = null;
+          Properties properties = loadProperties(packagePath);
+
+          String url = properties.getProperty(name);
+          if (url != null) {
+            source = new Source(name, url);
+          }
+
+          return source;
+        }
+
+        /* POST methods */
+        public static Source createSource(String packagePath, String name, String url) {
+          Source createdSource = null;
+          Properties properties = loadProperties(packagePath);
+
+          if (!properties.containsKey(name)) {
+            properties.setProperty(name, url);
+            saveProperties(packagePath, properties);
+          } else {
+            throw new RuntimeException("There was an error creating the source. A source with the name of '" + name + "' already exists.");
+          }          
+          return new Source(name, url);
+        }
+
+        /* PUT methods */
+        public static Source modifySource(String packagePath, String name, String updatedName, String url) {
+          Properties properties = loadProperties(packagePath);
+          Source source;
+
+          // Check if the source exists, if it doesn't thrown an error
+          if (properties.containsKey(name)) {
+
+            // See if there is a name change
+            if (!name.equals(updatedName) && !StringUtils.stripToEmpty(updatedName).isEmpty()) {
+              // If there is a name change, make sure the new name doesn't
+              // conflict with any name changes
+              if (!properties.containsKey(updatedName)) {
+                if (StringUtils.stripToEmpty(url).isEmpty()) {
+                  // If the name is being changed but there is no url
+                  // provided, grab the old url
+                  properties.setProperty(updatedName, properties.get(name).toString());
+                  source = new Source(updatedName, properties.get(name).toString());
+                } else {
+                  properties.setProperty(updatedName, url);
+                  source = new Source(updatedName, url);
+                }
+              } else {
+                throw new RuntimeException("There was an error creating the source. A source with the name of '" + updatedName + "' already exists.");
+              } 
+              // If that successfully created, delete the old source
+              properties.remove(name);
+            } else {
+              // If the name hasn't changed, just change the url
+              properties.setProperty(name, url);
+              source = new Source(name, url);
+            }
+          } else {
+            throw new RuntimeException("There was an error modifying the source. A source with the name of '" + name + "' doesn't currently exist.");
+          }
+
+          saveProperties(packagePath, properties);
+
+          return source;
+        }
+
+        /* DELETE methods */
+        public static void deleteSource(String packagePath, String name) {
+          Properties properties = loadProperties(packagePath);
+          properties.remove(name);
+          saveProperties(packagePath, properties);
+        }
+
+        /* Helper methods */
+        public static Properties loadProperties(String packagePath) {
+          Properties properties;
+          InputStream sourcesLocation;
+
+          // Check if the properties file exists already
+          File f = new File(packagePath + "/config/sources.properties");
+          try {
+            if (f.exists() && !f.isDirectory()) {
+              // If it does exist, set the File Input Stream as the properties file
+              sourcesLocation = new FileInputStream(packagePath + "/config/sources.properties");
+              properties = new Properties();
+              properties.load(sourcesLocation);
+              sourcesLocation.close();
+            } else {
+              properties = new Properties();
+              properties.setProperty("Kinetic Request - SAMPLE","http://127.0.0.1:8080/kinetic/DisplayPage?csrv={{id}}");
+            }
+          } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+          } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+          }
+
+          return properties;
+        }
+
+        public static void saveProperties(String packagePath, Properties properties) {
+          try {
+            OutputStream sourcesLocation = new FileOutputStream(packagePath + "/config/sources.properties");
+            properties.store(sourcesLocation,null);
+            sourcesLocation.close();
+          } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+          }
+        }
+
+        public Source(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
+
+        public String getName() {return this.name;}
+        public String getUrl() {return this.url;}
+        public String getUrl(String id) {return this.url.replace("{{id}}",id);}
+
+        public Map<String,Object> toJsonObject() {
+          Map<String,Object> source = new LinkedHashMap<String,Object>();
+          source.put("name",getName());
+          source.put("url",getUrl());
+
+          return source;
+        }
+    }
+%>
