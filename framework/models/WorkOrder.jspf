@@ -193,7 +193,7 @@
         public String getAssignedGroups() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUPS);}
         public String getAssignedGroupNames() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUP_NAMES);}
 
-        public Map<String,Object> toJsonObject(HttpServletRequest request) {
+        public Map<String,Object> toJsonObject(HttpServletRequest request, String packagePath) {
             Map<String,Object> jsonObject = new LinkedHashMap<String,Object>();
             jsonObject.put("id",StringUtils.stripToNull(getRequestId()));
             jsonObject.put("requestName",StringUtils.stripToNull(getRequestName()));
@@ -215,7 +215,14 @@
             Map<String,String> originator = new LinkedHashMap<String,String>();
             originator.put("id", getOriginatingId());
             originator.put("source", getOriginatingSource());
-            originator.put("url", "http://still-needs-to-be-implemented.io");
+
+            // Pull back Source Url
+            String url = "";
+            Source source = Source.getSource(packagePath, getOriginatingSource());
+            if (source != null) {
+                url = source.getUrl(getOriginatingId());
+            }
+            originator.put("url", url);
             jsonObject.put("originator", originator);
 
             jsonObject.put("status",StringUtils.stripToNull(getStatus()));

@@ -2,6 +2,7 @@
 <%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
+String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "GET") {
     // Using a regex to get the work order id. If an id can't be found in the
@@ -28,7 +29,7 @@ if (request.getMethod() == "GET") {
     // Using the previously obtained work order id to retrieve the work order object
     WorkOrder workOrder = WorkOrder.findSingleById(tzFreeContext, id);
     if (workOrder != null) {
-        results = workOrder.toJsonObject(request);
+        results = workOrder.toJsonObject(request,contextualPackagePath);
     } else {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         results.put("message","A Work Order with the id of '" + id + "' was not found.");

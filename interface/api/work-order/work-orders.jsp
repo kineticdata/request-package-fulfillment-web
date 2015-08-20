@@ -3,6 +3,7 @@
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
 ArrayList<Map<String,Object>> workOrders = new ArrayList<Map<String,Object>>();
+String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "GET") {
     // Creating a Time Zone Free copy of the Context so that time stamps 
@@ -55,7 +56,6 @@ if (request.getMethod() == "GET") {
     Object searchQualification = request.getAttribute("qualification");
     if (request.getParameter("filter") != null) {
         String filterName = request.getParameter("filter");
-        String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
         Filter filter = Filter.getFilter(context, contextualPackagePath, filterName);
         if (filter != null) {
             // sorting by 1 is ASC, sorting by 0 is DESC. Currently automatically searching by modified date ASC.
@@ -80,7 +80,7 @@ if (request.getMethod() == "GET") {
 
     // Iterate through the Work Order array and make work order JSON objects
     for (WorkOrder workOrder : workOrderObjects) {   
-        workOrders.add(workOrder.toJsonObject(request));
+        workOrders.add(workOrder.toJsonObject(request,contextualPackagePath));
     }
 
     // Adding the count, limit, offset, and work orders to the results.
