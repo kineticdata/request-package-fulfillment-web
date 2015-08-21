@@ -80,18 +80,13 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return deferred.promise;
     };
 
-    var activeFilter = '';
-    $rootScope.$on('krs-filter-changed', function(event, filter) {
-      activeFilter = filter;
-    });
-
     var activeWorkOrder = '';
     $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
       activeWorkOrder = workOrder;
     });
 
-    var workOrders = function(shouldCache) {
-      return api('WorkOrderCollection', shouldCache).service('work-orders')
+    var workOrders = function() {
+      return api('WorkOrderCollection').service('work-orders')
     };
 
     var search = function() {
@@ -110,18 +105,13 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return api('WorkOrderNoteCollection').one('work-orders', workOrderId).all('notes')
     };
 
-    var api = function(modelFactory, shouldCache) {
+    var api = function(modelFactory) {
       var factory = ModelFactory.get(modelFactory);
 
       return Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setRestangularFields({
           id: 'id'
         });
-
-        if(shouldCache) {
-          $log.info('{WordOrderService} Enabled caching for model: ' + modelFactory);
-          RestangularConfigurer.setDefaultHttpFields({cache: true});
-        }
 
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
           var newData = new factory.factoryObject(data);
@@ -137,7 +127,6 @@ angular.module('kineticdata.fulfillment.services.workorder', [
 
     return {
       // Properties:
-      activeFilter: activeFilter,
       activeWorkOrder: activeWorkOrder,
 
       // Methods:

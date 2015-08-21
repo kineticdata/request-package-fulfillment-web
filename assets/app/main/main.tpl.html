@@ -3,11 +3,3 @@
     <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
   </li>
 </ul>
-
-<!-- Subscribe to error flash messages. -->
-<div flash-alert="error" active-class="in alert" class="fade" duration="0">
-  <strong class="alert-heading">Oh no!</strong>
-  <span class="alert-message">{{flash.message}}</span>
-</div>
-
-<div ui-view></div>

@@ -2,12 +2,20 @@ angular.module('kineticdata.fulfillment.controllers.main', [
   'ui.router',
   'kineticdata.fulfillment.services.filter'
 ])
-  .controller('MainController', ['$scope', '$stateParams', '$log', 'filters', function($scope, $stateParams, $log, filters) {
+  .controller('MainController', ['$scope', '$urlMatcherFactory', '$state', '$location', '$log', 'filters', function($scope, $urlMatcherFactory, $state, $location, $log, filters) {
     'use strict';
     $log.info('{CTRL} Initializing MainController.');
 
+    var getCurrentFilterFromState = function() {
+      var urlMatcher = $urlMatcherFactory.compile($state.$current.url.sourcePath);
+      var stateParams = urlMatcher.exec($location.url());
+
+      return decodeURIComponent(stateParams.id);
+    };
+
+    //console.log('states', currentFilter)
     /// Holds the name of the active filter, 'default' means look up the default one.
-    $scope.activeFilter = $stateParams.id;
+    $scope.activeFilter = getCurrentFilterFromState();
 
     $scope.filters = filters;
 
@@ -26,8 +34,8 @@ angular.module('kineticdata.fulfillment.controllers.main', [
     /**
      * Watches for the 'krs-filter-changed' event, save the filter name.
      */
-    $scope.$on('krs-filter-changed', function(event, filter) {
-      $scope.activeFilter = filter;
+    $scope.$on('$stateChangeSuccess', function() {
+      $scope.activeFilter = getCurrentFilterFromState();
     });
 
   }]);

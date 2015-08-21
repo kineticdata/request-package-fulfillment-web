@@ -3,7 +3,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
   'kineticdata.fulfillment.services.filter',
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', '$cacheFactory', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', 'defaultSorting', 'defaultListParams', function($scope, $rootScope, $state, $stateParams, $log, $interval, $cacheFactory, FiltersService, WorkOrdersService, filters, workOrders, currentFilter, defaultSorting, defaultListParams) {
+  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', '$cacheFactory', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', function($scope, $rootScope, $state, $stateParams, $log, $interval, $cacheFactory, FiltersService, WorkOrdersService, filters, workOrders, currentFilter) {
     'use strict';
 
     // Prepare scope varaibles.
@@ -15,13 +15,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.internal.workOrderLoadFailures = 0;
     $scope.api = WorkOrdersService.WorkOrders(true);
 
-    $scope.sorting = defaultSorting;
-    $scope.listParams = defaultListParams;
+    $scope.sort = {};
+    $scope.sort.by = $stateParams.fsb;
+    $scope.sort.dir = ($stateParams.fsd==='ASC');
+
+
+    $scope.page = parseInt($stateParams.fp) || 0;
 
     $scope.sortOptions = [
       { name: 'ID', field: 'id' },
       { name: 'Work Order Name', field: 'workOrder' },
-      { name: 'Requested For', field: 'requestedFor' },
+      { name: 'Requested For', field: 'requestedFor.name' },
       { name: 'Status', field: 'status' },
       { name: 'Priority', field: 'priority' },
       { name: 'Due Date', field: 'due' },
@@ -29,23 +33,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     ];
 
     $scope.changeSortOrder = function(direction) {
-      $scope.sorting.direction = direction;
-      $scope.rebuildListParams();
-      $scope.loadWorkOrders();
+      $state.go('.', {fsd: (direction ? 'ASC' : 'DESC')});
     };
 
     $scope.changeSortItem = function(sortBy) {
-      $scope.sorting.sortBy = sortBy;
-      $scope.rebuildListParams();
-      $scope.loadWorkOrders();
+      $state.go('.', {fsb: sortBy});
     };
-
-    $scope.rebuildListParams = function() {
-      var direction = ($scope.sorting.direction ? 'ASC' : 'DESC');
-      $scope.listParams.order = $scope.sorting.sortBy + ' ' + direction;
-    };
-
-
 
     /**
      * Determines if the current state is a child of this controller's typical state.
@@ -54,22 +47,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.isChildState = function() {
       var currentState = $state.current.name;
       return currentState.match(/workorders\./) !== null;
-    };
-
-    ////////////////////////
-    // WORK ORDER LOADING //
-    ////////////////////////
-
-    $scope.loadWorkOrders = function() {
-      $cacheFactory.get('$http').removeAll();
-      $scope.api.getList($scope.listParams).then(
-        function(data) {
-          $scope.workOrders = data;
-        },
-        function() {
-          toastr.error('There was a problem refreshing work orders.');
-        }
-      )
     };
 
     /**
@@ -81,6 +58,30 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       } else {
         $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id });
       }
+    };
+
+    $scope.doNext = function() {
+      var offset = ($scope.page) * 5;
+      if(offset<$scope.workOrders.meta.count) {
+        $scope.page++;
+        $state.go('.', {fp: $scope.page});
+      }
+    };
+
+    $scope.doPrev = function() {
+      // Calculate the previous page, make sure it
+      var page = $scope.page - 1;
+      if(page>0) {
+        $state.go('.', {fp: page});
+      }
+    };
+
+    $scope.doPage = function(page) {
+      $state.go('.', {fp: page});
+    };
+
+    $scope.reload = function() {
+      $state.go('.', {}, { reload: true });
     };
 
     $scope.isActiveWorkOrder = function(workOrder) {
@@ -95,10 +96,4 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
       $scope.activeWorkOrder = workOrder;
     });
-
-    $rootScope.$on('krs-workorder-modified', function(event, workOrderId) {
-      $log.info('{WorkorderListController} A work order has been changed, refreshing the list.');
-      $scope.loadWorkOrders();
-    });
-
   }]);

@@ -113,7 +113,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         function() {
           // On successful assignment we should go to the details screen.
           $rootScope.$broadcast('krs-workorder-modified', $scope.workOrder.id);
-          $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: $scope.workOrder.id });
+          $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: $scope.workOrder.id }, { reload: true });
         },
         function() {
           $scope.state.loadingData = false;
@@ -132,7 +132,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
         function() {
           // On successful assignment we should go to the details screen.
           $rootScope.$broadcast('krs-workorder-modified', $scope.workOrder.id);
-          $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: $scope.workOrder.id });
+          $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: $scope.workOrder.id }, { reload: true });
         },
         function() {
           $scope.state.loadingData = false;

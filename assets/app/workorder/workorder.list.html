@@ -2,9 +2,9 @@
   <div class="sidebar col-md-4 col-xs-12" ng-class="{'hidden-xs': isChildState(), 'hidden-sm': isChildState() }">
     <span class="sidebar-title">
       <h3 class="text-center">
-        <button class="btn btn-default pull-left" ng-click="loadWorkOrders(true)"><i class="fa fa-refresh"></i></button>
+        <button class="btn btn-default pull-left" ng-click="reload()"><i class="fa fa-refresh"></i></button>
         {{currentFilter.name}}
-        
+
         <!-- Filter Current Work Orders -->
         <div class="btn-group  pull-right text-left">
           <div class="dropdown btn-group">
@@ -36,17 +36,17 @@
               </form>
           </ul>
         </div>
-        
+
         <!-- Sort Work Orders -->
         <div class="dropdown btn-group">
           <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sorting.direction), 'fa-sort-amount-desc': (!sorting.direction) }"></i>
+            <i class="fa" ng-class="{ 'fa-sort-amount-asc': (sort.dir), 'fa-sort-amount-desc': (!sort.dir) }"></i>
           </button>
           <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="workOrderListSort">
-            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sorting.direction" class="fa fa-check"></i></a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sorting.direction" class="fa fa-check"></i></a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(true)">Ascending <i ng-if="sort.dir" class="fa fa-check"></i></a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" ng-click="changeSortOrder(false)">Descending <i ng-if="!sort.dir" class="fa fa-check"></i></a></li>
             <li role="presentation" class="divider"></li>
-            <li role="presentation" ng-repeat="sort in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sort.field)">{{sort.name}} <i ng-if="sorting.sortBy === sort.field" class="fa fa-check"></i></a></li>
+            <li role="presentation" ng-repeat="sortOption in sortOptions"><a role="menuitem" tabindex="-1" ng-click="changeSortItem(sortOption.field)">{{sortOption.name}} <i ng-if="sort.by === sortOption.field" class="fa fa-check"></i></a></li>
           </ul>
         </div>
         </div>
@@ -59,7 +59,7 @@
         <div class="no-data">
           <h3>This list has no work orders.</h3>
           <p>Grab a work order and it will be shown here.</p>
-        </div> 
+        </div>
       </div>
     </div>
     <div class="row row-workorder-list" ng-repeat="workOrder in workOrders" ng-click="selectWorkOrder(workOrder)" ng-class="{ 'active-workorder': isActiveWorkOrder(workOrder) }">
@@ -89,11 +89,10 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-md-12 col-xs-12">
-        <!--<paginated-resource start="loadWorkOrdersStart" success="loadWorkOrdersSuccess" failure="loadWorkOrdersFailure" provider="workOrderProvider"></paginated-resource>-->
-        <simple-paginated-resource params="listParams" api="api" datasource="workOrders"></simple-paginated-resource>
+        <simple-paginated-resource datasource="workOrders" do-next="doNext" do-prev="doPrev" do-page="doPage"></simple-paginated-resource>
       </div>
     </div>
 

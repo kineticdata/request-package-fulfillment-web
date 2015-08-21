@@ -107,16 +107,43 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
     $urlRouterProvider.otherwise('/workorder/default');
     $stateProvider
-      .state('workorders', {
-        url: '/workorder/{id}?{terms}',
+      .state('app', {
+        abstract: true,
+        resolve: {
+          filters: function(FiltersService) {
+            return FiltersService.api().getList();
+          }
+        },
+
         views: {
-          '@': {
+          '': {
+            template: '<div ui-view></div>'
+          },
+          'filters': {
+            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            controller: 'MainController'
+          }
+        }
+      })
+      .state('workorders', {
+        parent: 'app',
+        url: '/workorder/{id}?terms&page',
+        params: {
+          // Work Order List Page
+          fp: 1,
+          // Work Order List Sort Direction
+          fsd: 'DESC',
+          // Work Order List Sort By
+          fsb: 'id',
+          reload: 0
+
+        },
+        views: {
+          '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
             controller: 'WorkOrderListController',
+
             resolve: {
-              filters: function(FiltersService) {
-                return FiltersService.api().getList();
-              },
               currentFilter: function(filters, $stateParams) {
                 if(typeof $stateParams.id === 'undefined') {
                   return filters.getDefault();
@@ -128,44 +155,34 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   return filters.getFilter($stateParams.id);
                 }
               },
-              defaultSorting: function() {
-                return {
-                  direction: false,
-                  sortBy: 'id'
-                }
-              },
-              defaultListParams: function(defaultSorting, currentFilter) {
-                var direction = (defaultSorting.direction ? 'ASC' : 'DESC');
-                var order = defaultSorting.sortBy + ' ' + direction;
+
+              listParams: function($stateParams, currentFilter) {
+                var WORK_ORDER_LIMIT = 5;
+                var page = parseInt($stateParams.fp) || 1;
+
+
                 var listParams = {
                   filter: currentFilter.name,
-                  order: order
+                  order: $stateParams.fsb + ' ' + $stateParams.fsd,
+                  limit: WORK_ORDER_LIMIT,
+                  offset: (page-1)*WORK_ORDER_LIMIT
                 };
 
-                if(typeof currentFilter.terms !== 'undefined') {
-                  listParams.query = currentFilter.terms
+                if(typeof $stateParams.terms !== 'undefined') {
+                  listParams.query = $stateParams.terms
                 }
 
                 return listParams;
               },
-              workOrders: function(WorkOrdersService, currentFilter, defaultListParams) {
+              workOrders: function(WorkOrdersService, currentFilter, listParams) {
                 if(typeof currentFilter.terms !== 'undefined') {
                   // When searching we
-                  var params = angular.copy(defaultListParams);
+                  var params = angular.copy(listParams);
                   delete params.filter;
                   return WorkOrdersService.Search().getList(params);
                 } else {
-                  return WorkOrdersService.WorkOrders(true).getList(defaultListParams);
+                  return WorkOrdersService.WorkOrders(true).getList(listParams);
                 }
-              }
-            }
-          },
-          'filters@': {
-            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
-            controller: 'MainController',
-            resolve: {
-              filters: function(FiltersService) {
-                return FiltersService.api().getList();
               }
             }
           }
@@ -187,15 +204,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                 return WorkOrdersService.WorkOrder(workOrderId).get();
               }
             }
-          },
-          'filters@': {
-            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
-            controller: 'MainController',
-            resolve: {
-              filters: function(FiltersService) {
-                return FiltersService.api().getList();
-              }
-            }
           }
         },
 
@@ -213,15 +221,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               },
               workOrder: function(WorkOrdersService, workOrderId) {
                 return WorkOrdersService.WorkOrder(workOrderId).get();
-              }
-            }
-          },
-          'filters@': {
-            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
-            controller: 'MainController',
-            resolve: {
-              filters: function(FiltersService) {
-                return FiltersService.api().getList();
               }
             }
           }

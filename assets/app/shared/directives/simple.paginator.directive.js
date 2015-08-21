@@ -1,5 +1,5 @@
 angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
-.directive('simplePaginatedResource', ['$log', function($log) {
+.directive('simplePaginatedResource', ['$log', '$cacheFactory', function($log, $cacheFactory) {
   'use strict'
 
   var directive = {};
@@ -7,9 +7,10 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
   directive.templateUrl = BUNDLE.packagePath+'assets/app/shared/directives/paginator.template.html';
 
   directive.scope = {
-    api: '=',
     datasource: '=',
-    params: '='
+    doNext: '=',
+    doPrev: '=',
+    doPage: '='
   };
 
   directive.link = function(scope) {
@@ -29,20 +30,24 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
       return scope.datasource.meta.limit===0 ? 0 : Math.ceil((scope.datasource.meta.count / scope.datasource.meta.limit));
     };
 
-    var doGet = function() {
-      var params = {limit: scope.datasource.meta.limit, offset: scope.datasource.meta.offset};
-      angular.extend(params, scope.params);
-
-      scope.api
-        .getList(params).then(
-        function(data) {
-          scope.datasource = data;
-        },
-        function() {
-          toastr.warning('There was a problem retrieving data from the server.')
-        }
-      );
-    }
+    //var doGet = function() {
+    //  var params = {limit: scope.datasource.meta.limit, offset: scope.datasource.meta.offset};
+    //  angular.extend(params, scope.params);
+    //
+    //  $cacheFactory('http').removeAll();
+    //  scope.api
+    //    .getList(params).then(
+    //    function(data) {
+    //      //scope.$applyAsync(function() {
+    //        console.log(data)
+    //        scope.datasource = data;
+    //      //});
+    //    },
+    //    function() {
+    //      toastr.warning('There was a problem retrieving data from the server.')
+    //    }
+    //  );
+    //}
 
     scope.hasNextPage = function() {
       return (scope.datasource.meta.count > scope.datasource.meta.offset + scope.datasource.meta.limit);
@@ -56,9 +61,9 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
       if(!scope.hasPrevPage()) {
         return;
       }
-      scope.datasource.meta.offset -= scope.datasource.meta.limit;
-
-      doGet();
+      //scope.datasource.meta.offset -= scope.datasource.meta.limit;
+      scope.doPrev();
+      //doGet();
     };
 
     scope.clickNext = function() {
@@ -66,11 +71,13 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
         return;
       }
 
-      scope.datasource.meta.offset += scope.datasource.meta.limit;
-      doGet();
+      //scope.datasource.meta.offset += scope.datasource.meta.limit;
+      scope.doNext();
+      //doGet();
     };
 
     scope.clickPage = function(pageIndex) {
+      scope.doPage(pageIndex+1)
     };
 
     scope.activePageIndex = function() {
