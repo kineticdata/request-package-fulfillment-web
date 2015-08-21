@@ -1,20 +1,20 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', 'WorkOrdersService', 'workOrderId', 'workOrder',
-    function($scope, $rootScope, $log, $state, $timeout, WorkOrdersService, workOrderId, workOrder) {
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', '$stateParams', 'WorkOrdersService', 'workOrderId', 'workOrder', 'workOrderNotes', 'workOrderLogs',
+    function($scope, $rootScope, $log, $state, $timeout, $stateParams, WorkOrdersService, workOrderId, workOrder, workOrderNotes, workOrderLogs) {
       $scope.currentWorkOrderId = workOrderId;
       $scope.currentFilter = '';
       $scope.workOrder = workOrder;
-      $scope.workOrderLogs = [];
-      $scope.workOrderNotes = {};
+      $scope.workOrderLogs = workOrderLogs;
+      $scope.workOrderNotes = workOrderNotes;
       // Loading trackers.
-      $scope.workOrderNotesLoading = true;
-      $scope.workOrderLogsLoading = true;
       $scope.workOrderLogsApi = WorkOrdersService.Logs(workOrderId);
       $scope.workOrderNotesApi = WorkOrdersService.Notes(workOrderId);
       $scope.showAddNote = false;
       $scope.tmpNote = {};
+      $scope.notesPage = parseInt($stateParams.np) || 0;
+      $scope.activeTab = $stateParams.tab;
 
       /**
        * Starts the note adding process.
@@ -30,8 +30,11 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         if(_.isEmpty($scope.tmpNote.entry)) {
           return;
         }
-        WorkOrdersService.postNote($scope.currentWorkOrderId, $scope.tmpNote)
-          .then($scope.retrieveNotes, function() {
+        WorkOrdersService.postNote($scope.currentWorkOrderId, $scope.tmpNote).then(
+          function() {
+            var lastPage = $scope.workOrderNotes.meta.limit===0 ? 0 : Math.ceil(($scope.workOrderNotes.meta.count / $scope.workOrderNotes.meta.limit));
+            $state.go('.', {np: lastPage}, {reload:true});
+          }, function() {
             toastr.warning('There was a problem posting a new note!');
           });
 
@@ -51,33 +54,19 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         $scope.tmpNote.attachment = file;
       };
 
-      /**
-       * Initiates the retrievel of notes. It uses scoped provider functions to process the responses.
-       */
-      $scope.retrieveNotes = function() {
-        $scope.workOrderNotesLoading = true;
-        $scope.workOrderNotesApi.getList().then(
-          function(data) {
-            $scope.workOrderNotesLoading = false;
-            $scope.workOrderNotes = data;
-          },
-          function() {
-            toastr.warning('There was a problem loading work order notes.');
-          });
-      };
-
       $scope.workitLabel = function() {
         return ($scope.isMine() ? 'Work It' : 'Grab It');
       };
 
       $scope.isMine = function() {
-        return (BUNDLE.config.user === $scope.workOrder.assignedId)
+        return ($scope.workOrder.assignee && BUNDLE.config.user === $scope.workOrder.assignee.loginId)
       };
 
       $scope.doWorkIt = function() {
         // If it is mine just change to the work it tab.
         if($scope.isMine()) {
-          $rootScope.$broadcast('krs-workit');
+          //$rootScope.$broadcast('krs-workit');
+          $scope.activeTab = 'work';
           return;
         }
 
@@ -98,25 +87,50 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         );
       };
 
+      $scope.doNoteNext = function() {
+        var offset = ($scope.notesPage) * 5;
+        if(offset<$scope.workOrderNotes.meta.count) {
+          $scope.notesPage++;
+          $state.go('.', {np: $scope.notesPage, tab: 'notes'});
+        }
+      };
+
+      $scope.doNotePrev = function() {
+        // Calculate the previous page, make sure it
+        var page = $scope.notesPage - 1;
+        if(page>0) {
+          $state.go('.', {np: page, tab: 'notes'});
+        }
+      };
+
+      $scope.doNotePage = function(page) {
+        $state.go('.', {np: page, tab: 'notes'});
+      };
+
+      $scope.doLogNext = function() {
+        var offset = ($scope.logsPage) * 5;
+        if(offset<$scope.workOrderNotes.meta.count) {
+          $scope.logsPage++;
+          $state.go('.', {np: $scope.logsPage, tab: 'logs'});
+        }
+      };
+
+      $scope.doLogPrev = function() {
+        // Calculate the previous page, make sure it
+        var page = $scope.logsPage - 1;
+        if(page>0) {
+          $state.go('.', {np: page, tab: 'logs'});
+        }
+      };
+
+      $scope.doLogPage = function(page) {
+        $state.go('.', {np: page, tab: 'logs'});
+      };
+
+
       //
       // RUNTIME
       //
 
-      $rootScope.$on('krs-filter-changed', function(event, filter) {
-        activeFilter = filter;
-      });
-
       $rootScope.$broadcast('krs-workorder-changed', $scope.currentWorkOrderId);
-
-      $scope.workOrderLogsApi.getList().then(
-        function(data) {
-          $scope.workOrderLogsLoading = false;
-          $scope.workOrderLogs = data;
-        },
-        function() {
-          toastr.warning('There was a problem loading work order logs.');
-        });
-
-      $scope.retrieveNotes();
-
     }]);

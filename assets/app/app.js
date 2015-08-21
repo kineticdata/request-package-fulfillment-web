@@ -46,7 +46,6 @@ angular.module('kineticdata.fulfillment', [
   'kineticdata.fulfillment.directives.simplepaginator',
   'kineticdata.fulfillment.directives.workframe',
   'kineticdata.fulfillment.directives.rowhover',
-  'kineticdata.fulfillment.directives.worktab',
 
   // Controllers
   'kineticdata.fulfillment.controllers.main',
@@ -192,6 +191,14 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
       })
       .state('workorders.detail', {
         url: '/:workOrderId',
+        params: {
+          // Work Order Notes Page
+          np: 1,
+          // Work Order Logs Page
+          lp: 1,
+          // Active Tab, can be driven via Query Parameter.
+          tab: 'summary'
+        },
         views: {
           '': {
             templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
@@ -202,6 +209,30 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               },
               workOrder: function(WorkOrdersService, workOrderId) {
                 return WorkOrdersService.WorkOrder(workOrderId).get();
+              },
+              notesParams: function($stateParams) {
+                var NOTE_LIMIT = 5;
+                var page = parseInt($stateParams.np) || 1;
+
+                return {
+                  limit: NOTE_LIMIT,
+                  offset: (page-1)*NOTE_LIMIT
+                }
+              },
+              workOrderNotes: function(WorkOrdersService, workOrderId, notesParams) {
+                return WorkOrdersService.Notes(workOrderId).getList(notesParams);
+              },
+              logsParams: function($stateParams) {
+                var LOG_LIMIT = 5;
+                var page = parseInt($stateParams.lp) || 1;
+
+                return {
+                  limit: LOG_LIMIT,
+                  offset: (page-1)*LOG_LIMIT
+                }
+              },
+              workOrderLogs: function(WorkOrdersService, workOrderId, logsParams) {
+                return WorkOrdersService.Logs(workOrderId).getList(logsParams);
               }
             }
           }
@@ -251,7 +282,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     // normally happen with a functioning API or legit data but will always happen if something 'off' happens on the
     // the Request side. In the event of a failed state change we're going to assume that it is error related and
     // forward the user to the data error page.
-    $rootScope.$on('$stateChangeError', function(event, to, from, fromParams, error) {
+    $rootScope.$on('$stateChangeError', function(event, to, toParams, from, fromParams, error) {
       event.preventDefault();
       $state.go('dataerror')
     });

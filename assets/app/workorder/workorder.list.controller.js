@@ -54,9 +54,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      */
     $scope.selectWorkOrder = function(workOrder) {
       if(angular.isDefined($scope.currentFilter.terms)) {
-        $state.go('workorders.detail', { id: 'search', terms: $scope.currentFilter.terms, workOrderId: workOrder.id });
+        $state.go('workorders.detail', { id: 'search', terms: $scope.currentFilter.terms, workOrderId: workOrder.id, tab: 'summary' });
       } else {
-        $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id });
+        $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id, tab: 'summary' });
       }
     };
 

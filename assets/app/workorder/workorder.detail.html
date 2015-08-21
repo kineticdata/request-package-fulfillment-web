@@ -4,15 +4,15 @@
   </div>
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="" aria-controls="summary" role="tab" data-toggle="tab" data-target="#summary">SUMMARY</a></li>
-    <li role="presentation"><a href="" aria-controls="work" role="tab" data-toggle="tab" data-target="#work" work-tab>WORK</a></li>
-    <li role="presentation">
-      <a href="" aria-controls="notes" role="tab" data-toggle="tab" data-target="#notes">
-        NOTES <span data-ng-if="!workOrderNotesLoading">({{workOrderNotes.length}})</span>
+    <li role="presentation" ng-class="{ 'active': activeTab==='summary'}"><a href="" aria-controls="summary" role="tab" ng-click="activeTab='summary'">SUMMARY</a></li>
+    <li role="presentation" ng-class="{ 'active': activeTab==='work'}"><a href="" aria-controls="work" role="tab" ng-click="activeTab='work'">WORK</a></li>
+    <li role="presentation" ng-class="{ 'active': activeTab==='notes'}">
+      <a href="" aria-controls="notes" role="tab" ng-click="activeTab='notes'">
+        NOTES <span data-ng-if="!workOrderNotesLoading">({{workOrderNotes.meta.count}})</span>
       </a>
     </li>
-    <li role="presentation">
-      <a href="" aria-controls="logs" role="tab" data-toggle="tab" data-target="#logs">
+    <li role="presentation" ng-class="{ 'active': activeTab==='logs'}">
+      <a href="" aria-controls="logs" role="tab" ng-click="activeTab='logs'">
         HISTORY
       </a>
     </li>
@@ -20,7 +20,7 @@
 
   <!-- Tab Content -->
   <div class="tab-content clearfix">
-    <div role="tabpanel" class="tab-pane fade in active" id="summary">
+    <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='summary'}" id="summary">
       <!-- Assignments details -->
       <div class="well well-sm">
         <dl class="dl-horizontal">
@@ -72,7 +72,7 @@
         <h4>Latest Note</h4>
         <div data-ng-if="!workOrderNotesLoading">
           <div data-ng-if="workOrderNotes.length > 0">
-            By <strong>{{workOrderNotes[0].submittedBy}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
+            By <strong>{{workOrderNotes[0].loginId}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
             <p class="white-space">{{workOrderNotes[0].entry}}</p>
           </div>
           <div data-ng-if="workOrderNotes.length === 0">
@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade in" id="work">
+    <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">
       <div class="no-data" ng-if="!isMine(workOrder)">
         <h3>Grab Work Order?</h3>
         <p>Do you want to assign this to yourself?</p>
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade in" id="notes">
+    <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='notes'}" id="notes">
       <div ng-show="workOrderNotesLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
@@ -108,15 +108,16 @@
             <label for="tmpNote">New Note</label>
             <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote.entry"/>
           </div>
-          <button
-            class="btn btn-default btn-block"
-            ngf-select
-            ngf-drop
-            ngf-drag-over-class="btn-success"
-            ngf-change="setNoteAttachment($file)">
-            <span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.
-            <p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>
-          </button>
+          <!-- When attachments in the backend work we can turn this back on. -->
+          <!--<button-->
+            <!--class="btn btn-default btn-block"-->
+            <!--ngf-select-->
+            <!--ngf-drop-->
+            <!--ngf-drag-over-class="btn-success"-->
+            <!--ngf-change="setNoteAttachment($file)">-->
+            <!--<span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.-->
+            <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
+          <!--</button>-->
 
           <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
           <button class="btn btn-danger" ng-click="addNote()">Save</button>
@@ -138,17 +139,18 @@
 
         <div ng-repeat="note in workOrderNotes" class="well-log">
           <div class="panel panel-default">
-            <div class="panel-heading">By {{note.submittedBy}}, <span am-time-ago="note.created"></span></div>
+            <div class="panel-heading">By {{note.loginId}}, <span am-time-ago="note.created"></span></div>
             <div class="panel-body">
               {{note.entry}}
             </div>
           </div>
         </div>
 
+        <simple-paginated-resource datasource="workOrderNotes" do-next="doNoteNext" do-prev="doNotePrev" do-page="doNotePage"></simple-paginated-resource>
       </div>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade in" id="logs">
+    <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='logs'}" id="logs">
       <div ng-show="workOrderLogsLoading">
         <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
       </div>
@@ -160,7 +162,7 @@
           <p>{{log.id}} {{log.entry}}</p>
           <p>Submitted By: {{log.assigneeId}}</p>
         </div>
-        <simple-paginated-resource api="workOrderLogsApi" datasource="workOrderLogs"></simple-paginated-resource>
+        <simple-paginated-resource datasource="workOrderLogs" do-next="doLogsNext" do-prev="doLogsPrev" do-page="doLogsPage"></simple-paginated-resource>
       </div>
     </div>
   </div>
