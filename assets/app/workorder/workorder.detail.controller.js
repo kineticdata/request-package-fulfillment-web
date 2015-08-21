@@ -1,18 +1,20 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', '$stateParams', 'WorkOrdersService', 'workOrderId', 'workOrder', 'workOrderNotes', 'workOrderLogs',
-    function($scope, $rootScope, $log, $state, $timeout, $stateParams, WorkOrdersService, workOrderId, workOrder, workOrderNotes, workOrderLogs) {
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', '$stateParams', 'WorkOrdersService', 'workOrderId', 'workOrder', 'workOrderNotes', 'workOrderLogs', 'latestNote',
+    function($scope, $rootScope, $log, $state, $timeout, $stateParams, WorkOrdersService, workOrderId, workOrder, workOrderNotes, workOrderLogs, latestNote) {
       $scope.currentWorkOrderId = workOrderId;
       $scope.currentFilter = '';
       $scope.workOrder = workOrder;
       $scope.workOrderLogs = workOrderLogs;
       $scope.workOrderNotes = workOrderNotes;
+      $scope.latestNote = latestNote;
+
       // Loading trackers.
-      $scope.workOrderLogsApi = WorkOrdersService.Logs(workOrderId);
-      $scope.workOrderNotesApi = WorkOrdersService.Notes(workOrderId);
       $scope.showAddNote = false;
       $scope.tmpNote = {};
+
+
       $scope.notesPage = parseInt($stateParams.np) || 0;
       $scope.logsPage = parseInt($stateParams.lp) || 0;
       $scope.activeTab = $stateParams.tab;

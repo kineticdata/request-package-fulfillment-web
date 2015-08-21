@@ -233,6 +233,9 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               },
               workOrderLogs: function(WorkOrdersService, workOrderId, logsParams) {
                 return WorkOrdersService.Logs(workOrderId).getList(logsParams);
+              },
+              latestNote: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.Notes(workOrderId).getList({order: 'created DESC', limit: 1, offset: 0});
               }
             }
           }
