@@ -431,3 +431,20 @@ body{
   padding: 1em;
   width:280px;
 }
+a.originator{
+  color:#2F7ED8;
+}
+a.originator:hover{
+  color:#2165b3;
+}
+.meta{
+  color:#9B9B9B;
+  font-size: .8em;
+  margin:0;
+}
+.workOrderNote{
+  border-radius: 0;
+  background-color: #fff;
+  border: 1px solid #edecec;
+  box-shadow: none;
+}

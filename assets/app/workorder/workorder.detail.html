@@ -64,7 +64,7 @@
           <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
 
           <dt>Originator</dt>
-          <dd><a href="{{workOrder.originator.url}}">({{workOrder.originator.source || 'Request'}}) {{workOrder.originator.id}}</a></dd>
+          <dd><a href="{{workOrder.originator.url}}" class="originator">Originating Request</a></dd>
         </dl>
       </div>
 
@@ -72,8 +72,8 @@
         <h4>Latest Note</h4>
         <div data-ng-if="!workOrderNotesLoading">
           <div data-ng-if="workOrderNotes.length > 0">
-            By <strong>{{workOrderNotes[0].submittedBy}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
             <p class="white-space">{{workOrderNotes[0].entry}}</p>
+            <span class="meta">By <strong>{{workOrderNotes[0].submittedBy}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span></span>
           </div>
           <div data-ng-if="workOrderNotes.length === 0">
             Work Order has no notes.
@@ -137,10 +137,10 @@
         </div>
 
         <div ng-repeat="note in workOrderNotes" class="well-log">
-          <div class="panel panel-default">
-            <div class="panel-heading">By {{note.submittedBy}}, <span am-time-ago="note.created"></span></div>
+          <div class="panel panel-default workOrderNote">
             <div class="panel-body">
-              {{note.entry}}
+              <span class="white-space">{{note.entry}}</span>
+              <p class="meta">By {{note.submittedBy}}, <span am-time-ago="note.created"></span></p>
             </div>
           </div>
         </div>
