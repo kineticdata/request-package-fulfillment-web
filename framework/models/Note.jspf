@@ -18,6 +18,12 @@
             FIELD_ATTACHMENT, FIELD_SUBMITTER, FIELD_MODIFY_DATE
         };
 
+        public static final Map<String,String> SORTABLE_FIELDS = new HashMap<String,String>();
+        static {
+            SORTABLE_FIELDS.put("created",FIELD_CREATE_DATE);
+            SORTABLE_FIELDS.put("modified",FIELD_MODIFY_DATE);
+        }
+
         public static int count(HelperContext context, String qualification) {
             return ArsBase.count(context, FORM_NAME, qualification);
         }

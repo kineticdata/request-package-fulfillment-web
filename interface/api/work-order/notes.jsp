@@ -113,9 +113,40 @@ if (request.getMethod() == "POST") {
     int limit = request.getParameter("limit") == null ? 0 : Integer.parseInt(request.getParameter("limit"));
     int offset = request.getParameter("offset") == null ? 0 : Integer.parseInt(request.getParameter("offset"));
 
+    // Set the sorting information. Default to modified date if no sort data
+    // was passed in
+    String[] orderList;
+    int sortDirection = 1; // default to ASC, 2 is DESC
+    String order = request.getParameter("order");
+    if (order != null) {
+        orderList = order.split(",");
+        for (int i=0; i<orderList.length; i++) {
+            if (i != orderList.length-1) {
+                orderList[i] = Note.SORTABLE_FIELDS.get(orderList[i].trim());
+                if (orderList[i] == null) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    results.put("message", "A field with the name of " + orderList[i] + " was not found.");
+                    response.getWriter().write(JsonUtils.toJsonString(results));
+                    return;
+                }
+            } else {
+                orderList[i] = orderList[i].trim();
+                if (orderList[i].contains(" ")) {
+                    String[] split = orderList[i].split(" ");
+                    orderList[i] = Note.SORTABLE_FIELDS.get(split[0].trim());
+                    if (split[1].toUpperCase().equals("DESC")) {
+                        sortDirection = 2;
+                    }
+                }
+            }
+        }
+    } else {
+        orderList = new String[] {Note.SORTABLE_FIELDS.get("modified")};
+    }
+
     // Creating the qualification to return the notes for the specified work order id.
     String qualification = "'" + Note.FIELD_WORK_ORDER_ID + "'=\"" + workOrderId + "\"";
-    Note[] notes = Note.find(tzFreeContext,qualification, new String[] {Note.FIELD_MODIFY_DATE}, limit, offset, 1);
+    Note[] notes = Note.find(tzFreeContext,qualification, orderList, limit, offset, sortDirection);
     int count = Note.count(context, qualification);
 
     List<Map> notesList = new ArrayList<Map>();
