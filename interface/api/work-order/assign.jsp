@@ -2,6 +2,7 @@
 <%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
+String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "POST") {
     // Read the call parameter in do get the work order id from the path
@@ -99,7 +100,7 @@ if (request.getMethod() == "POST") {
 
     // Finally, return the changed work order object
     response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().write(JsonUtils.toJsonString(workOrder.toJsonObject(request)));
+    response.getWriter().write(JsonUtils.toJsonString(workOrder.toJsonObject(request,contextualPackagePath)));
 } else {
     response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     response.getWriter().write(JsonUtils.toJsonString(results));

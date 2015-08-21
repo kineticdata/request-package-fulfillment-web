@@ -64,20 +64,18 @@
           <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
 
           <dt>Originator</dt>
-          <dd><a href="{{workOrder.originator.url}}">({{workOrder.originator.source || 'Request'}}) {{workOrder.originator.id}}</a></dd>
+          <dd><a href="{{workOrder.originator.url}}" class="originator">Originating Request</a></dd>
         </dl>
       </div>
 
       <div class="well well-sm">
         <h4>Latest Note</h4>
-        <div data-ng-if="!workOrderNotesLoading">
-          <div data-ng-if="workOrderNotes.length > 0">
-            By <strong>{{workOrderNotes[0].loginId}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span>
-            <p class="white-space">{{workOrderNotes[0].entry}}</p>
-          </div>
-          <div data-ng-if="workOrderNotes.length === 0">
-            Work Order has no notes.
-          </div>
+        <div data-ng-if="workOrderNotes.length > 0">
+          <p class="white-space">{{workOrderNotes[0].entry}}</p>
+          <span class="meta">By <strong>{{workOrderNotes[0].loginId}}</strong>, <span am-time-ago="workOrderNotes[0].created"></span></span>
+        </div>
+        <div data-ng-if="workOrderNotes.length === 0">
+          Work Order has no notes.
         </div>
       </div>
 
@@ -99,71 +97,61 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='notes'}" id="notes">
-      <div ng-show="workOrderNotesLoading">
-        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      <div class="showAddNote clearfix" ng-if="showAddNote">
+        <div class="form-group">
+          <label for="tmpNote">New Note</label>
+          <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote.entry"/>
+        </div>
+        <!-- When attachments in the backend work we can turn this back on. -->
+        <!--<button-->
+          <!--class="btn btn-default btn-block"-->
+          <!--ngf-select-->
+          <!--ngf-drop-->
+          <!--ngf-drag-over-class="btn-success"-->
+          <!--ngf-change="setNoteAttachment($file)">-->
+          <!--<span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.-->
+          <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
+        <!--</button>-->
+
+        <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
+        <button class="btn btn-danger" ng-click="addNote()">Save</button>
+
       </div>
-      <div ng-hide="workOrderNotesLoading">
-        <div class="showAddNote clearfix" ng-if="showAddNote">
-          <div class="form-group">
-            <label for="tmpNote">New Note</label>
-            <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote.entry"/>
+
+      <div ng-if="!showAddNote">
+        <div class="no-data">
+          <div data-ng-if="workOrderNotes.length === 0">
+            <h3>There are no notes attached to this work order</h3>
+            <p>Click ‘+ New Note’ to create a new note</p>
           </div>
-          <!-- When attachments in the backend work we can turn this back on. -->
-          <!--<button-->
-            <!--class="btn btn-default btn-block"-->
-            <!--ngf-select-->
-            <!--ngf-drop-->
-            <!--ngf-drag-over-class="btn-success"-->
-            <!--ngf-change="setNoteAttachment($file)">-->
-            <!--<span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.-->
-            <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
-          <!--</button>-->
 
-          <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
-          <button class="btn btn-danger" ng-click="addNote()">Save</button>
-
+          <p>
+            <button class="btn btn-primary btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
+          </p>
         </div>
-
-        <div ng-if="!showAddNote">
-          <div class="no-data">
-            <div data-ng-if="workOrderNotes.length === 0">
-              <h3>There are no notes attached to this work order</h3>
-              <p>Click ‘+ New Note’ to create a new note</p>
-            </div>
-
-            <p>
-              <button class="btn btn-primary btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
-            </p>
-          </div>
-        </div>
-
-        <div ng-repeat="note in workOrderNotes" class="well-log">
-          <div class="panel panel-default">
-            <div class="panel-heading">By {{note.loginId}}, <span am-time-ago="note.created"></span></div>
-            <div class="panel-body">
-              {{note.entry}}
-            </div>
-          </div>
-        </div>
-
-        <simple-paginated-resource datasource="workOrderNotes" do-next="doNoteNext" do-prev="doNotePrev" do-page="doNotePage"></simple-paginated-resource>
       </div>
+
+      <div ng-repeat="note in workOrderNotes" class="well-log">
+        <div class="panel panel-default workOrderNote">
+          <div class="panel-body">
+            <span class="white-space">{{note.entry}}</span>
+            <p class="meta">By {{note.loginId}}, <span am-time-ago="note.created"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <simple-paginated-resource datasource="workOrderNotes" do-next="doNoteNext" do-prev="doNotePrev" do-page="doNotePage"></simple-paginated-resource>
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='logs'}" id="logs">
-      <div ng-show="workOrderLogsLoading">
-        <p class="text-center"><i class="fa fa-spinner fa-spin fa-5x"></i></p>
+      <div class="no-data" data-ng-if="workOrderLogs.length < 1">
+        <h3>There are no logs attached to this work order</h3>
       </div>
-      <div ng-hide="workOrderLogsLoading">
-          <div class="no-data">
-            <h3>There are no logs attached to this work order</h3>
-          </div>
-        <div ng-repeat="log in workOrderLogs" class="well-log">
-          <p>{{log.id}} {{log.entry}}</p>
-          <p>Submitted By: {{log.assigneeId}}</p>
-        </div>
-        <simple-paginated-resource datasource="workOrderLogs" do-next="doLogsNext" do-prev="doLogsPrev" do-page="doLogsPage"></simple-paginated-resource>
+      <div ng-repeat="log in workOrderLogs" class="well-log">
+        <p>{{log.id}} {{log.entry}}</p>
+        <p>Submitted By: {{log.assigneeId}}</p>
       </div>
+      <simple-paginated-resource datasource="workOrderLogs" do-next="doLogsNext" do-prev="doLogsPrev" do-page="doLogsPage"></simple-paginated-resource>
     </div>
   </div>
 </div>
