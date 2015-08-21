@@ -43,8 +43,10 @@
         FILTER_FIELDS.put("id",FLD_REQUEST_ID);
         FILTER_FIELDS.put("requestName", FLD_REQUEST_NAME);
         FILTER_FIELDS.put("workOrder", FLD_WORK_ORDER);
+        FILTER_FIELDS.put("requestedFor", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.loginId", FLD_REQUESTED_FOR_ID);
+        FILTER_FIELDS.put("assignee", FLD_ASSIGNEE_NAME);
         FILTER_FIELDS.put("assignee.name", FLD_ASSIGNEE_NAME);
         FILTER_FIELDS.put("assignee.loginId", FLD_ASSIGNEE_ID);
         FILTER_FIELDS.put("originator.id", FLD_ORIGINATING_ID);
