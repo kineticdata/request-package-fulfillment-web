@@ -94,6 +94,7 @@
 <%@include file="../models/Log.jspf"%>
 <%@include file="../models/Note.jspf"%>
 <%@include file="../models/Filter.jspf"%>
+<%@include file="../models/Source.jspf"%>
 <%@include file="../models/Group.jspf" %>
 <%@include file="../models/Member.jspf" %>
 <%@include file="../models/Assignment.jspf" %>

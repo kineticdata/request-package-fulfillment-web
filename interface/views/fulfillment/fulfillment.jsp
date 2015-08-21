@@ -34,7 +34,14 @@
   <div class="container">
     <h3>Fulfillment</h3>
     <div ui-view="filters"></div>
-    <div ui-view></div>
+    <div ui-view>
+      <nav class="nav nav-pills">&nbsp;</nav>
+      <div class="text-center no-data">
+        <span class="fa fa-circle-o-notch fa-spin"></span>
+        <h3>Loading</h3>
+
+      <p>Please wait while we load the application.</p>
+</div></div>
   </div>
 </div>
 

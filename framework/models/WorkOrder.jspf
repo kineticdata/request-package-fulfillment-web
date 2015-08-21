@@ -43,8 +43,10 @@
         FILTER_FIELDS.put("id",FLD_REQUEST_ID);
         FILTER_FIELDS.put("requestName", FLD_REQUEST_NAME);
         FILTER_FIELDS.put("workOrder", FLD_WORK_ORDER);
+        FILTER_FIELDS.put("requestedFor", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.loginId", FLD_REQUESTED_FOR_ID);
+        FILTER_FIELDS.put("assignee", FLD_ASSIGNEE_NAME);
         FILTER_FIELDS.put("assignee.name", FLD_ASSIGNEE_NAME);
         FILTER_FIELDS.put("assignee.loginId", FLD_ASSIGNEE_ID);
         FILTER_FIELDS.put("originator.id", FLD_ORIGINATING_ID);
@@ -193,7 +195,7 @@
         public String getAssignedGroups() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUPS);}
         public String getAssignedGroupNames() {return entry.getEntryFieldValue(FLD_ASSIGNED_GROUP_NAMES);}
 
-        public Map<String,Object> toJsonObject(HttpServletRequest request) {
+        public Map<String,Object> toJsonObject(HttpServletRequest request, String packagePath) {
             Map<String,Object> jsonObject = new LinkedHashMap<String,Object>();
             jsonObject.put("id",StringUtils.stripToNull(getRequestId()));
             jsonObject.put("requestName",StringUtils.stripToNull(getRequestName()));
@@ -215,7 +217,14 @@
             Map<String,String> originator = new LinkedHashMap<String,String>();
             originator.put("id", getOriginatingId());
             originator.put("source", getOriginatingSource());
-            originator.put("url", "http://still-needs-to-be-implemented.io");
+
+            // Pull back Source Url
+            String url = "";
+            Source source = Source.getSource(packagePath, getOriginatingSource());
+            if (source != null) {
+                url = source.getUrl(getOriginatingId());
+            }
+            originator.put("url", url);
             jsonObject.put("originator", originator);
 
             jsonObject.put("status",StringUtils.stripToNull(getStatus()));

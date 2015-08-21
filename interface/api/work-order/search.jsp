@@ -2,7 +2,7 @@
 <%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
-//ArrayList<Map<String,Object>> workOrders = new ArrayList<Map<String,Object>>();
+String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "GET") {
     String query = request.getParameter("query");
@@ -35,7 +35,7 @@ if (request.getMethod() == "GET") {
     
     // Build Remedy Qualification based off of the input query
     StringBuilder qualification = new StringBuilder();
-    qualification.append(Filter.getOpenWorkOrdersFilter(context, bundle.getProperty("catalogName")).getQualification());
+    qualification.append(Filter.getDefaultFilter(context, contextualPackagePath).getQualification());
     qualification.append(" AND ");
     if (ksr != null) {
         // If the input query was able to be translated to a valid KSR, add a

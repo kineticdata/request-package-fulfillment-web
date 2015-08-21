@@ -11,13 +11,12 @@
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{}");
         } else {
-            if (call.matches("/api/v1/work-orders/?")) { forwardJsp = "interface/api/work-order/work-orders.jsp";}
+            if (call.matches("/api/v1/filters/?(.*?)(\\z|/)")) {forwardJsp = "interface/api/filters.jsp";}
+            else if (call.matches("/api/v1/sources/?(.*?)(\\z|/)")) {forwardJsp = "interface/api/sources.jsp";}
+            else if (call.matches("/api/v1/work-orders/?")) { forwardJsp = "interface/api/work-order/work-orders.jsp";}
             else if (call.matches("/api/v1/work-orders/search/?")) {forwardJsp = "interface/api/work-order/search.jsp";}
-            else if (call.matches("/api/v1/work-orders/filters/?(.*?)(\\z|/)")) {forwardJsp = "interface/api/work-order/filters.jsp";}
-            else if (call.matches("/api/v1/work-orders/\\w*/view/?")) {forwardJsp = "interface/api/work-order/view.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/logs/?")) {forwardJsp = "interface/api/work-order/logs.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/notes/?")) {forwardJsp = "interface/api/work-order/notes.jsp";}
-            else if (call.matches("/api/v1/work-orders/\\w*/history/?")) {forwardJsp = "interface/api/work-order/history.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/assign/me/?")) {forwardJsp = "interface/api/work-order/assign-me.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/assign/?")) {forwardJsp = "interface/api/work-order/assign.jsp";}
             else if (call.matches("/api/v1/work-orders/\\w*/related/?")) {forwardJsp = "interface/api/work-order/related.jsp";}

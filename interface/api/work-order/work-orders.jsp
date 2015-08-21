@@ -3,6 +3,7 @@
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
 ArrayList<Map<String,Object>> workOrders = new ArrayList<Map<String,Object>>();
+String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "GET") {
     // Creating a Time Zone Free copy of the Context so that time stamps 
@@ -48,6 +49,24 @@ if (request.getMethod() == "GET") {
         orderList = new String[] {WorkOrder.SORTABLE_FIELDS.get("modifiedDate")};
     }
 
+    List<String> individualFilters = new ArrayList<String>();
+    for (Map.Entry<String,String[]> entry : request.getParameterMap().entrySet()) {
+        if (entry.getKey().matches("field\\[.*?\\]")) {
+            String key = entry.getKey();
+            for (String value : entry.getValue()) {
+                String field = key.substring("field[".length(), key.length()-1);
+                // '{field}' LIKE "%Demo2%"
+                String individualFilter;
+                if (!field.equals("status")) {
+                    individualFilter = String.format("'%s' LIKE \"%%%s%%\"",WorkOrder.FILTER_FIELDS.get(field), value);
+                } else {
+                    individualFilter = String.format("'%s'=\"%s\"",WorkOrder.FILTER_FIELDS.get(field), value);
+                }
+                individualFilters.add(individualFilter);
+            }
+        }
+    }
+
     // If the work order page is passed a filter, use the qualification from the
     // filter to return the work orders. If there no filter passed, throw an error.
     // If a search qualification was passed from search.jsp, use that as the
@@ -55,12 +74,17 @@ if (request.getMethod() == "GET") {
     Object searchQualification = request.getAttribute("qualification");
     if (request.getParameter("filter") != null) {
         String filterName = request.getParameter("filter");
-        String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
         Filter filter = Filter.getFilter(context, contextualPackagePath, filterName);
         if (filter != null) {
             // sorting by 1 is ASC, sorting by 0 is DESC. Currently automatically searching by modified date ASC.
-            workOrderObjects = WorkOrder.find(tzFreeContext, filter.getQualification(), orderList, limit, offset, sortDirection);
-            count = WorkOrder.count(context, filter.getQualification());
+            String qualification;
+            if (!individualFilters.isEmpty()) {
+                qualification = "(" + filter.getQualification() + ") AND " + StringUtils.join(individualFilters," AND ");
+            } else {
+                qualification = filter.getQualification();
+            }
+            workOrderObjects = WorkOrder.find(tzFreeContext, qualification, orderList, limit, offset, sortDirection);
+            count = WorkOrder.count(context, qualification);
         }
         else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -80,7 +104,7 @@ if (request.getMethod() == "GET") {
 
     // Iterate through the Work Order array and make work order JSON objects
     for (WorkOrder workOrder : workOrderObjects) {   
-        workOrders.add(workOrder.toJsonObject(request));
+        workOrders.add(workOrder.toJsonObject(request,contextualPackagePath));
     }
 
     // Adding the count, limit, offset, and work orders to the results.

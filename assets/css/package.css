@@ -406,7 +406,14 @@ body{
   position: relative;
   border: 1px solid transparent; 
 }
-.no-data h3{color: #666;font-size: 1.4em;}
+.no-data h3{
+  color: #666;
+  font-size: 1.4em;
+}
+.no-data span.fa{
+  color: orange;
+  font-size: 4em;
+}
 .showAddNote{
   display: block;
   margin:1em 0;
@@ -419,4 +426,8 @@ body{
 }
 .return-back{
   margin:1em 0;
+}
+.workOrderListSort{
+  padding: 1em;
+  width:280px;
 }

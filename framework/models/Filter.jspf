@@ -41,6 +41,24 @@
           return filter;
         }
 
+        public static Filter getDefaultFilter(HelperContext context, String packagePath) {
+          Filter defaultFilter = null;
+          for (Filter filter : getFilters(packagePath)) {
+            if (filter.isDefault() == true) {
+              defaultFilter = filter;
+              break;
+            }
+          }
+
+          // Convert the qualification to use field ids instead of names
+          String qualification = defaultFilter.getQualification();
+          qualification = qualification.replaceAll("\\{\\{user.current\\}\\}", context.getUserName());
+          qualification = convertFieldNames(qualification);
+
+          defaultFilter.setQualification(qualification);
+          return defaultFilter;
+        }
+
         /* POST methods */
         public static Filter createFilter(String packagePath, String name, String qualification) {
           Filter createdFilter = null;
@@ -176,5 +194,7 @@
         public String getName() {return this.name;}
         public String getQualification() {return this.qualification;}
         public Boolean isDefault() {return this.defaultFilter;}
+
+        public void setQualification(String qualification) {this.qualification = qualification;}
     }
 %>

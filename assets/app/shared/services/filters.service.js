@@ -11,7 +11,7 @@ angular.module('kineticdata.fulfillment.services.filter', [
     var api = function() {
       return Restangular.withConfig(function(RestangularConfigurer) {
         // Set the filters base URL.
-        RestangularConfigurer.setBaseUrl(ConfigService.getBaseUrl() + '/work-orders');
+        RestangularConfigurer.setBaseUrl(ConfigService.getBaseUrl());
         RestangularConfigurer.addResponseInterceptor(function(data, operation) {
           if(operation === 'getList') {
             var newData = new factory.factoryObject(data.filters);

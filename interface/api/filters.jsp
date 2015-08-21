@@ -1,4 +1,4 @@
-<%@include file="../../../framework/includes/packageInitialization.jspf" %>
+<%@include file="../../framework/includes/packageInitialization.jspf" %>
 <%@page contentType="application/json" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
@@ -30,6 +30,7 @@ if (request.getMethod() == "GET") {
     response.setStatus(HttpServletResponse.SC_OK);
     response.getWriter().write(JsonUtils.toJsonString(results));
 } else if (request.getMethod() == "POST") {
+  if (request.getHeader("X-HTTP-Method") == null || request.getHeader("X-HTTP-Method").equals("POST")) {
     if (!request.getContentType().contains("application/json")) {
         response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         response.getWriter().write(JsonUtils.toJsonString(results));
@@ -75,93 +76,94 @@ if (request.getMethod() == "GET") {
     // Returning the results with a status code of 200 OK
     response.setStatus(HttpServletResponse.SC_OK);
     response.getWriter().write(JsonUtils.toJsonString(results));
-} else if (request.getMethod() == "DELETE") {
-  String call = request.getParameter("call");
+  } else if (request.getHeader("X-HTTP-Method").equals("DELETE")) {
+    String call = request.getParameter("call");
 
-  // Using a regex to get the filter name. If a name can't be found in the
-  // call path, return a 400 BadRequest with a message in results.
-  String patternStr="/api/v1/work-orders/filters/([\\w\\s]*)/?";
-  Pattern p = Pattern.compile(patternStr);
-  Matcher m = p.matcher(call);
+    // Using a regex to get the filter name. If a name can't be found in the
+    // call path, return a 400 BadRequest with a message in results.
+    String patternStr="/api/v1/filters/([\\w\\s]*)/?";
+    Pattern p = Pattern.compile(patternStr);
+    Matcher m = p.matcher(call);
 
-  String filterName = "";
-  if (m.find()) {
-      filterName = m.group(1);
-  } else {
-      results.put("message","Could not find the Filter name in the call path.");
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      response.getWriter().write(JsonUtils.toJsonString(results));
-      return;
-  }
+    String filterName = "";
+    if (m.find()) {
+        filterName = m.group(1);
+    } else {
+        results.put("message","Could not find the Filter name in the call path.");
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.getWriter().write(JsonUtils.toJsonString(results));
+        return;
+    }
 
-  try {
-    Filter.deleteFilter(contextualPackagePath, filterName);
-  } catch (RuntimeException e) {
-    results.put("message",e.getMessage());
-    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-    response.getWriter().write(JsonUtils.toJsonString(results));
-    return;
-  }
-} else if (request.getMethod() == "PUT") {
-  String call = request.getParameter("call");
-
-  // Using a regex to get the filter name. If a name can't be found in the
-  // call path, return a 400 BadRequest with a message in results.
-  String patternStr="/api/v1/work-orders/filters/([\\w\\s]*)/?";
-  Pattern p = Pattern.compile(patternStr);
-  Matcher m = p.matcher(call);
-
-  String filterName = "";
-  if (m.find()) {
-      filterName = m.group(1);
-  } else {
-      results.put("message","Could not find the Filter name in the call path.");
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-      response.getWriter().write(JsonUtils.toJsonString(results));
-      return;
-  }
-
-  if (!request.getContentType().contains("application/json")) {
-      response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-      response.getWriter().write(JsonUtils.toJsonString(results));
-      return;
-  }
-
-  // Retrieve the JSON Body
-  String body = IOUtils.toString(request.getReader());
-  JSONObject json = (JSONObject)JSONValue.parse(body);
-  if (json == null) {
-      results.put("message","The input data is not recognized as properly formatted JSON");
+    try {
+      Filter.deleteFilter(contextualPackagePath, filterName);
+    } catch (RuntimeException e) {
+      results.put("message",e.getMessage());
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       response.getWriter().write(JsonUtils.toJsonString(results));
       return;
-  }
+    }
+  } else if (request.getHeader("X-HTTP-Method").equals("PUT")) {
+    String call = request.getParameter("call");
 
-  // Get the name and qualification (if they exist)
-  String updatedName = null;
-  String qualification = null;
-  if (json.containsKey("name")) { updatedName = json.get("name").toString(); }
-  if (json.containsKey("qualification")) { qualification = json.get("qualification").toString(); }
+    // Using a regex to get the filter name. If a name can't be found in the
+    // call path, return a 400 BadRequest with a message in results.
+    String patternStr="/api/v1/filters/([\\w\\s]*)/?";
+    Pattern p = Pattern.compile(patternStr);
+    Matcher m = p.matcher(call);
 
-  Filter filter = null;
-  try {
-    filter = Filter.modifyFilter(contextualPackagePath,filterName,updatedName,qualification);
-  } catch (RuntimeException e) {
-    results.put("message",e.getMessage());
-    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    String filterName = "";
+    if (m.find()) {
+        filterName = m.group(1);
+    } else {
+        results.put("message","Could not find the Filter name in the call path.");
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.getWriter().write(JsonUtils.toJsonString(results));
+        return;
+    }
+
+    if (!request.getContentType().contains("application/json")) {
+        response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        response.getWriter().write(JsonUtils.toJsonString(results));
+        return;
+    }
+
+    // Retrieve the JSON Body
+    String body = IOUtils.toString(request.getReader());
+    JSONObject json = (JSONObject)JSONValue.parse(body);
+    if (json == null) {
+        results.put("message","The input data is not recognized as properly formatted JSON");
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write(JsonUtils.toJsonString(results));
+        return;
+    }
+
+    // Get the name and qualification (if they exist)
+    String updatedName = null;
+    String qualification = null;
+    if (json.containsKey("name")) { updatedName = json.get("name").toString(); }
+    if (json.containsKey("qualification")) { qualification = json.get("qualification").toString(); }
+
+    Filter filter = null;
+    try {
+      filter = Filter.modifyFilter(contextualPackagePath,filterName,updatedName,qualification);
+    } catch (RuntimeException e) {
+      results.put("message",e.getMessage());
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.getWriter().write(JsonUtils.toJsonString(results));
+      return;
+    }
+
+    if (filter != null) {
+      results.put("name", filter.getName());
+      results.put("qualification", filter.getQualification());
+      results.put("default", filter.isDefault());
+    }
+
+    // Returning the results with a status code of 200 OK
+    response.setStatus(HttpServletResponse.SC_OK);
     response.getWriter().write(JsonUtils.toJsonString(results));
-    return;
   }
-
-  if (filter != null) {
-    results.put("name", filter.getName());
-    results.put("qualification", filter.getQualification());
-    results.put("default", filter.isDefault());
-  }
-
-  // Returning the results with a status code of 200 OK
-  response.setStatus(HttpServletResponse.SC_OK);
-  response.getWriter().write(JsonUtils.toJsonString(results));
 } else {
     response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     response.getWriter().write(JsonUtils.toJsonString(results));
