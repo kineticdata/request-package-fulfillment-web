@@ -14,6 +14,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.showAddNote = false;
       $scope.tmpNote = {};
       $scope.notesPage = parseInt($stateParams.np) || 0;
+      $scope.logsPage = parseInt($stateParams.lp) || 0;
       $scope.activeTab = $stateParams.tab;
 
       /**
@@ -111,7 +112,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         var offset = ($scope.logsPage) * 5;
         if(offset<$scope.workOrderNotes.meta.count) {
           $scope.logsPage++;
-          $state.go('.', {np: $scope.logsPage, tab: 'logs'});
+          $state.go('.', {lp: $scope.logsPage, tab: 'logs'});
         }
       };
 
@@ -119,12 +120,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         // Calculate the previous page, make sure it
         var page = $scope.logsPage - 1;
         if(page>0) {
-          $state.go('.', {np: page, tab: 'logs'});
+          $state.go('.', {lp: page, tab: 'logs'});
         }
       };
 
       $scope.doLogPage = function(page) {
-        $state.go('.', {np: page, tab: 'logs'});
+        $state.go('.', {lp: page, tab: 'logs'});
       };
 
 

@@ -144,14 +144,18 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='logs'}" id="logs">
-      <div class="no-data" data-ng-if="workOrderLogs.length < 1">
+      <div class="no-data" data-ng-if="workOrderLogs.length === 0">
         <h3>There are no logs attached to this work order</h3>
       </div>
       <div ng-repeat="log in workOrderLogs" class="well-log">
-        <p>{{log.id}} {{log.entry}}</p>
-        <p>Submitted By: {{log.assigneeId}}</p>
+        <div class="panel panel-default workOrderNote">
+          <div class="panel-body">
+            <span class="white-space">({{log.type}}) {{log.entry}}</span>
+            <p class="meta">By {{log.loginId}}, <span am-time-ago="log.created"></span></p>
+          </div>
+        </div>
       </div>
-      <simple-paginated-resource datasource="workOrderLogs" do-next="doLogsNext" do-prev="doLogsPrev" do-page="doLogsPage"></simple-paginated-resource>
+      <simple-paginated-resource datasource="workOrderLogs" do-next="doLogNext" do-prev="doLogPrev" do-page="doLogPage"></simple-paginated-resource>
     </div>
   </div>
 </div>
