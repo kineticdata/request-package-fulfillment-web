@@ -12,28 +12,34 @@
             <i class="fa fa-filter"></i>
           </button>
           <ul class="dropdown-menu pull-right workOrderListSort" role="menu" aria-labelledby="workOrderListSort">
-            <form action="">
+            <form ng-submit="updateFilters()">
               <li role="presentation" class="form-group">
                 <label for="workOrder">Work Order ID</label>
-                <input class="form-control"type="text" title="workOrderId" placeholder="Search Work Order ID">
+                <input class="form-control"type="text" title="workOrderId" placeholder="Search Work Order ID" ng-model="fb.id">
               </li>
               <li role="separator" class="divider"></li>
               <li role="presentation" class="form-group">
                 <label for="workOrderStaus">Status</label>
-                <select name="workOrderStatus" class="form-control">
-                <option selected="true"></option>
-                  <option value="">New</option>
-                  <option value="">complete</option>
+                <select name="workOrderStatus" class="form-control" ng-model="fb.status">
+                  <option value="">Any</option>
+                  <option value="New">New</option>
+                  <option value="Sent">Sent</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Expired">Expired</option>
+                  <option value="Delete">Delete</option>
+                  <option value="In progress">In Progress</option>
+                  <option value="Opt Out">Opt Out</option>
                 </select>
               </li>
               <li role="separator" class="divider"></li>
               <li role="presentation" class="form-group">
                 <label for="workOrderName">Name</label>
-                <input class="form-control"type="text" title="workOrderName" placeholder="Search Work Order Name">
+                <input class="form-control" type="text" title="workOrderName" placeholder="Search Work Order Name" ng-model="fb.workOrderName">
               </li>
-              <li><input class="btn btn-primary" type="submit" value="Filter">
+              <li>
+                <input class="btn btn-primary" type="submit" value="Filter">
               </li>
-              </form>
+            </form>
           </ul>
         </div>
 
