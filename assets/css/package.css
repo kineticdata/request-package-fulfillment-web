@@ -341,7 +341,7 @@ iframe#workFrame {
 body{
   background-color: #e3e3e3;
 }
-.nav-tabs{  
+.nav-tabs{
   margin: 1em 0;
 }
 .sidebar{
@@ -374,6 +374,7 @@ body{
   background-image:none;
   box-shadow: none;
   text-shadow:none;
+  border: 1px solid transparent;
   background-color: #2F7ED8;
 }
 .btn-warning{
@@ -409,7 +410,7 @@ body{
   padding: 1em;
   background-color: #eee;
   position: relative;
-  border: 1px solid transparent; 
+  border: 1px solid transparent;
 }
 .no-data h3{
   color: #666;

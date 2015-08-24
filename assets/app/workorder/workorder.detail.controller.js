@@ -44,7 +44,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         WorkOrdersService.postNote($scope.currentWorkOrderId, $scope.tmpNote).then(
           function() {
             var lastPage = $scope.workOrderNotes.meta.limit===0 ? 0 : Math.ceil(($scope.workOrderNotes.meta.count / $scope.workOrderNotes.meta.limit));
-            $state.go('.', {np: lastPage}, {reload:true});
+            $state.go('.', {np: lastPage, tab: 'notes'}, {reload:true});
           }, function() {
             toastr.warning('There was a problem posting a new note!');
           });
