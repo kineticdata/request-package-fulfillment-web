@@ -28,8 +28,8 @@ if (request.getMethod() == "POST") {
         return;
     }
 
-    String previousGroups = workOrder.getAssignedGroups();
-    String previousMember = workOrder.getAssigneeId();
+    String previousGroups = StringUtils.stripToNull(workOrder.getAssignedGroups());
+    String previousMember = StringUtils.stripToNull(workOrder.getAssigneeId());
 
     String groups = null;
     String member = null;
@@ -97,6 +97,18 @@ if (request.getMethod() == "POST") {
     workOrder.saveMember(context, member, memberName);
 
     // Do the logging here
+    String logEntry = "";  
+    if ((previousGroups != null && !previousGroups.equals(groups)) || (previousGroups == null && groups != null)) {
+        logEntry += String.format("Group changed from [%s] to [%s]", 
+            StringUtils.stripToEmpty(previousGroups), StringUtils.stripToEmpty(groups));
+    }
+    if (previousMember != member) {
+        if (!logEntry.equals("")) { logEntry += "; "; }
+        logEntry += String.format("Member changed from [%s] to [%s]", 
+            StringUtils.stripToEmpty(previousMember), StringUtils.stripToEmpty(member));
+    }
+
+    if (!logEntry.equals("")) {Log.saveLog(context, workOrderId, logEntry, "Assignment", previousMember);}
 
     // Finally, return the changed work order object
     response.setStatus(HttpServletResponse.SC_OK);

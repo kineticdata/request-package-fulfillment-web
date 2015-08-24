@@ -78,13 +78,14 @@
 
         public static String getGroupId(HelperContext context, String group) {
           String groupId = null;
+          int groupLevel = group.split("::").length;
 
           String[] fieldIds = new String[] {
             "1", // Group Id
             "536870913"  // Group Name
           };
 
-          String qualification = "'536870913' = \"" + group + "\"";
+          String qualification = "'536870913' = \"" + group + "\" AND '536870917' = \"" + String.valueOf(groupLevel) + "\"";
 
           SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
           if (entries.length != 0) {
@@ -204,7 +205,6 @@
           List<Member> members = new ArrayList<Member>();
           if (memberIds != null) {
             if (memberIds.length != 0) {
-              System.out.println("Inside If Statement");
               ExecutorService memberPool = Executors.newFixedThreadPool(memberIds.length);
               Set<Future<Member>> memberFutureSet = new HashSet<Future<Member>>();
 
