@@ -62,9 +62,6 @@
 
           <dt>Due</dt>
           <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
-
-          <dt>Originator</dt>
-          <dd><a href="{{workOrder.originator.url}}" class="originator">Originating Request</a></dd>
         </dl>
       </div>
 
@@ -75,20 +72,54 @@
           <span class="meta">By <strong>{{latestNote[0].loginId}}</strong>, <span am-time-ago="latestNote[0].created"></span></span>
         </div>
         <div data-ng-if="workOrderNotes.length === 0">
-          Work Order has no notes.
+          <p>Work Order has no notes.</p>
         </div>
       </div>
 
       <div class="well well-sm">
-        <h4>Details</h4>
+        <h4>
+          Details
+          <a href="{{workOrder.originator.url}}" class="originator pull-right">Originating Request</a>
+        </h4>
+        
         <p class="white-space">{{workOrder.details}}</p>
+        <div data-ng-if="isDetailsEmpty()">
+          <p>There are not details to display.</p>
+        </div>
       </div>
 
       <div class="well well-sm">
         <h4>Related Work Orders</h4>
-        <p ng-repeat="related in relatedWorkOrders">
-          <a href="" ng-click="selectWorkOrder(related)">{{related.id}}</a>
-        </p>
+        <ul class="unstyled relatedWordOrders clearfix" >
+          <div data-ng-if="relatedWorkOrders.length === 0">
+            <p>There are no related work orders.</p>
+          </div>
+          <li class="col-md-4 col-xs-12" ng-repeat="related in relatedWorkOrders">
+            <a href="" ng-click="selectWorkOrder(related)">
+              <div class="row">
+                <div class="col-md-12">{{related.getNiceId()}}</div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12"><p><strong>{{related.workOrder}}</strong></p></div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">requested for {{related.getRequestedFor()}}</p></div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12"><i class="fa fa-group fa-fw"></i> {{related.getGroupName()}}</div>
+                <div class="col-md-12"><i class="fa fa-bookmark fa-fw"></i> {{related.status}}</div>
+                <div class="col-md-12">
+                  <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': related.isUnassigned() }"></i> {{related.getAssignedName()}}
+                </div>
+                <div class="col-md-12" ng-class="{ 'text-danger': related.isOverdue() }"><i class="fa fa-calendar fa-fw" ></i> {{related.getNiceDueDate()}}
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
