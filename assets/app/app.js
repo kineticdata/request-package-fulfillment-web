@@ -36,6 +36,7 @@ angular.module('kineticdata.fulfillment', [
   'ui.bootstrap',
   'restangular',
   'ngFileUpload',
+  'truncate',
 
   // // Models.
   'kineticdata.fulfillment.models.workorder',

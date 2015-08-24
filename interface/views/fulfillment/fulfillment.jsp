@@ -55,6 +55,8 @@
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-router/angular-ui-router.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-loading-bar/loading-bar.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-truncate/truncate.js"></script>
+
 <script src="<%=bundle.packagePath()%>assets/js/ng-file-upload/ng-file-upload-shim.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/ng-file-upload/ng-file-upload.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/restangular/restangular.js"></script>
