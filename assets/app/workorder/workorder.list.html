@@ -3,7 +3,7 @@
     <span class="sidebar-title">
       <h3 class="text-center">
         <button class="btn btn-default pull-left" ng-click="reload()"><i class="fa fa-refresh"></i></button>
-        {{currentFilter.name}}
+        {{currentFilter.name | characters:16 }}
 
         <!-- Filter Current Work Orders -->
         <div class="btn-group  pull-right text-left">
