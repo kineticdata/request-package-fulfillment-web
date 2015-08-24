@@ -26,9 +26,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
        * Determines if details is empty.
        */
        $scope.isDetailsEmpty = function () {
-         // body...
          return _.isEmpty($scope.workOrder.details)
-       }
+       };
+
+      $scope.isOriginatorEmpty = function() {
+        return _.isEmpty($scope.workOrder.originator) || _.isEmpty($scope.workOrder.originator.url);
+      };
 
       /**
        * Starts the note adding process.
