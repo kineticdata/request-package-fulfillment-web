@@ -62,6 +62,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       }
     };
 
+    $scope.isFiltering = function() {
+      return !_.isEmpty($scope.fb.id) || !_.isEmpty($scope.fb.status) || !_.isEmpty($scope.fb.workOrderName);
+    };
+
+    $scope.resetFilters = function() {
+      $scope.fb.id = '';
+      $scope.fb.status = '';
+      $scope.fb.workOrderName = '';
+      $scope.updateFilters();
+    };
+
     $scope.updateFilters = function() {
       $state.go('.', {
         fbId: $scope.fb.id,

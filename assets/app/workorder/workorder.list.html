@@ -8,7 +8,7 @@
         <!-- Filter Current Work Orders -->
         <div class="btn-group  pull-right text-left">
           <div class="dropdown btn-group">
-          <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <button class="btn dropdown-toggle" ng-class="{'btn-primary': isFiltering(), 'btn-default': !isFiltering() }" data-toggle="dropdown" aria-expanded="false">
             <i class="fa fa-filter"></i>
           </button>
           <ul class="dropdown-menu pull-right workOrderListSort" role="menu" aria-labelledby="workOrderListSort">
@@ -38,6 +38,7 @@
               </li>
               <li>
                 <input class="btn btn-primary" type="submit" value="Filter">
+                <button class="btn btn-link" ng-click="resetFilters()">Reset</button>
               </li>
             </form>
           </ul>
