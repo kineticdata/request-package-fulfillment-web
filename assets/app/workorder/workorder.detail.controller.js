@@ -19,6 +19,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.logsPage = parseInt($stateParams.lp) || 0;
       $scope.activeTab = $stateParams.tab;
 
+
+      $scope.hideList();
+
       /**
        * Starts the note adding process.
        */

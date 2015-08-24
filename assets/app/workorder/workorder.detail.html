@@ -1,6 +1,6 @@
-<div role="tabpanel">
+<div role="tabpanel" ng-class="{'hidden-xs': !shouldHideList(), 'hidden-sm': !shouldHideList() }">
   <div class="return-back visible-sm visible-xs">
-    <a href="#"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
+    <a href="" ng-click="showList()"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
   </div>
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs" role="tablist">

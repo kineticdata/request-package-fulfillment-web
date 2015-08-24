@@ -21,11 +21,11 @@
 <!-- Override the loading bar. -->
 <style>
   #loading-bar .bar {
-    height: 3px;
+    height: 5px;
     top: 50px;
   }
   #loading-bar .peg {
-    height: 3px;
+    height: 5px;
   }
 </style>
 

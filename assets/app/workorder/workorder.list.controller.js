@@ -15,6 +15,21 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.internal.workOrderLoadFailures = 0;
     $scope.api = WorkOrdersService.WorkOrders(true);
 
+    // Hidden by default.
+    $scope.listHiddenOnXS = true;
+
+    $scope.shouldHideList = function() {
+      return $scope.listHiddenOnXS && $scope.isChildState();
+    };
+
+    $scope.showList = function() {
+      $scope.listHiddenOnXS = false;
+    };
+
+    $scope.hideList = function() {
+      $scope.listHiddenOnXS = true;
+    };
+
     $scope.sort = {};
     $scope.sort.by = $stateParams.fsb;
     $scope.sort.dir = ($stateParams.fsd==='ASC');
@@ -55,6 +70,11 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * Changes UI state to the selected work order object's detail view.
      */
     $scope.selectWorkOrder = function(workOrder) {
+      if($scope.isActiveWorkOrder(workOrder)) {
+        $scope.listHiddenOnXS = true;
+      }
+
+
       if(angular.isDefined($scope.currentFilter.terms)) {
         $state.go('workorders.detail', { id: 'search', terms: $scope.currentFilter.terms, workOrderId: workOrder.id, tab: 'summary' });
       } else {
