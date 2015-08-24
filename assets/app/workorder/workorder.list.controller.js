@@ -3,7 +3,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
   'kineticdata.fulfillment.services.filter',
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', '$cacheFactory', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', function($scope, $rootScope, $state, $stateParams, $log, $interval, $cacheFactory, FiltersService, WorkOrdersService, filters, workOrders, currentFilter) {
+  .controller('WorkOrderListController', ['$scope', '$rootScope', '$state', '$stateParams', '$log', '$interval', '$cacheFactory', 'FiltersService', 'WorkOrdersService', 'filters', 'workOrders', 'currentFilter', 'filterState', function($scope, $rootScope, $state, $stateParams, $log, $interval, $cacheFactory, FiltersService, WorkOrdersService, filters, workOrders, currentFilter, filterState) {
     'use strict';
 
     // Prepare scope varaibles.
@@ -18,6 +18,8 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.sort = {};
     $scope.sort.by = $stateParams.fsb;
     $scope.sort.dir = ($stateParams.fsd==='ASC');
+
+    $scope.fb = filterState;
 
 
     $scope.page = parseInt($stateParams.fp) || 0;
@@ -58,6 +60,14 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       } else {
         $state.go('workorders.detail', { id: $scope.currentFilter.name, workOrderId: workOrder.id, tab: 'summary' });
       }
+    };
+
+    $scope.updateFilters = function() {
+      $state.go('.', {
+        fbId: $scope.fb.id,
+        fbStatus: $scope.fb.status,
+        fbWOName: $scope.fb.workOrderName
+      });
     };
 
     $scope.doNext = function() {

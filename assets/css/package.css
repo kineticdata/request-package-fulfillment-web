@@ -363,6 +363,9 @@ body{
   border:1px solid #edecec;
   box-shadow: none;
 }
+.main-content .title{
+  margin:.541666667em 0;
+}
 .main-content .well h4{
   font-size: 1.1em;
   font-weight: bold;
@@ -377,6 +380,9 @@ body{
   background-color:#FFB200;
   border:none;
   font-weight: bold;
+}
+.nav{
+  margin-bottom: 1em;
 }
 .nav-tabs>li>a{
   border-radius: 0;
@@ -396,7 +402,6 @@ body{
 /*Empty States outside of tables*/
 .no-data{
   color: #999999;
-  text-align: center;
   border: 1px solid #999;
   border-radius: 3px;
   line-height: 140%;
@@ -417,6 +422,10 @@ body{
 .showAddNote{
   display: block;
   margin:1em 0;
+  padding: 1em;
+  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #eee;
 }
 .row-workorder-list{
   background-color: #fff;

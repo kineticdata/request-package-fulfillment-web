@@ -36,6 +36,7 @@ angular.module('kineticdata.fulfillment', [
   'ui.bootstrap',
   'restangular',
   'ngFileUpload',
+  'truncate',
 
   // // Models.
   'kineticdata.fulfillment.models.workorder',
@@ -111,6 +112,17 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         resolve: {
           filters: function(FiltersService) {
             return FiltersService.api().getList();
+          },
+          currentFilter: function(filters, $stateParams) {
+            if(typeof $stateParams.id === 'undefined') {
+              return filters.getDefault();
+            } else if($stateParams.id === 'default') {
+              return filters.getDefault();
+            } else if($stateParams.id === 'search') {
+              return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
+            } else {
+              return filters.getFilter($stateParams.id);
+            }
           }
         },
 
@@ -134,6 +146,14 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
           fsd: 'DESC',
           // Work Order List Sort By
           fsb: 'id',
+
+          // Filter By ID
+          fbId: '',
+          // Filter By Status
+          fbStatus: '',
+          // Filter By Work Order Name
+          fbWOName: '',
+
           reload: 0
 
         },
@@ -143,19 +163,16 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
             controller: 'WorkOrderListController',
 
             resolve: {
-              currentFilter: function(filters, $stateParams) {
-                if(typeof $stateParams.id === 'undefined') {
-                  return filters.getDefault();
-                } else if($stateParams.id === 'default') {
-                  return filters.getDefault();
-                } else if($stateParams.id === 'search') {
-                  return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
-                } else {
-                  return filters.getFilter($stateParams.id);
+              filterState: function($stateParams) {
+                var filterState = {
+                  id: $stateParams.fbId,
+                  status: $stateParams.fbStatus,
+                  workOrderName: $stateParams.fbWOName
                 }
-              },
 
-              listParams: function($stateParams, currentFilter) {
+                return filterState;
+              },
+              listParams: function($stateParams, currentFilter, filterState) {
                 var WORK_ORDER_LIMIT = 5;
                 var page = parseInt($stateParams.fp) || 1;
 
@@ -166,6 +183,20 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   limit: WORK_ORDER_LIMIT,
                   offset: (page-1)*WORK_ORDER_LIMIT
                 };
+
+                // Using the Filter State resolution, build the query params up.
+                if(!_.isEmpty(filterState.id)) {
+                  listParams['field[id]'] = filterState.id;
+                }
+
+                if(!_.isEmpty(filterState.status)) {
+                  listParams['field[status]'] = filterState.status;
+                }
+
+                if(!_.isEmpty(filterState.workOrderName)) {
+                  listParams['field[workOrder]'] = filterState.workOrderName;
+                }
+
 
                 if(typeof $stateParams.terms !== 'undefined') {
                   listParams.query = $stateParams.terms
@@ -233,6 +264,9 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               },
               workOrderLogs: function(WorkOrdersService, workOrderId, logsParams) {
                 return WorkOrdersService.Logs(workOrderId).getList(logsParams);
+              },
+              relatedWorkOrders: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.Related(workOrderId).getList();
               },
               latestNote: function(WorkOrdersService, workOrderId) {
                 return WorkOrdersService.Notes(workOrderId).getList({order: 'created DESC', limit: 1, offset: 0});

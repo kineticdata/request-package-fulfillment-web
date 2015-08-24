@@ -2,10 +2,8 @@
   <p class="text-center"><i class="fa fa-5x fa-spin fa-spinner"></i></p>
 </div>
 <div ng-if="!state.loading">
-  <h3>Work Order Assignments
+  <h3 class="title">Work Order Assignments
     <button class="btn btn-default" ui-sref="workorders.detail({ workOrderId: currentWorkOrderId })">Details</button>
-    <button class="btn btn-default" ng-if="!state.overview" ng-click="goToOverview()">Cancel</button>
-    <button class="btn btn-default" ng-if="!state.overview" ng-click="savePartial()">Done</button>
   </h3>
 
   <!-- Overview of selected groups -->
@@ -65,6 +63,10 @@
         </div>
       </li>
     </ul>
+    <div class="pull-right">
+      <button class="btn btn-link" ng-if="!state.overview" ng-click="goToOverview()">Cancel</button>
+      <button class="btn btn-primary" ng-if="!state.overview" ng-click="savePartial()">Done</button>
+    </div>
   </div>
 
 </div>
