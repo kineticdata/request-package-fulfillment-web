@@ -112,17 +112,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         resolve: {
           filters: function(FiltersService) {
             return FiltersService.api().getList();
-          },
-          currentFilter: function(filters, $stateParams) {
-            if(typeof $stateParams.id === 'undefined') {
-              return filters.getDefault();
-            } else if($stateParams.id === 'default') {
-              return filters.getDefault();
-            } else if($stateParams.id === 'search') {
-              return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
-            } else {
-              return filters.getFilter($stateParams.id);
-            }
           }
         },
 
@@ -138,8 +127,10 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
       })
       .state('workorders', {
         parent: 'app',
-        url: '/workorder/{id}?terms&page',
+        url: '/workorder/{id}',
         params: {
+          // Search terms.
+          terms: '',
           // Work Order List Page
           fp: 1,
           // Work Order List Sort Direction
@@ -163,6 +154,17 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
             controller: 'WorkOrderListController',
 
             resolve: {
+              currentFilter: function(filters, $stateParams) {
+                if(typeof $stateParams.id === 'undefined') {
+                  return filters.getDefault();
+                } else if($stateParams.id === 'default') {
+                  return filters.getDefault();
+                } else if($stateParams.id === 'search') {
+                  return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
+                } else {
+                  return filters.getFilter($stateParams.id);
+                }
+              },
               filterState: function($stateParams) {
                 var filterState = {
                   id: $stateParams.fbId,
@@ -205,8 +207,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                 return listParams;
               },
               workOrders: function(WorkOrdersService, currentFilter, listParams) {
-                if(typeof currentFilter.terms !== 'undefined') {
-                  // When searching we
+                if(!_.isEmpty(currentFilter.terms)) {
                   var params = angular.copy(listParams);
                   delete params.filter;
                   return WorkOrdersService.Search().getList(params);
