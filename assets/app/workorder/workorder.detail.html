@@ -93,7 +93,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">
-      <div class="no-data" ng-if="!isMine(workOrder)">
+      <div class="no-data text-center" ng-if="!isMine(workOrder)">
         <h3>Grab Work Order?</h3>
         <p>Do you want to assign this to yourself?</p>
         <button class="btn btn-block btn-primary" ng-click="doWorkIt()">Grab It!</button>
@@ -104,10 +104,14 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='notes'}" id="notes">
-      <div class="showAddNote clearfix" ng-if="showAddNote">
-        <div class="form-group">
+      <div class="showAddNote no-date text-left clearfix" ng-if="showAddNote">
+        <div class="form-group text-left">
           <label for="tmpNote">New Note</label>
           <input id="tmpNote" type="text" class="form-control" placeholder="enter note..." ng-model="tmpNote.entry"/>
+        </div>
+        <div class="center-block pull-right">
+          <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
+          <button class="btn btn-primary" ng-click="addNote()">Save</button>
         </div>
         <!-- When attachments in the backend work we can turn this back on. -->
         <!--<button-->
@@ -120,13 +124,12 @@
           <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
         <!--</button>-->
 
-        <button class="btn btn-link" ng-click="cancelNote()">Cancel</button>
-        <button class="btn btn-danger" ng-click="addNote()">Save</button>
+
 
       </div>
 
       <div ng-if="!showAddNote">
-        <div class="no-data">
+        <div class="no-data text-center">
           <div data-ng-if="workOrderNotes.length === 0">
             <h3>There are no notes attached to this work order</h3>
             <p>Click ‘+ New Note’ to create a new note</p>
@@ -151,7 +154,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='logs'}" id="logs">
-      <div class="no-data" data-ng-if="workOrderLogs.length === 0">
+      <div class="no-data text-center" data-ng-if="workOrderLogs.length === 0">
         <h3>There are no logs attached to this work order</h3>
       </div>
       <div ng-repeat="log in workOrderLogs" class="well-log">
