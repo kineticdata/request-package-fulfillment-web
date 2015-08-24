@@ -105,6 +105,10 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       return api('WorkOrderNoteCollection').one('work-orders', workOrderId).all('notes')
     };
 
+    var related = function(workOrderId) {
+      return api('WorkOrderCollection').one('work-orders', workOrderId).all('related')
+    };
+
     var api = function(modelFactory) {
       var factory = ModelFactory.get(modelFactory);
 
@@ -138,6 +142,7 @@ angular.module('kineticdata.fulfillment.services.workorder', [
       WorkOrder: workOrder,
       Logs: logs,
       Notes: notes,
-      Search: search
+      Search: search,
+      Related: related
     };
   }]);

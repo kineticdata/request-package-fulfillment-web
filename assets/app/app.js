@@ -112,6 +112,17 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         resolve: {
           filters: function(FiltersService) {
             return FiltersService.api().getList();
+          },
+          currentFilter: function(filters, $stateParams) {
+            if(typeof $stateParams.id === 'undefined') {
+              return filters.getDefault();
+            } else if($stateParams.id === 'default') {
+              return filters.getDefault();
+            } else if($stateParams.id === 'search') {
+              return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
+            } else {
+              return filters.getFilter($stateParams.id);
+            }
           }
         },
 
@@ -144,18 +155,6 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
             controller: 'WorkOrderListController',
 
             resolve: {
-              currentFilter: function(filters, $stateParams) {
-                if(typeof $stateParams.id === 'undefined') {
-                  return filters.getDefault();
-                } else if($stateParams.id === 'default') {
-                  return filters.getDefault();
-                } else if($stateParams.id === 'search') {
-                  return { name: 'Search Results', terms: ($stateParams.terms===undefined ? ' ' : $stateParams.terms) };
-                } else {
-                  return filters.getFilter($stateParams.id);
-                }
-              },
-
               listParams: function($stateParams, currentFilter) {
                 var WORK_ORDER_LIMIT = 5;
                 var page = parseInt($stateParams.fp) || 1;
@@ -234,6 +233,9 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               },
               workOrderLogs: function(WorkOrdersService, workOrderId, logsParams) {
                 return WorkOrdersService.Logs(workOrderId).getList(logsParams);
+              },
+              relatedWorkOrders: function(WorkOrdersService, workOrderId) {
+                return WorkOrdersService.Related(workOrderId).getList();
               },
               latestNote: function(WorkOrdersService, workOrderId) {
                 return WorkOrdersService.Notes(workOrderId).getList({order: 'created DESC', limit: 1, offset: 0});

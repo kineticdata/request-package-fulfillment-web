@@ -83,6 +83,13 @@
         <h4>Details</h4>
         <p class="white-space">{{workOrder.details}}</p>
       </div>
+
+      <div class="well well-sm">
+        <h4>Related Work Orders</h4>
+        <p ng-repeat="related in relatedWorkOrders">
+          <a href="" ng-click="selectWorkOrder(related)">{{related.id}}</a>
+        </p>
+      </div>
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">

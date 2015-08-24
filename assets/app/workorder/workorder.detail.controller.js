@@ -1,14 +1,14 @@
 angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
   'kineticdata.fulfillment.services.workorder'
 ])
-  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', '$stateParams', 'WorkOrdersService', 'workOrderId', 'workOrder', 'workOrderNotes', 'workOrderLogs', 'latestNote',
-    function($scope, $rootScope, $log, $state, $timeout, $stateParams, WorkOrdersService, workOrderId, workOrder, workOrderNotes, workOrderLogs, latestNote) {
+  .controller('WorkOrderDetailController', [ '$scope', '$rootScope', '$log', '$state', '$timeout', '$stateParams', 'WorkOrdersService', 'workOrderId', 'workOrder', 'workOrderNotes', 'workOrderLogs', 'latestNote', 'relatedWorkOrders',
+    function($scope, $rootScope, $log, $state, $timeout, $stateParams, WorkOrdersService, workOrderId, workOrder, workOrderNotes, workOrderLogs, latestNote, relatedWorkOrders) {
       $scope.currentWorkOrderId = workOrderId;
-      $scope.currentFilter = '';
       $scope.workOrder = workOrder;
       $scope.workOrderLogs = workOrderLogs;
       $scope.workOrderNotes = workOrderNotes;
       $scope.latestNote = latestNote;
+      $scope.relatedWorkOrders = relatedWorkOrders;
 
       // Loading trackers.
       $scope.showAddNote = false;
