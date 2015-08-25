@@ -28,7 +28,7 @@
 
       public static final Map<String,String> SORTABLE_FIELDS = new HashMap<String,String>();
       static {
-        SORTABLE_FIELDS.put("requestName",FLD_TEMPLATE);
+        SORTABLE_FIELDS.put("template",FLD_TEMPLATE);
         SORTABLE_FIELDS.put("workOrder",FLD_WORK_ORDER);
         SORTABLE_FIELDS.put("originatingId",FLD_ORIGINATING_ID);
         SORTABLE_FIELDS.put("status",FLD_STATUS);
@@ -41,7 +41,7 @@
       public static final Map<String,String> FILTER_FIELDS = new HashMap<String,String>();
       static {
         FILTER_FIELDS.put("id",FLD_REQUEST_ID);
-        FILTER_FIELDS.put("requestName", FLD_TEMPLATE);
+        FILTER_FIELDS.put("template", FLD_TEMPLATE);
         FILTER_FIELDS.put("workOrder", FLD_WORK_ORDER);
         FILTER_FIELDS.put("requestedFor", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
