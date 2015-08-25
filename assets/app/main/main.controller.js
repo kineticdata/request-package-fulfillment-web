@@ -30,7 +30,19 @@ angular.module('kineticdata.fulfillment.controllers.main', [
       }
       return name === filter.name;
     };
+    $scope.selectFilter = function(filter){
+      if(filter === 'search'){
+        return;
+      }
+      $state.go('workorders', {id: filter});
+    };
 
+    $scope.filterName = function(filter){
+      if (filter === 'search') {
+        return 'Search Results';
+      }
+      return filter;
+    }
     /**
      * Watches for the 'krs-filter-changed' event, save the filter name.
      */

@@ -1,5 +1,20 @@
-<ul class="nav nav-pills nav-justified">
+<h3 class="page-title">Fulfillment</h3>
+<ul class="nav nav-pills hidden-xs hidden-sm">
   <li role="presentation" ng-repeat="filter in filters" ng-class="{active: isActiveFilter(filter)}">
     <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
   </li>
 </ul>
+
+<!-- Split button -->
+<div class="btn-group visible-xs visible-sm pull-right">
+  <button type="button" class="btn btn-primary"><a data-ng-click="selectFilter(activeFilter)">{{filterName(activeFilter)}}</a></button>
+  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+  <ul class="dropdown-menu">
+    <li role="presentation" ng-repeat="filter in filters" ng-class="{active: isActiveFilter(filter)}">
+      <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
+  </li>
+  </ul>
+</div>
