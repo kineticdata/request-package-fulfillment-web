@@ -24,13 +24,35 @@
       <!-- Assignments details -->
       <div class="well well-sm">
         <dl class="dl-horizontal">
+          <dt>ID</dt>
+          <dd>{{workOrder.getNiceId()}}</dd>
+
+          <dt>Work Order Name</dt>
+          <dd>{{workOrder.workOrder}}</dd>
+
+          <dt>Requested For</dt>
+          <dd>{{workOrder.getRequestedFor()}}</dd>
+
+          <dt>Status</dt>
+          <dd>
+            <i class="fa fa-bookmark fa-fw"></i>
+            {{workOrder.status}}
+          </dd>
+
+          <dt>Due</dt>
+          <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">
+            <i class="fa fa-calendar fa-fw" ></i>
+            {{workOrder.getNiceDueDate()}}
+          </dd>
+
           <dt>Assigned To</dt>
           <dd>
             <i class="fa fa-users fa-fw"></i> {{workOrder.getGroupPath()}}
           </dd>
           <dt></dt>
           <dd>
-            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i> {{workOrder.getAssignedName()}}
+            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i>
+            {{workOrder.getAssignedName()}}
           </dd>
         </dl>
       </div>
@@ -43,26 +65,6 @@
         <div class="col-md-6 col-xs-6">
           <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
         </div>
-      </div>
-
-      <!-- Work Order Details -->
-      <div class="well well-sm">
-        <dl class="dl-horizontal">
-          <dt>Work Order Name</dt>
-          <dd>{{workOrder.workOrder}}</dd>
-
-          <dt>Requested For</dt>
-          <dd>{{workOrder.getRequestedFor()}}</dd>
-
-          <dt>ID</dt>
-          <dd>{{workOrder.getNiceId()}}</dd>
-
-          <dt>Status</dt>
-          <dd>{{workOrder.status}}</dd>
-
-          <dt>Due</dt>
-          <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">{{workOrder.getNiceDueDate()}}</dd>
-        </dl>
       </div>
 
       <div class="well well-sm">
@@ -81,7 +83,7 @@
           Details
           <a href="{{workOrder.originator.url}}" class="originator pull-right">Originating Request</a>
         </h4>
-        
+
         <p class="white-space">{{workOrder.details}}</p>
         <div data-ng-if="isDetailsEmpty()">
           <p>There are not details to display.</p>

@@ -1,4 +1,4 @@
-<ul class="nav nav-pills">
+<ul class="nav nav-pills nav-justified">
   <li role="presentation" ng-repeat="filter in filters" ng-class="{active: isActiveFilter(filter)}">
     <a ui-sref="workorders({id: filter.name})" ng-bind="filter.name">&nbsp;</a>
   </li>
