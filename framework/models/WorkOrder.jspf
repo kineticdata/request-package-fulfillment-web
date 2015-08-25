@@ -4,8 +4,8 @@
       public static final String FLD_INSTANCE_ID = "179"; // Instance Id
       public static final String FLD_STATUS = "7"; // Status
 
-      public static final String FLD_WORK_ORDER = "600000300"; // Originating Form
-      public static final String FLD_REQUEST_NAME = "700001000"; // Survey Template Name
+      public static final String FLD_WORK_ORDER = "700001000"; // Survey Template Name
+      public static final String FLD_REQUEST_NAME = "600000300"; // Originating Form
 
       public static final String FLD_ORIGINATING_ID = "600000310"; // Originating Id
       public static final String FLD_ORIGINATING_SOURCE = "700006300"; // Source
@@ -128,8 +128,10 @@
             entrySave.setSchemaName(FORM_NAME);
             entrySave.setEntryItems(new Hashtable());
 
+            String nullString = null;
             entrySave.setEntryFieldValue(FLD_REQUEST_ID, getRequestId());
             entrySave.setEntryFieldValue(FLD_ASSIGNED_GROUPS, group);
+            entrySave.setEntryFieldValue(FLD_ASSIGNED_GROUP_NAMES, nullString);
 
             // Also set the values in this.entry so that the WO can be retrieved
             // without a second call to the database

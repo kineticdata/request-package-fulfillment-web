@@ -142,6 +142,7 @@ if (request.getMethod() == "POST") {
         }
     } else {
         orderList = new String[] {Note.SORTABLE_FIELDS.get("modified")};
+        sortDirection = 2; // Default Sort order is descending by modified
     }
 
     // Creating the qualification to return the notes for the specified work order id.
