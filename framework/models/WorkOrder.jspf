@@ -4,8 +4,8 @@
       public static final String FLD_INSTANCE_ID = "179"; // Instance Id
       public static final String FLD_STATUS = "7"; // Status
 
-      public static final String FLD_WORK_ORDER = "700001000"; // Survey Template Name
-      public static final String FLD_REQUEST_NAME = "600000300"; // Originating Form
+      public static final String FLD_WORK_ORDER = "770001016"; // Form Displayed Name
+      public static final String FLD_TEMPLATE = "700001000"; // Survey Template Name
 
       public static final String FLD_ORIGINATING_ID = "600000310"; // Originating Id
       public static final String FLD_ORIGINATING_SOURCE = "700006300"; // Source
@@ -28,7 +28,7 @@
 
       public static final Map<String,String> SORTABLE_FIELDS = new HashMap<String,String>();
       static {
-        SORTABLE_FIELDS.put("requestName",FLD_REQUEST_NAME);
+        SORTABLE_FIELDS.put("requestName",FLD_TEMPLATE);
         SORTABLE_FIELDS.put("workOrder",FLD_WORK_ORDER);
         SORTABLE_FIELDS.put("originatingId",FLD_ORIGINATING_ID);
         SORTABLE_FIELDS.put("status",FLD_STATUS);
@@ -41,7 +41,7 @@
       public static final Map<String,String> FILTER_FIELDS = new HashMap<String,String>();
       static {
         FILTER_FIELDS.put("id",FLD_REQUEST_ID);
-        FILTER_FIELDS.put("requestName", FLD_REQUEST_NAME);
+        FILTER_FIELDS.put("requestName", FLD_TEMPLATE);
         FILTER_FIELDS.put("workOrder", FLD_WORK_ORDER);
         FILTER_FIELDS.put("requestedFor", FLD_REQUESTED_FOR_NAME);
         FILTER_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
@@ -61,7 +61,7 @@
 
       public static final String[] FIELD_IDS = new String[] {
         FLD_REQUEST_ID,FLD_ORIGINATING_ID,FLD_ORIGINATING_SOURCE,FLD_STATUS,FLD_WORK_ORDER,
-        FLD_REQUEST_NAME,FLD_REQUESTED_FOR_NAME,FLD_REQUESTED_FOR_ID,FLD_ASSIGNEE_ID,
+        FLD_TEMPLATE,FLD_REQUESTED_FOR_NAME,FLD_REQUESTED_FOR_ID,FLD_ASSIGNEE_ID,
         FLD_ASSIGNEE_NAME,FLD_DUE_DATE,FLD_DETAILS,FLD_SUMMARY,FLD_ASSIGNED_GROUPS,
         FLD_CREATED_DATE,FLD_MODIFIED_DATE,FLD_SUBMIT_TYPE,FLD_ASSIGNED_GROUP_NAMES,
         FLD_INSTANCE_ID
@@ -189,7 +189,7 @@
         public String getRequestedForId() {return entry.getEntryFieldValue(FLD_REQUESTED_FOR_ID);}
         public String getRequestedForName() {return entry.getEntryFieldValue(FLD_REQUESTED_FOR_NAME);}
         public String getWorkOrderName() {return entry.getEntryFieldValue(FLD_WORK_ORDER);}
-        public String getRequestName() {return entry.getEntryFieldValue(FLD_REQUEST_NAME);}
+        public String getTemplateName() {return entry.getEntryFieldValue(FLD_TEMPLATE);}
         public String getStatus() {return entry.getEntryFieldValue(FLD_STATUS);}
         public String getSummary() {return entry.getEntryFieldValue(FLD_SUMMARY);}
         public String getDetails() {return entry.getEntryFieldValue(FLD_DETAILS);}
@@ -200,8 +200,8 @@
         public Map<String,Object> toJsonObject(HttpServletRequest request, String packagePath) {
             Map<String,Object> jsonObject = new LinkedHashMap<String,Object>();
             jsonObject.put("id",StringUtils.stripToNull(getRequestId()));
-            jsonObject.put("requestName",StringUtils.stripToNull(getRequestName()));
             jsonObject.put("workOrder",StringUtils.stripToNull(getWorkOrderName()));
+            jsonObject.put("template",StringUtils.stripToNull(getTemplateName()));
             Map<String,String> requestedFor = new LinkedHashMap<String,String>();
             requestedFor.put("name", getRequestedForName());
             requestedFor.put("loginId", getRequestedForId());
