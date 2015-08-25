@@ -2,6 +2,7 @@
   <div class="return-back visible-sm visible-xs">
     <a href="" ng-click="showList()"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
   </div>
+
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" ng-class="{ 'active': activeTab==='summary'}"><a href="" aria-controls="summary" role="tab" ng-click="activeTab='summary'">SUMMARY</a></li>
@@ -15,6 +16,16 @@
       <a href="" aria-controls="logs" role="tab" ng-click="activeTab='logs'">
         HISTORY
       </a>
+    </li>
+    <li class="pull-right visible-sm visible-xs">
+      <div class="btn-group">
+        <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
+          <span class="fa fa-fw fa-chevron-left"></span>
+        </a>
+        <a class="btn btn-default" ng-disabled="!hasNextWorkOrder()" ng-click="nextWorkOrder()">
+          <span class="fa fa-fw fa-chevron-right"></span>
+        </a>
+      </div>
     </li>
   </ul>
 
@@ -81,7 +92,7 @@
       <div class="well well-sm">
         <h4>
           Details
-          <a href="{{workOrder.originator.url}}" class="originator pull-right" ng-if="!isOriginatorEmpty()">Originating Request {{workOrder.originator}}</a>
+          <a href="{{workOrder.originator.url}}" class="originator pull-right" ng-if="!isOriginatorEmpty()" target="_blank">Originating Request</a>
         </h4>
 
         <p class="white-space">{{workOrder.details}}</p>
