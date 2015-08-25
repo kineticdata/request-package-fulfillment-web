@@ -13,10 +13,13 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
         },
         completed: function() {
           var injector = angular.element($('[ng-app]')).injector();
-          injector.invoke(['$log', '$state', '$timeout', '$cacheFactory', 'WorkOrdersService', function($log, $state, $timeout, $cacheFactory, wos) {
-            $cacheFactory.get('$http').removeAll();
+          injector.invoke(['$log', '$state', '$timeout', '$urlMatcherFactory', '$location', function($log, $state, $timeout, $urlMatcherFactory, $location) {
+            // Get the active filter from the current state's source path.
+            var urlMatcher = $urlMatcherFactory.compile($state.$current.url.sourcePath);
+            var stateParams = urlMatcher.exec($location.url());
+            var filter = decodeURIComponent(stateParams.id);
 
-            var filter = (wos.activeFilter===''?'default':wos.activeFilter);
+            //var filter = (wos.activeFilter===''?'default':wos.activeFilter);
             $timeout(function() {
               $state.go('workorders', { id: filter });
             }, 3000);
