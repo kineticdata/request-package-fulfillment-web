@@ -32,7 +32,6 @@
 
 <div ng-app="kineticdata.fulfillment" id="foo">
   <div class="container">
-    <h3>Fulfillment</h3>
     <div ui-view="filters"></div>
     <div ui-view>
       <nav class="nav nav-pills">&nbsp;</nav>
