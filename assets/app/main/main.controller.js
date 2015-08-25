@@ -13,10 +13,8 @@ angular.module('kineticdata.fulfillment.controllers.main', [
       return decodeURIComponent(stateParams.id);
     };
 
-    //console.log('states', currentFilter)
     /// Holds the name of the active filter, 'default' means look up the default one.
     $scope.activeFilter = getCurrentFilterFromState();
-
     $scope.filters = filters;
 
     /**
@@ -30,19 +28,25 @@ angular.module('kineticdata.fulfillment.controllers.main', [
       }
       return name === filter.name;
     };
+
     $scope.selectFilter = function(filter){
-      if(filter === 'search'){
-        return;
+      if(filter === 'default') {
+        $state.go('workorders', {id: $scope.filters.getDefault().name});
+      } else {
+        $state.go('workorders', {id: filter});
       }
-      $state.go('workorders', {id: filter});
+
     };
 
     $scope.filterName = function(filter){
-      if (filter === 'search') {
+      if(filter === 'search') {
         return 'Search Results';
+      } else if (filter === 'default') {
+        return $scope.filters.getDefault().name;
       }
       return filter;
-    }
+    };
+
     /**
      * Watches for the 'krs-filter-changed' event, save the filter name.
      */
