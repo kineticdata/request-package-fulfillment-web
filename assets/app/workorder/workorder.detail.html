@@ -33,39 +33,24 @@
   <div class="tab-content clearfix">
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='summary'}" id="summary">
       <!-- Assignments details -->
-      <div class="well well-sm">
-        <dl class="dl-horizontal">
-          <dt>ID</dt>
-          <dd>{{workOrder.getNiceId()}}</dd>
+      <div class="well well-sm visible-sm visible-xs">
+        <div class="row">
+          <div class="col-md-12">{{workOrder.getNiceId()}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-12"><p><strong>{{workOrder.workOrder}}</strong></p></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-xs-6"><i class="fa fa-group fa-fw"></i> {{workOrder.getGroupName()}}</div>
+          <div class="col-md-6 col-xs-6"><i class="fa fa-bookmark fa-fw"></i> {{workOrder.status}}</div>
+        </div>
 
-          <dt>Work Order Name</dt>
-          <dd>{{workOrder.workOrder}}</dd>
-
-          <dt>Requested For</dt>
-          <dd>{{workOrder.getRequestedFor()}}</dd>
-
-          <dt>Status</dt>
-          <dd>
-            <i class="fa fa-bookmark fa-fw"></i>
-            {{workOrder.status}}
-          </dd>
-
-          <dt>Due</dt>
-          <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">
-            <i class="fa fa-calendar fa-fw" ></i>
-            {{workOrder.getNiceDueDate()}}
-          </dd>
-
-          <dt>Assigned To</dt>
-          <dd>
-            <i class="fa fa-users fa-fw"></i> {{workOrder.getGroupPath()}}
-          </dd>
-          <dt></dt>
-          <dd>
-            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i>
-            {{workOrder.getAssignedName()}}
-          </dd>
-        </dl>
+        <div class="row">
+          <div class="col-md-6 col-xs-6">
+            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i> {{workOrder.getAssignedName()}}
+          </div>
+          <div class="col-md-6 col-xs-6" ng-class="{ 'text-danger': workOrder.isOverdue() }"><i class="fa fa-calendar fa-fw" ></i> {{workOrder.getNiceDueDate()}}</div>
+        </div>
       </div>
 
       <!-- Working buttons -->
@@ -114,11 +99,9 @@
               </div>
 
               <div class="row">
-                <div class="col-md-12"><p><strong>{{related.workOrder}}</strong></p></div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">requested for {{related.getRequestedFor()}}</p></div>
+                <div class="col-md-12">
+                  <p><strong>{{related.workOrder}}</strong></p>
+                </div>
               </div>
 
               <div class="row">

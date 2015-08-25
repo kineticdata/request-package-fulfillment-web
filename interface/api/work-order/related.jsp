@@ -36,7 +36,9 @@ if (request.getMethod() == "GET") {
     String originatingId = workOrder.getOriginatingId();
 
     // Build Remedy Qualification to find other Work Orders with the same id
-    String qualification = "'" + WorkOrder.FLD_ORIGINATING_ID + "'=\"" + originatingId + "\"";
+    String qualification = "'" + WorkOrder.FLD_ORIGINATING_ID + "'=\"" + originatingId + "\" AND ";
+    qualification += "'" + WorkOrder.FLD_SUBMIT_TYPE + "'=\"workOrder\" AND ";
+    qualification += "'" + WorkOrder.FLD_REQUEST_ID + "'!=\"" + workOrderId + "\"";
     
     // Pass the qualification and the inputted parameters onto work-orders.jsp, so that the
     // pagination, ordering, and retrieval can be handled there to keep work order retrieval
