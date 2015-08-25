@@ -22,6 +22,35 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
 
       $scope.hideList();
 
+      $scope.nextWorkOrder = function() {
+        var index = $scope.activeWorkOrderIndex();
+
+        if(!$scope.hasNextWorkOrder()) {
+          return;
+        }
+
+        $scope.selectWorkOrder($scope.workOrders[index+1]);
+      };
+
+      $scope.previousWorkOrder = function() {
+        var index = $scope.activeWorkOrderIndex();
+        if(!$scope.hasPreviousWorkOrder()) {
+          return;
+        }
+
+        $scope.selectWorkOrder($scope.workOrders[index-1]);
+      };
+
+      $scope.hasNextWorkOrder = function() {
+        var index = $scope.activeWorkOrderIndex() + 1;
+        return index < $scope.workOrders.length;
+      };
+
+      $scope.hasPreviousWorkOrder = function() {
+        var index = $scope.activeWorkOrderIndex() - 1;
+        return index >= 0;
+      };
+
       /**
        * Determines if details is empty.
        */

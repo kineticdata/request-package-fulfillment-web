@@ -129,6 +129,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       return workOrder.id === $scope.activeWorkOrder
     };
 
+    $scope.activeWorkOrderIndex = function() {
+      return _.chain($scope.workOrders).pluck('id').indexOf($scope.activeWorkOrder).value();
+    };
+
     ///////////////////////////////
     // CONTROLLER INITIALIZATION //
     ///////////////////////////////

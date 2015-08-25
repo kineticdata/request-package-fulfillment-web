@@ -2,6 +2,7 @@
   <div class="return-back visible-sm visible-xs">
     <a href="" ng-click="showList()"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
   </div>
+
   <!-- Navigation Tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" ng-class="{ 'active': activeTab==='summary'}"><a href="" aria-controls="summary" role="tab" ng-click="activeTab='summary'">SUMMARY</a></li>
@@ -16,33 +17,57 @@
         HISTORY
       </a>
     </li>
+    <li class="pull-right visible-sm visible-xs">
+      <div class="btn-group">
+        <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
+          <span class="fa fa-fw fa-chevron-left"></span>
+        </a>
+        <a class="btn btn-default" ng-disabled="!hasNextWorkOrder()" ng-click="nextWorkOrder()">
+          <span class="fa fa-fw fa-chevron-right"></span>
+        </a>
+      </div>
+    </li>
   </ul>
+
   <!-- Tab Content -->
   <div class="tab-content clearfix">
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='summary'}" id="summary">
       <!-- Assignments details -->
-      <div class="well well-sm visible-sm visible-xs">
-        <div class="row">
-          <div class="col-md-12">{{workOrder.getNiceId()}}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-12"><p><strong>{{workOrder.workOrder}}</strong></p></div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">requested for {{workOrder.getRequestedFor()}}</p></div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-xs-6"><i class="fa fa-group fa-fw"></i> {{workOrder.getGroupName()}}</div>
-          <div class="col-md-6 col-xs-6"><i class="fa fa-bookmark fa-fw"></i> {{workOrder.status}}</div>
-        </div>
+      <div class="well well-sm">
+        <dl class="dl-horizontal">
+          <dt>ID</dt>
+          <dd>{{workOrder.getNiceId()}}</dd>
 
-        <div class="row">
-          <div class="col-md-6 col-xs-6">
-            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i> {{workOrder.getAssignedName()}}
-          </div>
-          <div class="col-md-6 col-xs-6" ng-class="{ 'text-danger': workOrder.isOverdue() }"><i class="fa fa-calendar fa-fw" ></i> {{workOrder.getNiceDueDate()}}</div>
-        </div>
+          <dt>Work Order Name</dt>
+          <dd>{{workOrder.workOrder}}</dd>
+
+          <dt>Requested For</dt>
+          <dd>{{workOrder.getRequestedFor()}}</dd>
+
+          <dt>Status</dt>
+          <dd>
+            <i class="fa fa-bookmark fa-fw"></i>
+            {{workOrder.status}}
+          </dd>
+
+          <dt>Due</dt>
+          <dd ng-class="{ 'text-danger': workOrder.isOverdue() }">
+            <i class="fa fa-calendar fa-fw" ></i>
+            {{workOrder.getNiceDueDate()}}
+          </dd>
+
+          <dt>Assigned To</dt>
+          <dd>
+            <i class="fa fa-users fa-fw"></i> {{workOrder.getGroupPath()}}
+          </dd>
+          <dt></dt>
+          <dd>
+            <i class="fa fa-user fa-fw" ng-class="{ 'text-danger': workOrder.isUnassigned() }"></i>
+            {{workOrder.getAssignedName()}}
+          </dd>
+        </dl>
       </div>
+
       <!-- Working buttons -->
       <div class="row row-workorder-actions">
         <div class="col-md-6 col-xs-6">
@@ -52,6 +77,7 @@
           <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
         </div>
       </div>
+
       <div class="well well-sm">
         <h4>Latest Note</h4>
         <div data-ng-if="latestNote.length > 0">
@@ -62,16 +88,19 @@
           <p>Work Order has no notes.</p>
         </div>
       </div>
+
       <div class="well well-sm">
         <h4>
-        Details
-        <a href="{{workOrder.originator.url}}" class="originator pull-right" ng-if="!isOriginatorEmpty()">Originating Request {{workOrder.originator}}</a>
+          Details
+          <a href="{{workOrder.originator.url}}" class="originator pull-right" ng-if="!isOriginatorEmpty()" target="_blank">Originating Request</a>
         </h4>
+
         <p class="white-space">{{workOrder.details}}</p>
         <div data-ng-if="isDetailsEmpty()">
           <p>There are not details to display.</p>
         </div>
       </div>
+
       <div class="well well-sm">
         <h4>Related Work Orders</h4>
         <ul class="unstyled relatedWordOrders clearfix" >
@@ -83,12 +112,15 @@
               <div class="row">
                 <div class="col-md-12">{{related.getNiceId()}}</div>
               </div>
+
               <div class="row">
                 <div class="col-md-12"><p><strong>{{related.workOrder}}</strong></p></div>
               </div>
+
               <div class="row">
                 <div class="col-md-12">requested for {{related.getRequestedFor()}}</p></div>
               </div>
+
               <div class="row">
                 <div class="col-md-12"><i class="fa fa-group fa-fw"></i> {{related.getGroupName()}}</div>
                 <div class="col-md-12"><i class="fa fa-bookmark fa-fw"></i> {{related.status}}</div>
@@ -103,6 +135,7 @@
         </ul>
       </div>
     </div>
+
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">
       <div class="no-data text-center" ng-if="!isMine(workOrder)">
         <h3>Grab Work Order?</h3>
@@ -113,6 +146,7 @@
         <work-frame dest="{{workOrder.workOrderURL}}"></work-frame>
       </div>
     </div>
+
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='notes'}" id="notes">
       <div class="showAddNote no-date text-left clearfix" ng-if="showAddNote">
         <div class="form-group text-left">
@@ -125,26 +159,32 @@
         </div>
         <!-- When attachments in the backend work we can turn this back on. -->
         <!--<button-->
-        <!--class="btn btn-default btn-block"-->
-        <!--ngf-select-->
-        <!--ngf-drop-->
-        <!--ngf-drag-over-class="btn-success"-->
-        <!--ngf-change="setNoteAttachment($file)">-->
-        <!--<span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.-->
-        <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
+          <!--class="btn btn-default btn-block"-->
+          <!--ngf-select-->
+          <!--ngf-drop-->
+          <!--ngf-drag-over-class="btn-success"-->
+          <!--ngf-change="setNoteAttachment($file)">-->
+          <!--<span class="fa fa-fw fa-paperclip"></span> Drop files here or click to browse.-->
+          <!--<p data-ng-if="tmpNote.attachment.name">Attachment: {{tmpNote.attachment.name}}</p>-->
         <!--</button>-->
+
+
+
       </div>
+
       <div ng-if="!showAddNote">
         <div class="no-data text-center">
           <div data-ng-if="workOrderNotes.length === 0">
             <h3>There are no notes attached to this work order</h3>
             <p>Click ‘+ New Note’ to create a new note</p>
           </div>
+
           <p>
             <button class="btn btn-primary btn-block" ng-click="startAddNote()"><i class="fa fa-plus"></i>New Note</button>
           </p>
         </div>
       </div>
+
       <div ng-repeat="note in workOrderNotes" class="well-log">
         <div class="panel panel-default workOrderNote">
           <div class="panel-body">
@@ -153,8 +193,10 @@
           </div>
         </div>
       </div>
+
       <simple-paginated-resource datasource="workOrderNotes" do-next="doNoteNext" do-prev="doNotePrev" do-page="doNotePage"></simple-paginated-resource>
     </div>
+
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='logs'}" id="logs">
       <div class="no-data text-center" data-ng-if="workOrderLogs.length === 0">
         <h3>There are no logs attached to this work order</h3>
