@@ -266,8 +266,23 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               workOrderLogs: function(WorkOrdersService, workOrderId, logsParams) {
                 return WorkOrdersService.Logs(workOrderId).getList(logsParams);
               },
-              relatedWorkOrders: function(WorkOrdersService, workOrderId) {
-                return WorkOrdersService.Related(workOrderId).getList();
+              relatedWorkOrders: function(WorkOrdersService, workOrderId, workOrder, $q) {
+                var deferred = $q.defer();
+
+                // Fetch the related work orders and filter out our active work order so that it does not appear in the
+                // list of related work orders.
+                WorkOrdersService.Related(workOrderId).getList().then(
+                  function(workOrders) {
+                    _.remove(workOrders, function(wo) {
+                      return wo.id === workOrder.id;
+                    });
+                    deferred.resolve(workOrders);
+                  },
+                  function() {
+                    deferred.reject();
+                  });
+
+                return deferred.promise;
               },
               latestNote: function(WorkOrdersService, workOrderId) {
                 return WorkOrdersService.Notes(workOrderId).getList({order: 'created DESC', limit: 1, offset: 0});
