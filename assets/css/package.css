@@ -344,6 +344,9 @@ body{
 .nav-tabs{
   margin: 1em 0;
 }
+.nav-pills>li>a{
+  color: #373737;
+}
 .sidebar{
   background-color: #fff;
   border-right: 1px solid #edecec;
