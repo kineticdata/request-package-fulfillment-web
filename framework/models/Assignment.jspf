@@ -52,7 +52,9 @@
         }
 
         public static Boolean doesGroupExist(HelperContext context, String group) {
-          String qualification = "'536870913' = \"" + group + "\"";
+          int groupLevel = group.split("::").length;
+
+          String qualification = "'536870913' = \"" + group + "\" AND '536870917' = \"" + String.valueOf(groupLevel) + "\"";
           int count = ArsBase.count(context, GROUP_FORM, qualification);
 
           if (count == 1) {

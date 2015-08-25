@@ -16,7 +16,7 @@
       public static final String FLD_ASSIGNEE_NAME = "770001013"; // Assigned Individual Display Name
 
       public static final String FLD_DUE_DATE = "770001018"; // Due Date
-      public static final String FLD_DETAILS = "600003021"; // NotesForCustomer
+      public static final String FLD_DETAILS = "600000021"; // Internal Notes
       public static final String FLD_SUMMARY = "600000115"; // Multi-Purpose Info
       public static final String FLD_ASSIGNED_GROUPS = "770001008"; // Assigned Group
       public static final String FLD_ASSIGNED_GROUP_NAMES = "770001012"; // Assigned Group Display Names
