@@ -55,14 +55,24 @@ if (request.getMethod() == "GET") {
             String key = entry.getKey();
             for (String value : entry.getValue()) {
                 String field = key.substring("field[".length(), key.length()-1);
+                // If the field isn't contained in FILTER_FIELDS, throw an error
+                if (!WorkOrder.FILTER_FIELDS.containsKey(field)) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    results.put("message", "'" + field + "' is not a valid filterable field.");
+                    response.getWriter().write(JsonUtils.toJsonString(results));
+                    return;
+                }
+
                 // '{field}' LIKE "%Demo2%"
                 String individualFilter;
-                if (!field.equals("status")) {
-                    individualFilter = String.format("'%s' LIKE \"%%%s%%\"",WorkOrder.FILTER_FIELDS.get(field), value);
-                } else {
-                    individualFilter = String.format("'%s'=\"%s\"",WorkOrder.FILTER_FIELDS.get(field), value);
+                if (StringUtils.stripToNull(key) == null) {
+                    if (!field.equals("status")) {
+                        individualFilter = String.format("'%s' LIKE \"%%%s%%\"",WorkOrder.FILTER_FIELDS.get(field), value);
+                    } else {
+                        individualFilter = String.format("'%s'=\"%s\"",WorkOrder.FILTER_FIELDS.get(field), value);
+                    }
+                    individualFilters.add(individualFilter);
                 }
-                individualFilters.add(individualFilter);
             }
         }
     }
