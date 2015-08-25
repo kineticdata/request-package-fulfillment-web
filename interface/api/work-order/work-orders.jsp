@@ -65,7 +65,7 @@ if (request.getMethod() == "GET") {
 
                 // '{field}' LIKE "%Demo2%"
                 String individualFilter;
-                if (StringUtils.stripToNull(key) == null) {
+                if (StringUtils.stripToNull(value) != null) {
                     if (!field.equals("status")) {
                         individualFilter = String.format("'%s' LIKE \"%%%s%%\"",WorkOrder.FILTER_FIELDS.get(field), value);
                     } else {
