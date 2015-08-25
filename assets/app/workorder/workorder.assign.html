@@ -63,7 +63,7 @@
         </div>
       </li>
     </ul>
-    <div class="pull-right">
+    <div class="pull-right" data-ng-if="!state.loadingData">
       <button class="btn btn-link" ng-if="!state.overview" ng-click="goToOverview()">Cancel</button>
       <button class="btn btn-primary" ng-if="!state.overview" ng-click="savePartial()">Done</button>
     </div>
