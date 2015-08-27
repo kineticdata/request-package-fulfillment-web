@@ -46,7 +46,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       { name: 'Status', field: 'status' },
       { name: 'Priority', field: 'priority' },
       { name: 'Due Date', field: 'due' },
-      { name: 'Assigned To', field: 'assignedName' }
+      { name: 'Assigned To', field: 'assignee.name' }
     ];
 
     $scope.changeSortOrder = function(direction) {

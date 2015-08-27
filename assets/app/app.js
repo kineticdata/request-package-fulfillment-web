@@ -63,6 +63,10 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
   function($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider, RestangularProvider, ConfigServiceProvider) {
     'use strict';
 
+    // Force $http to populate X-Requested-With headers.
+    // See https://github.com/angular/angular.js/commit/3a75b1124d062f64093a90b26630938558909e8d for more info.
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
     // Set the base URL for the API.
     RestangularProvider.setBaseUrl(ConfigServiceProvider.getBaseUrl());
 
