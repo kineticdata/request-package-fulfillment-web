@@ -7,24 +7,43 @@ ArrayList<Map<String,Object>> filterObjects = new ArrayList<Map<String,Object>>(
 String contextualPackagePath = request.getServletContext().getRealPath("/") + bundle.relativePackagePath();
 
 if (request.getMethod() == "GET") {
-    Filter[] filters = Filter.getFilters(contextualPackagePath);
-    for (Filter filter : filters) {
-      // Retrieve the filters and then use that data to build to build up the filter
-      // JSON objects.
-      Map<String,Object> workOrder = new LinkedHashMap<String,Object>();
-      workOrder.put("name",filter.getName());
-      workOrder.put("qualification",filter.getQualification());
-      workOrder.put("default",filter.isDefault());
-      filterObjects.add(workOrder);
+    // Check if the GET is for a single filter or all filters
+    if (request.getParameter("call").replaceAll("/$","").matches("/api/v1/filters/([\\w\\s]*)/?")) {
+      // If it matches this, the user is attempting to retrieve a single filter.
+      // Using a regex to get the filter name if it is included in the call. If a 
+      // name can't be found in the call path, return a 400 BadRequest with a 
+      // message in results.
+      String patternStr="/api/v1/filters/([\\w\\s]*)/?";
+      Pattern p = Pattern.compile(patternStr);
+      Matcher m = p.matcher(request.getParameter("call"));
+
+      String filterName = "";
+      if (m.find()) {
+          filterName = m.group(1);
+      } else {
+          results.put("message","Could not find the Filter name in the call path.");
+          response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+          response.getWriter().write(JsonUtils.toJsonString(results));
+          return;
+      }
+
+      Filter filter = Filter.getFilter(context, contextualPackagePath, filterName);
+      results = filter.toJsonObject();
+    } else {
+      Filter[] filters = Filter.getFilters(contextualPackagePath);
+      for (Filter filter : filters) {
+        // Retrieve the filters and then use that data to build to build up the filter
+        // JSON objects.
+        filterObjects.add(filter.toJsonObject());
+      }
+
+      // Adding the count and filters to the results. Limit and offset are both
+      // hard-coded to 0 currently because they aren't implemented yet.
+      results.put("count",filterObjects.size());
+      results.put("limit",0);
+      results.put("offset",0);
+      results.put("filters",filterObjects);
     }
-
-    // Adding the count and filters to the results. Limit and offset are both
-    // hard-coded to 0 currently because they aren't implemented yet.
-    results.put("count",filterObjects.size());
-    results.put("limit",0);
-    results.put("offset",0);
-    results.put("filters",filterObjects);
-
 
     // Returning the results with a status code of 200 OK
     response.setStatus(HttpServletResponse.SC_OK);
@@ -68,9 +87,7 @@ if (request.getMethod() == "GET") {
     }
 
     if (filter != null) {
-      results.put("name", filter.getName());
-      results.put("qualification", filter.getQualification());
-      results.put("default", filter.isDefault());
+      results = filter.toJsonObject();
     }
 
     // Returning the results with a status code of 200 OK
@@ -155,9 +172,7 @@ if (request.getMethod() == "GET") {
     }
 
     if (filter != null) {
-      results.put("name", filter.getName());
-      results.put("qualification", filter.getQualification());
-      results.put("default", filter.isDefault());
+      results = filter.toJsonObject();
     }
 
     // Returning the results with a status code of 200 OK

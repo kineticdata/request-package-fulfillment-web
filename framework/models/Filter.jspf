@@ -3,6 +3,7 @@
         private String name = null;
         private String qualification = null;
         private Boolean defaultFilter = null;
+        private Map<String,String> groupQualificationCache = new HashMap<String,String>();
 
         /* GET methods */
         public static Filter[] getFilters(String packagePath) {
@@ -33,6 +34,14 @@
 
           String qualification = properties.getProperty(name);
           qualification = qualification.replaceAll("\\{\\{user.current\\}\\}", context.getUserName());
+          qualification = "(" + qualification + ")";
+          String personId = Assignment.getPersonId(context, context.getUserName());
+          List<String> groups = Assignment.findGroupNamesByPersonId(context, personId);
+          List<String> indvGroupQuals = new ArrayList<String>();
+          for (String groupName : groups) {
+           indvGroupQuals.add(String.format("'%s'=\"%s\"",WorkOrder.FLD_ASSIGNED_GROUPS, groupName));
+          }
+          qualification += " AND (" + StringUtils.join(indvGroupQuals," OR ") + ")";
           qualification = convertFieldNames(qualification);
           if (qualification != null) {
             filter = new Filter(name, qualification, false);
@@ -66,13 +75,13 @@
 
           // Make sure the qualification is valid
           convertFieldNames(qualification);
-          
+
           if (!properties.containsKey(name)) {
             properties.setProperty(name, qualification);
             saveProperties(packagePath, properties);
           } else {
             throw new RuntimeException("There was an error creating the filter. A filter with the name of '" + name + "' already exists.");
-          }          
+          }
           return new Filter(name, qualification, false);
         }
 
@@ -102,7 +111,7 @@
                 }
               } else {
                 throw new RuntimeException("There was an error creating the filter. A filter with the name of '" + updatedName + "' already exists.");
-              } 
+              }
               // If that successfully created, delete the old filter
               properties.remove(name);
             } else {
@@ -177,7 +186,7 @@
                 String fieldId = WorkOrder.FILTER_FIELDS.get(m.group(1));
                 if (fieldId == null) {
                   throw new RuntimeException("Invalid Filter: The filter field '" + m.group(1) + "' does not map to a valid filterable Work Order field.");
-                } 
+                }
                 result = result.replace(m.group(),fieldId);
               }
           }
@@ -196,5 +205,13 @@
         public Boolean isDefault() {return this.defaultFilter;}
 
         public void setQualification(String qualification) {this.qualification = qualification;}
+
+        public Map<String,Object> toJsonObject() {
+          Map<String,Object> json = new LinkedHashMap<String,Object>();
+          json.put("name", getName());
+          json.put("qualification", getQualification());
+          json.put("default", isDefault());
+          return json;
+        }
     }
 %>
