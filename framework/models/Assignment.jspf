@@ -123,9 +123,8 @@
         public static String getPersonId(HelperContext context, String loginId) {
           String personId = null;
 
-          if (userToPersonIdCache.containsKey(loginId)) {
-            System.out.println("Cache worked");
-            personId = userToPersonIdCache.get(loginId);
+          if (userToPersonIdCache.containsKey(loginId.toLowerCase())) {
+            personId = userToPersonIdCache.get(loginId.toLowerCase());
           } else {
             String[] fieldIds = new String[] {
               "1", // Person Id
@@ -137,7 +136,7 @@
             SimpleEntry[] entries = ArsBase.find(context, MEMBER_FORM, qualification, fieldIds);
             if (entries.length != 0) {
               personId = entries[0].getEntryFieldValue("1");
-              userToPersonIdCache.put(loginId, personId);
+              userToPersonIdCache.put(loginId.toLowerCase(), personId);
             }
           }
 
