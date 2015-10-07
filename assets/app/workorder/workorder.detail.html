@@ -72,15 +72,13 @@
           <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
         </div>
       </div>
-
-      <div class="well well-sm">
-        <h4>Latest Note</h4>
-        <div data-ng-if="latestNote.length > 0">
-          <p class="white-space">{{latestNote[0].entry}}</p>
-          <span class="meta">By <strong>{{latestNote[0].loginId}}</strong>, <span am-time-ago="latestNote[0].created"></span></span>
-        </div>
-        <div data-ng-if="workOrderNotes.length === 0">
-          <p>Work Order has no notes.</p>
+      <div ng-show="latestNote != 0">
+        <div class="well well-sm">
+          <h4>Latest Note</h4>
+          <div data-ng-if="latestNote.length > 0">
+            <p class="white-space">{{latestNote[0].entry}}</p>
+            <span class="meta">By <strong>{{latestNote[0].loginId}}</strong>, <span am-time-ago="latestNote[0].created"></span></span>
+          </div>
         </div>
       </div>
 
