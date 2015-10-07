@@ -1,6 +1,16 @@
 <div role="tabpanel" ng-class="{'hidden-xs': !shouldHideList(), 'hidden-sm': !shouldHideList() }">
   <div class="return-back visible-sm visible-xs">
     <a href="" ng-click="showList()"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
+      <div class="pull-right visible-xs">
+        <div class="btn-group">
+          <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
+            <span class="fa fa-fw fa-chevron-left"></span>
+          </a>
+          <a class="btn btn-default" ng-disabled="!hasNextWorkOrder()" ng-click="nextWorkOrder()">
+            <span class="fa fa-fw fa-chevron-right"></span>
+          </a>
+        </div>
+      </div>
   </div>
 
   <!-- Navigation Tabs -->
@@ -17,7 +27,7 @@
         HISTORY
       </a>
     </li>
-    <li class="pull-right visible-sm visible-xs">
+    <li class="pull-right visible-sm">
       <div class="btn-group">
         <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
           <span class="fa fa-fw fa-chevron-left"></span>
