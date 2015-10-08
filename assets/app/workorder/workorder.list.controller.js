@@ -83,11 +83,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     };
 
     $scope.isFiltering = function() {
-      return !_.isEmpty($scope.fb.id) || !_.isEmpty($scope.fb.status) || !_.isEmpty($scope.fb.workOrderName);
+      return !_.isEmpty($scope.fb.id) || !_.isEmpty($scope.fb.origId) || !_.isEmpty($scope.fb.status) || !_.isEmpty($scope.fb.workOrderName);
     };
 
     $scope.resetFilters = function() {
       $scope.fb.id = '';
+      $scope.fb.origId = '';
       $scope.fb.status = '';
       $scope.fb.workOrderName = '';
       $scope.updateFilters();
@@ -96,6 +97,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.updateFilters = function() {
       $state.go('.', {
         fbId: $scope.fb.id,
+        fbOrigId: $scope.fb.origId,
         fbStatus: $scope.fb.status,
         fbWOName: $scope.fb.workOrderName
       });

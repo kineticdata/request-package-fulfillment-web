@@ -144,6 +144,8 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
 
           // Filter By ID
           fbId: '',
+          // Filter by Original Id
+          fbOrigId: '',
           // Filter By Status
           fbStatus: '',
           // Filter By Work Order Name
@@ -172,6 +174,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
               filterState: function($stateParams) {
                 var filterState = {
                   id: $stateParams.fbId,
+                  origId: $stateParams.fbOrigId,
                   status: $stateParams.fbStatus,
                   workOrderName: $stateParams.fbWOName
                 }
@@ -193,6 +196,10 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                 // Using the Filter State resolution, build the query params up.
                 if(!_.isEmpty(filterState.id)) {
                   listParams['field[id]'] = filterState.id;
+                }
+
+                if(!_.isEmpty(filterState.origId)) {
+                  listParams['field[originator.id]'] = filterState.origId;
                 }
 
                 if(!_.isEmpty(filterState.status)) {
