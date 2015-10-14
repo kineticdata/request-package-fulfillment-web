@@ -22,6 +22,17 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
 
       $scope.hideList();
 
+      $scope.workOrderURL = workOrder.workOrderURL;
+      console.log("1 workOrder.workOrderURL ",workOrder.workOrderURL);
+
+      if ($scope.workOrder.status == "Completed"){
+        console.log("2 workOrder.workOrderURL",workOrder.workOrderURL);
+        (workOrder.workOrderURL = workOrder.workOrderURL.replace("DisplayPage","ReviewRequest"));
+        console.log("3 workOrder.workOrderURL",workOrder.workOrderURL);
+      };
+      console.log("4 final ",workOrder.workOrderURL);
+
+
       $scope.nextWorkOrder = function() {
         var index = $scope.activeWorkOrderIndex();
 
@@ -31,6 +42,8 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
 
         $scope.selectWorkOrder($scope.workOrders[index+1]);
       };
+
+
 
       $scope.previousWorkOrder = function() {
         var index = $scope.activeWorkOrderIndex();
@@ -100,22 +113,34 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         $scope.tmpNote.attachment = file;
       };
 
+      // button functionality based on condtion of work order status //
+      $scope.workViewConditional = function() {
+        if ($scope.workOrder.status == "Completed"){
+          $scope.doViewIt();
+        }
+        else if ($scope.isMine()) {
+          $scope.doWorkIt();
+        }
+      };
+      $scope.doWorkIt = function(){
+        $scope.activeTab = 'work';
+      };
+      $scope.doViewIt = function(){
+        window.open(workOrder.workOrderURL);
+      };
+
       $scope.workitLabel = function() {
+        // console.log($scope.workOrder.status);
+        if($scope.workOrder.status == "Completed"){
+          return ($scope.isMine = 'View It');
+        } else {
         return ($scope.isMine() ? 'Work It' : 'Grab It');
+        }
       };
 
       $scope.isMine = function() {
         return ($scope.workOrder.assignee && BUNDLE.config.user === $scope.workOrder.assignee.loginId)
       };
-
-      $scope.doWorkIt = function() {
-        // If it is mine just change to the work it tab.
-        if($scope.isMine()) {
-          //$rootScope.$broadcast('krs-workit');
-          $scope.activeTab = 'work';
-          return;
-        }
-
         // Grab it first.
         WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
           function() {
@@ -131,7 +156,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
             }
           }
         );
-      };
+
 
       $scope.doNoteNext = function() {
         var offset = ($scope.notesPage) * 5;
@@ -148,6 +173,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $state.go('.', {np: page, tab: 'notes'});
         }
       };
+
+
+
+
 
       $scope.doNotePage = function(page) {
         $state.go('.', {np: page, tab: 'notes'});
