@@ -69,7 +69,7 @@
           <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
         </div>
         <div class="col-md-6 col-xs-6">
-          <button class="btn btn-block btn-primary" ng-click="workViewConditional()">{{workitLabel()}}</button>
+          <button class="btn btn-block btn-primary" ng-click="workView()">{{workitLabel()}}</button>
         </div>
       </div>
       <div ng-show="latestNote != 0">
@@ -129,13 +129,16 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">
-      <div class="no-data text-center" ng-if="!isMine(workOrder)">
+      <div class="no-data text-center" ng-if="!isMine(workOrder) && isCompleted !== true">
         <h3>Grab Work Order?</h3>
         <p>Do you want to assign this to yourself?</p>
-        <button class="btn btn-block btn-primary" ng-click="workViewConditional()">Grab It!</button>
+        <button class="btn btn-block btn-primary" ng-click="workView()">Grab It!</button>
       </div>
-      <div ng-if="isMine(workOrder)">
+      <div ng-if="isMine(workOrder) && isCompleted !== true">
         <work-frame dest="{{workOrder.workOrderURL}}"></work-frame>
+      </div>
+      <div ng-if="isCompleted === true">
+        <work-frame dest="{{requestUrl}}"></work-frame>
       </div>
     </div>
 
