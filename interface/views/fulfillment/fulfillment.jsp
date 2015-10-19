@@ -22,7 +22,7 @@
 <style>
   #loading-bar .bar {
     height: 5px;
-    top: 50px;
+    top: 0px;
   }
   #loading-bar .peg {
     height: 5px;
