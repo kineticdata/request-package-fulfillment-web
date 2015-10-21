@@ -19,9 +19,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.logsPage = parseInt($stateParams.lp) || 0;
       $scope.activeTab = $stateParams.tab;
 
-      $scope.hideList();
+      // $scope.hideList();
 
-      // $scope.workOrderURL = workOrder.workOrderURL;
+      $scope.workOrderURL = workOrder.workOrderURL;
 
       if ($scope.workOrder.status == "Completed") {
         $scope.workOrder.workOrderURL= workOrder.workOrderURL.replace("DisplayPage","ReviewRequest");
@@ -45,7 +45,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         return ($scope.isMine() ? 'Work It' : 'Grab It');
         }
       };
-      
+
       $scope.nextWorkOrder = function() {
         var index = $scope.activeWorkOrderIndex();
 

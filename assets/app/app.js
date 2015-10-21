@@ -150,7 +150,9 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
           fbStatus: '',
           // Filter By Work Order Name
           fbWOName: '',
-
+          // Hide list on XS?
+          hideList: true,
+          
           reload: 0
 
         },

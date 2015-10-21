@@ -15,19 +15,21 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.internal.workOrderLoadFailures = 0;
     $scope.api = WorkOrdersService.WorkOrders(true);
 
-    // Hidden by default.
-    $scope.listHiddenOnXS = true;
+    $scope.shouldHideListXS = $stateParams.hideList;
 
+    // console.log('should hide', $scope.shouldHideListXS)
     $scope.shouldHideList = function() {
-      return $scope.listHiddenOnXS && $scope.isChildState();
+      return $scope.shouldHideListXS  && $scope.isChildState();
     };
 
     $scope.showList = function() {
-      $scope.listHiddenOnXS = false;
+      $scope.shouldHideListXS  = false;
+      // console.log('should hide', $scope.shouldHideListXS)
     };
 
     $scope.hideList = function() {
-      $scope.listHiddenOnXS = true;
+      $scope.shouldHideListXS  = true;
+      // console.log('should hide', $scope.shouldHideListXS)
     };
 
     $scope.sort = {};
@@ -70,11 +72,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
      * Changes UI state to the selected work order object's detail view.
      */
     $scope.selectWorkOrder = function(workOrder) {
-      if($scope.isActiveWorkOrder(workOrder)) {
-        $scope.listHiddenOnXS = true;
-      }
-
-
+      // if($scope.isActiveWorkOrder(workOrder)) {
+        $scope.shouldHideListXS = true;
+      // }
       if(angular.isDefined($scope.currentFilter.terms)) {
         $state.go('workorders.detail', { id: 'search', terms: $scope.currentFilter.terms, workOrderId: workOrder.id, tab: 'summary' });
       } else {
@@ -107,7 +107,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       var offset = ($scope.page) * 5;
       if(offset<$scope.workOrders.meta.count) {
         $scope.page++;
-        $state.go('.', {fp: $scope.page});
+        $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
       }
     };
 
@@ -115,12 +115,12 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       // Calculate the previous page, make sure it
       var page = $scope.page - 1;
       if(page>0) {
-        $state.go('.', {fp: page});
+        $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
       }
     };
 
     $scope.doPage = function(page) {
-      $state.go('.', {fp: page});
+      $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
     };
 
     $scope.reload = function() {
