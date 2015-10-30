@@ -1,5 +1,7 @@
 angular.module('kineticdata.fulfillment.controllers.workorderlist', [
   'ui.router',
+  'ngAnimate',
+  'ui.bootstrap',
   'kineticdata.fulfillment.services.filter',
   'kineticdata.fulfillment.services.workorder'
 ])
@@ -14,10 +16,13 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     $scope.internal = {};
     $scope.internal.workOrderLoadFailures = 0;
     $scope.api = WorkOrdersService.WorkOrders(true);
-
+    $scope.maxSize = 5;
     $scope.shouldHideListXS = $stateParams.hideList;
 
-    // console.log('should hide', $scope.shouldHideListXS)
+    // console.log("workOrders.meta.count",$scope.workOrders.meta.count);
+    // console.log("workOrders.meta.limit",$scope.workOrders.meta.limit);
+    // console.log("$scope.maxSize",$scope.maxSize);
+
     $scope.shouldHideList = function() {
       return $scope.shouldHideListXS  && $scope.isChildState();
     };
@@ -119,6 +124,14 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       }
     };
 
+
+
+    $scope.goToPage = function() {
+      $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
+    }
+
+
+
     $scope.doPage = function(page) {
       $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
     };
@@ -138,7 +151,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
     ///////////////////////////////
     // CONTROLLER INITIALIZATION //
     ///////////////////////////////
-
+    // console.log("currentPage",$scope.page);
     $scope.activeWorkOrder = '';
     $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
       $scope.activeWorkOrder = workOrder;

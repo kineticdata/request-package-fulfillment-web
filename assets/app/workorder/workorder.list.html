@@ -98,13 +98,22 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12 col-xs-12">
-        <simple-paginated-resource datasource="workOrders" do-next="doNext" do-prev="doPrev" do-page="doPage"></simple-paginated-resource>
+    <nav ng-hide="hidden()">
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+          <uib-pagination total-items="workOrders.meta.count"
+                items-per-page="workOrders.meta.limit"
+                ng-model="page"
+                ng-change="goToPage()"
+                max-size="maxSize"
+                class="pagination-sm"
+                boundary-links="true"
+                rotate="false"
+                num-pages=""
+                ></uib-pagination>
+        </div>
       </div>
-    </div>
-
-  </div>
+    </nav>
 
   <div class="col-md-8 col-xs-12 main-content">
     <div ui-view>
