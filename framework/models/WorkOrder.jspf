@@ -30,12 +30,18 @@
       static {
         SORTABLE_FIELDS.put("template",FLD_TEMPLATE);
         SORTABLE_FIELDS.put("workOrder",FLD_WORK_ORDER);
-        SORTABLE_FIELDS.put("originatingId",FLD_ORIGINATING_ID);
+        SORTABLE_FIELDS.put("originator.id",FLD_ORIGINATING_ID);
         SORTABLE_FIELDS.put("status",FLD_STATUS);
         SORTABLE_FIELDS.put("due",FLD_DUE_DATE);
         SORTABLE_FIELDS.put("id",FLD_REQUEST_ID);
         SORTABLE_FIELDS.put("createdDate",FLD_CREATED_DATE);
         SORTABLE_FIELDS.put("modifiedDate",FLD_MODIFIED_DATE);
+        SORTABLE_FIELDS.put("assignee.name",FLD_ASSIGNEE_NAME);
+        SORTABLE_FIELDS.put("assignee.loginId",FLD_ASSIGNEE_ID);
+        SORTABLE_FIELDS.put("assignee",FLD_ASSIGNEE_NAME);
+        SORTABLE_FIELDS.put("requestedFor", FLD_REQUESTED_FOR_NAME);
+        SORTABLE_FIELDS.put("requestedFor.name", FLD_REQUESTED_FOR_NAME);
+        SORTABLE_FIELDS.put("requestedFor.loginId", FLD_REQUESTED_FOR_ID);
       }
 
       public static final Map<String,String> FILTER_FIELDS = new HashMap<String,String>();

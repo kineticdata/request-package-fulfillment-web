@@ -20,33 +20,60 @@ if (request.getMethod() == "GET") {
 
     // Set the sorting information. Default to modified date if no sort data
     // was passed in
-    String[] orderList;
     int sortDirection = 1; // default to ASC, 2 is DESC
     String order = request.getParameter("order");
+    String[] orderIds;
+    String[] orderNames;
     if (order != null) {
-        orderList = order.split(",");
-        for (int i=0; i<orderList.length; i++) {
-            if (i != orderList.length-1) {
-                orderList[i] = WorkOrder.SORTABLE_FIELDS.get(orderList[i].trim());
-                if (orderList[i] == null) {
-                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    results.put("message", "A field with the name of " + orderList[i] + " was not found.");
-                    response.getWriter().write(JsonUtils.toJsonString(results));
-                    return;
+        orderNames = order.split(",");
+        orderIds = new String[orderNames.length];
+        for (int i=0; i<orderNames.length; i++) {
+            // If there is a space in the Filter Field look for a DESC (b/c
+            // there shouldn't be any spaces in field names). If a DESC is
+            // found, set the overall sort direction. If it is not found,
+            // assume ASC.
+            if (orderNames[i].trim().contains(" ") && i != orderNames.length - 1) {
+                // Because you cannot currently do ASC, DESC on individual fields
+                // (can only do all ASC or all DESC), throw an error if there is
+                // an ASC or DESC on an order field that isn't the final field 
+                // specified
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                results.put("message", "Invalid Order: Can't do ASC/DESC on individual order fields. Put ASC or DESC at the end of the order string to sort all order fields by ASC or DESC.");
+                response.getWriter().write(JsonUtils.toJsonString(results));
+                return;
+            } else if (orderNames[i].trim().contains(" ")) {
+                String[] split = orderNames[i].trim().split(" ");
+                orderIds[i] = WorkOrder.SORTABLE_FIELDS.get(split[0].trim());
+                if (split[1].toUpperCase().equals("DESC")) {
+                    sortDirection = 2;
                 }
             } else {
-                orderList[i] = orderList[i].trim();
-                if (orderList[i].contains(" ")) {
-                    String[] split = orderList[i].split(" ");
-                    orderList[i] = WorkOrder.SORTABLE_FIELDS.get(split[0].trim());
-                    if (split[1].toUpperCase().equals("DESC")) {
-                        sortDirection = 2;
-                    }
-                }
+                System.out.println(orderNames[i].trim());
+                System.out.println(WorkOrder.SORTABLE_FIELDS.get(orderNames[i].trim()));
+                orderIds[i] = WorkOrder.SORTABLE_FIELDS.get(orderNames[i].trim());
             }
         }
+
+        // Go through orderIds to make sure that there aren't any null values,
+        // which indicate that the sortable field doesn't exist
+        List<String> badFields = null;
+        for (int i=0; i<orderIds.length; i++) {
+            if (orderIds[i] == null) {
+                if (badFields == null) { badFields = new ArrayList<String>(); }
+                badFields.add(orderNames[i]);
+            }
+        }
+        // If there are bad fields, throw an error message alerting the user to
+        // bad order fields
+        if (badFields != null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            results.put("message", "The following filter field(s) were not found: " + StringUtils.join(badFields,", "));
+            response.getWriter().write(JsonUtils.toJsonString(results));
+            return;
+        }
     } else {
-        orderList = new String[] {WorkOrder.SORTABLE_FIELDS.get("modifiedDate")};
+        // If not order string was provided, default to sorting by modifiedDate.
+        orderIds = new String[] {WorkOrder.SORTABLE_FIELDS.get("modifiedDate")};
     }
 
     List<String> individualFilters = new ArrayList<String>();
@@ -93,7 +120,7 @@ if (request.getMethod() == "GET") {
             } else {
                 qualification = filter.getQualification();
             }
-            workOrderObjects = WorkOrder.find(tzFreeContext, qualification, orderList, limit, offset, sortDirection);
+            workOrderObjects = WorkOrder.find(tzFreeContext, qualification, orderIds, limit, offset, sortDirection);
             count = WorkOrder.count(context, qualification);
         }
         else {
@@ -103,7 +130,7 @@ if (request.getMethod() == "GET") {
             return;
         }
     } else if (searchQualification != null) { // If a qualification was passed from search.jsp, find the workOrders
-        workOrderObjects = WorkOrder.find(tzFreeContext, searchQualification.toString(), orderList, limit, offset, sortDirection);
+        workOrderObjects = WorkOrder.find(tzFreeContext, searchQualification.toString(), orderIds, limit, offset, sortDirection);
         count = WorkOrder.count(context, searchQualification.toString());
     } else {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
