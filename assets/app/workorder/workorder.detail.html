@@ -1,6 +1,16 @@
 <div role="tabpanel" ng-class="{'hidden-xs': !shouldHideList(), 'hidden-sm': !shouldHideList() }">
-  <div class="return-back visible-sm visible-xs">
+  <div class="visible-sm visible-xs">
     <a href="" ng-click="showList()"><span class="fa fa-arrow-left"></span> Return to Work Orders</a>
+      <div class="pull-right visible-xs">
+        <div class="btn-group">
+          <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
+            <span class="fa fa-fw fa-chevron-left"></span>
+          </a>
+          <a class="btn btn-default" ng-disabled="!hasNextWorkOrder()" ng-click="nextWorkOrder()">
+            <span class="fa fa-fw fa-chevron-right"></span>
+          </a>
+        </div>
+      </div>
   </div>
 
   <!-- Navigation Tabs -->
@@ -17,7 +27,7 @@
         HISTORY
       </a>
     </li>
-    <li class="pull-right visible-sm visible-xs">
+    <li class="pull-right visible-sm">
       <div class="btn-group">
         <a class="btn btn-default" ng-disabled="!hasPreviousWorkOrder()" ng-click="previousWorkOrder()">
           <span class="fa fa-fw fa-chevron-left"></span>
@@ -33,7 +43,7 @@
   <div class="tab-content clearfix">
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='summary'}" id="summary">
       <!-- Assignments details -->
-      <div class="well well-sm visible-sm visible-xs">
+      <div class="well well-sm">
         <div class="row">
           <div class="col-md-12">{{workOrder.getNiceId()}}</div>
         </div>
@@ -59,20 +69,19 @@
           <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
         </div>
         <div class="col-md-6 col-xs-6">
-          <button class="btn btn-block btn-primary" ng-click="doWorkIt()">{{workitLabel()}}</button>
+          <button class="btn btn-block btn-primary" ng-click="workView()">{{workitLabel()}}</button>
+        </div>
+      </div>
+      <div ng-show="latestNote != 0">
+        <div class="well well-sm">
+          <h4>Latest Note</h4>
+          <div data-ng-if="latestNote.length > 0">
+            <p class="white-space">{{latestNote[0].entry}}</p>
+            <span class="meta">By <strong>{{latestNote[0].loginId}}</strong>, <span am-time-ago="latestNote[0].created"></span></span>
+          </div>
         </div>
       </div>
 
-      <div class="well well-sm">
-        <h4>Latest Note</h4>
-        <div data-ng-if="latestNote.length > 0">
-          <p class="white-space">{{latestNote[0].entry}}</p>
-          <span class="meta">By <strong>{{latestNote[0].loginId}}</strong>, <span am-time-ago="latestNote[0].created"></span></span>
-        </div>
-        <div data-ng-if="workOrderNotes.length === 0">
-          <p>Work Order has no notes.</p>
-        </div>
-      </div>
 
       <div class="well well-sm">
         <h4>
@@ -120,13 +129,16 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade in" ng-class="{'active': activeTab==='work'}" id="work">
-      <div class="no-data text-center" ng-if="!isMine(workOrder)">
+      <div class="no-data text-center" ng-if="!isMine(workOrder) && isCompleted !== true">
         <h3>Grab Work Order?</h3>
         <p>Do you want to assign this to yourself?</p>
-        <button class="btn btn-block btn-primary" ng-click="doWorkIt()">Grab It!</button>
+        <button class="btn btn-block btn-primary" ng-click="workView()">Grab It!</button>
       </div>
-      <div ng-if="isMine(workOrder)">
+      <div ng-if="isMine(workOrder) && isCompleted !== true">
         <work-frame dest="{{workOrder.workOrderURL}}"></work-frame>
+      </div>
+      <div ng-if="isCompleted === true">
+        <work-frame dest="{{requestUrl}}"></work-frame>
       </div>
     </div>
 

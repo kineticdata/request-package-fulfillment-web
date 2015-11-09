@@ -22,7 +22,7 @@
 <style>
   #loading-bar .bar {
     height: 5px;
-    top: 50px;
+    top: 0px;
   }
   #loading-bar .peg {
     height: 5px;
@@ -45,13 +45,13 @@
 </div>
 
 
-
 <script src="<%=bundle.packagePath()%>assets/js/angular/angular.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-flash/angular-flash.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-moment/angular-moment.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-animate/angular-animate.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/ui-bootstrap.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="<%=bundle.packagePath()%>assets/js/angular-ui-bootstrap/pagination.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-ui-router/angular-ui-router.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-loading-bar/loading-bar.js"></script>
 <script src="<%=bundle.packagePath()%>assets/js/angular-truncate/truncate.js"></script>

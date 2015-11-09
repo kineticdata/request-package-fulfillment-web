@@ -9,18 +9,42 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.workOrderNotes = workOrderNotes;
       $scope.latestNote = latestNote;
       $scope.relatedWorkOrders = relatedWorkOrders;
-
+      $scope.isCompleted = false;
       // Loading trackers.
       $scope.showAddNote = false;
       $scope.tmpNote = {};
-
+      $scope.requestUrl={};
 
       $scope.notesPage = parseInt($stateParams.np) || 0;
       $scope.logsPage = parseInt($stateParams.lp) || 0;
       $scope.activeTab = $stateParams.tab;
 
+      // $scope.hideList();
 
-      $scope.hideList();
+      $scope.workOrderURL = workOrder.workOrderURL;
+
+      if ($scope.workOrder.status == "Completed") {
+        $scope.workOrder.workOrderURL= workOrder.workOrderURL.replace("DisplayPage","ReviewRequest");
+        $scope.requestUrl = workOrder.workOrderURL.replace("DisplayPage","ReviewRequest");
+        $scope.isCompleted = true;
+      }
+
+      // button functionality based on condtion of work order status //
+      $scope.workView= function() {
+          $scope.doWorkIt();
+      };
+      $scope.doWorkIt = function(){
+        $scope.activeTab = 'work';
+      };
+
+      $scope.workitLabel = function() {
+        // console.log($scope.workOrder.status);
+        if ($scope.isCompleted == true){
+          return 'View It';
+        } else {
+        return ($scope.isMine() ? 'Work It' : 'Grab It');
+        }
+      };
 
       $scope.nextWorkOrder = function() {
         var index = $scope.activeWorkOrderIndex();
@@ -100,22 +124,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         $scope.tmpNote.attachment = file;
       };
 
-      $scope.workitLabel = function() {
-        return ($scope.isMine() ? 'Work It' : 'Grab It');
-      };
-
       $scope.isMine = function() {
         return ($scope.workOrder.assignee && BUNDLE.config.user === $scope.workOrder.assignee.loginId)
       };
-
-      $scope.doWorkIt = function() {
-        // If it is mine just change to the work it tab.
-        if($scope.isMine()) {
-          //$rootScope.$broadcast('krs-workit');
-          $scope.activeTab = 'work';
-          return;
-        }
-
         // Grab it first.
         WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
           function() {
@@ -131,7 +142,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
             }
           }
         );
-      };
+
 
       $scope.doNoteNext = function() {
         var offset = ($scope.notesPage) * 5;
@@ -148,6 +159,10 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $state.go('.', {np: page, tab: 'notes'});
         }
       };
+
+
+
+
 
       $scope.doNotePage = function(page) {
         $state.go('.', {np: page, tab: 'notes'});

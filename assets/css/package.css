@@ -12,6 +12,7 @@ div.col-sm-6 { margin: 0 0 10px 0; }
 ul.templates li div.description-wide p,
 ul.templates li div.description-small p { overflow: hidden; max-height: 55px; }
 
+
 /* Navigation Flyout */
 nav ul.nav {
     margin: 0;
@@ -297,7 +298,10 @@ table tbody tr td.nav-pop-v {
 }
 
 /* Responsive */
-@media (min-width: 991px) {
+@media (max-width: 1200px) {
+  h3 {
+    font-size: 20px;
+  }
 }
 @media (min-width: 767px) {
     nav.catalog { display: none; }
@@ -306,6 +310,7 @@ table tbody tr td.nav-pop-v {
     ul.templates li div.description-wide p,
     ul.templates li div.description-small p { overflow: hidden; max-height: 35px; }
     a.read-more { margin: 0 0 0 10px; }
+
 }
 
 .row-workorder-list {
