@@ -20,13 +20,12 @@ if (request.getParameter("loginId") != null) {
     }
 
     List<String> groupNames = Assignment.findGroupNamesByIds(context, groupIds);
-
+    Collections.sort(groupNames);
     for (String name : groupNames) {
       Map<String,Object> item = new LinkedHashMap<String,Object>();
       item.put("name", name);
       items.add(item);
     }
-
   } else {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     results.put("message", "Invalid Login Id: Could not find a User matching the id '" + loginId + "'");
@@ -36,6 +35,13 @@ if (request.getParameter("loginId") != null) {
 } else {
   String parent = request.getParameter("parent");
   groups = Assignment.findGroupsByParent(context, parent);
+
+  // Sort the groups based on their name
+  Collections.sort(groups, new Comparator<Group>() {
+      public int compare(Group g1, Group g2) {
+          return g1.getName().compareTo(g2.getName());
+      }
+  });
 
   for (Group group : groups) {
     Map<String,Object> item = new LinkedHashMap<String,Object>();
