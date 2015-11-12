@@ -55,7 +55,33 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       { name: 'Due Date', field: 'due' },
       { name: 'Assigned To', field: 'assignee.name' }
     ];
+    console.log(workOrders);
 
+    $scope.isFiltering = function() {
+      return !_.isEmpty($scope.fb.id) || !_.isEmpty($scope.fb.origId) || !_.isEmpty($scope.fb.status) || !_.isEmpty($scope.fb.due) || !_.isEmpty($scope.fb.workOrderName) || !_.isEmpty($scope.fb.assigneeName);
+    };
+
+    $scope.resetFilters = function() {
+      $scope.fb.id = '';
+      $scope.fb.origId = '';
+      $scope.fb.status = '';
+      $scope.fb.workOrderName = '';
+      $scope.fb.due = '';
+      $scope.fb.assigneeName = '';
+      $scope.updateFilters();
+    };
+
+    $scope.updateFilters = function() {
+      $state.go('.', {
+        fbId: $scope.fb.id,
+        fbOrigId: $scope.fb.origId,
+        fbStatus: $scope.fb.status,
+        fbDue:   $scope.fb.due,
+        fbWOName: $scope.fb.workOrderName,
+        fbAName: $scope.fb.assigneeName
+
+      });
+    };
     $scope.changeSortOrder = function(direction) {
       $state.go('.', {fsd: (direction ? 'ASC' : 'DESC')});
     };
@@ -87,73 +113,52 @@ angular.module('kineticdata.fulfillment.controllers.workorderlist', [
       }
     };
 
-    $scope.isFiltering = function() {
-      return !_.isEmpty($scope.fb.id) || !_.isEmpty($scope.fb.origId) || !_.isEmpty($scope.fb.status) || !_.isEmpty($scope.fb.workOrderName);
-    };
+$scope.doNext = function() {
+  var offset = ($scope.page) * 5;
+  if(offset<$scope.workOrders.meta.count) {
+    $scope.page++;
+    $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
+  }
+};
 
-    $scope.resetFilters = function() {
-      $scope.fb.id = '';
-      $scope.fb.origId = '';
-      $scope.fb.status = '';
-      $scope.fb.workOrderName = '';
-      $scope.updateFilters();
-    };
-
-    $scope.updateFilters = function() {
-      $state.go('.', {
-        fbId: $scope.fb.id,
-        fbOrigId: $scope.fb.origId,
-        fbStatus: $scope.fb.status,
-        fbWOName: $scope.fb.workOrderName
-      });
-    };
-
-    $scope.doNext = function() {
-      var offset = ($scope.page) * 5;
-      if(offset<$scope.workOrders.meta.count) {
-        $scope.page++;
-        $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
-      }
-    };
-
-    $scope.doPrev = function() {
-      // Calculate the previous page, make sure it
-      var page = $scope.page - 1;
-      if(page>0) {
-        $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
-      }
-    };
+$scope.doPrev = function() {
+  // Calculate the previous page, make sure it
+  var page = $scope.page - 1;
+  if(page>0) {
+    $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
+  }
+};
 
 
 
-    $scope.goToPage = function() {
-      $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
-    }
+$scope.goToPage = function() {
+  $state.go('.', {fp: $scope.page, hideList: $scope.shouldHideListXS});
+}
 
 
 
-    $scope.doPage = function(page) {
-      $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
-    };
+$scope.doPage = function(page) {
+  $state.go('.', {fp: page, hideList: $scope.shouldHideListXS});
+};
 
-    $scope.reload = function() {
-      $state.go('.', {}, { reload: true });
-    };
+$scope.reload = function() {
+  $state.go('.', {}, { reload: true });
+};
 
-    $scope.isActiveWorkOrder = function(workOrder) {
-      return workOrder.id === $scope.activeWorkOrder
-    };
+$scope.isActiveWorkOrder = function(workOrder) {
+  return workOrder.id === $scope.activeWorkOrder
+};
 
-    $scope.activeWorkOrderIndex = function() {
-      return _.chain($scope.workOrders).pluck('id').indexOf($scope.activeWorkOrder).value();
-    };
+$scope.activeWorkOrderIndex = function() {
+  return _.chain($scope.workOrders).pluck('id').indexOf($scope.activeWorkOrder).value();
+};
 
-    ///////////////////////////////
-    // CONTROLLER INITIALIZATION //
-    ///////////////////////////////
-    // console.log("currentPage",$scope.page);
-    $scope.activeWorkOrder = '';
-    $rootScope.$on('krs-workorder-changed', function(event, workOrder) {
-      $scope.activeWorkOrder = workOrder;
-    });
-  }]);
+///////////////////////////////
+// CONTROLLER INITIALIZATION //
+///////////////////////////////
+// console.log("currentPage",$scope.page);
+$scope.activeWorkOrder = '';
+$rootScope.$on('krs-workorder-changed', function(event, workOrder) {
+  $scope.activeWorkOrder = workOrder;
+});
+}]);

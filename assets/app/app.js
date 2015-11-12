@@ -150,9 +150,13 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
           fbStatus: '',
           // Filter By Work Order Name
           fbWOName: '',
+          //Filter by due date
+          fbDue: '',
+          // Filter by Assignee Name
+          fbAName: '',
           // Hide list on XS?
           hideList: true,
-          
+
           reload: 0
 
         },
@@ -178,7 +182,9 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   id: $stateParams.fbId,
                   origId: $stateParams.fbOrigId,
                   status: $stateParams.fbStatus,
-                  workOrderName: $stateParams.fbWOName
+                  due: $stateParams.fbDue,
+                  workOrderName: $stateParams.fbWOName,
+                  assigneeName: $stateParams.fbAName
                 }
 
                 return filterState;
@@ -208,8 +214,15 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
                   listParams['field[status]'] = filterState.status;
                 }
 
+                if(!_.isEmpty(filterState.due)) {
+                  listParams['field[due]'] = filterState.due;
+                }
+
                 if(!_.isEmpty(filterState.workOrderName)) {
                   listParams['field[workOrder]'] = filterState.workOrderName;
+                }
+                if(!_.isEmpty(filterState.assigneeName)) {
+                  listParams['field[assignee.name]'] = filterState.assigneeName;
                 }
 
 
