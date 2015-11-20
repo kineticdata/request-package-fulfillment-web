@@ -1,13 +1,20 @@
-<% 
-    // Define the current servlet path for Bundle to use for package context within the layout
-    request.setAttribute("lastForwardServletPath", request.getServletPath());
-    // Explicitly set the view we want the layout to use as a request attribute 
-    // Views are configured in package/config/config.json
-    request.setAttribute("view", "workorder");
-    // Define dispatcher to forward to the desired layout
-    RequestDispatcher dispatcher = request.getRequestDispatcher("interface/layouts/layout.jsp");
-    // Forward
-    dispatcher.forward(request, response);
-    // Return to ensure nothing else is processed
-    return;
-%>
+<%@page pageEncoding="UTF-8" contentType="text/html" trimDirectiveWhitespaces="true"%>
+<%@include file="package/initialization.jspf" %>
+<bundle:layout page="views/layouts/workOrderLayout.jsp">
+    <bundle:scriptpack>
+        <bundle:script src="${bundle.packagePath}/assets/js/workOrder.js" />
+    </bundle:scriptpack>
+    <bundle:stylepack>
+        <bundle:style src="${bundle.packagePath}/assets/css/workOrder.css "/>
+    </bundle:stylepack>
+    <bundle:variable name="head">
+        <title>${app:escape(form.name)}</title>
+    </bundle:variable>
+    <section class="page container">
+        <header class="page-header">
+            <h2>${app:escape(form.name)}</h2>
+        </header>
+        <div class="errors"></div>
+        <app:bodyContent/>
+    </section>
+</bundle:layout>
