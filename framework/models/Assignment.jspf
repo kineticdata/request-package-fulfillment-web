@@ -29,6 +29,10 @@
             "536870913"  // Group Name (also used as id)
           };
 
+          // Add the status to the qualification to make sure that the group is
+          // currently active
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
+
           SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
           if (entries != null && entries.length > 0) {
             for(int i=0;i<entries.length;i++) {
@@ -58,6 +62,7 @@
           int groupLevel = group.split("::").length;
 
           String qualification = "'536870913' = \"" + group + "\" AND '536870917' = \"" + String.valueOf(groupLevel) + "\"";
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
           int count = ArsBase.count(context, GROUP_FORM, qualification);
 
           if (count == 1) {
@@ -72,6 +77,7 @@
           String groupId = getGroupId(context, group);
 
           String qualification = String.format("'536870913' = \"%s\" AND '536870914' = \"%s\"", groupId, personId);
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
           int count = ArsBase.count(context, MEMBER_GROUP_ASSIGN_FORM, qualification);
 
           if (count == 1) {
@@ -91,6 +97,7 @@
           };
 
           String qualification = "'536870913' = \"" + group + "\" AND '536870917' = \"" + String.valueOf(groupLevel) + "\"";
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
 
           SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
           if (entries.length != 0) {
@@ -107,6 +114,7 @@
           };
 
           String qualification = "'536870917' = \"" + loginId + "\"";
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
 
           SimpleEntry[] entries = ArsBase.find(context, MEMBER_FORM, qualification, fieldIds);
 
@@ -132,6 +140,7 @@
             };
 
             String qualification = "'536870917' = \"" + loginId + "\"";
+            qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
 
             SimpleEntry[] entries = ArsBase.find(context, MEMBER_FORM, qualification, fieldIds);
             if (entries.length != 0) {
@@ -152,6 +161,7 @@
           };
 
           String qualification = "'536870914' = \"" + personId + "\"";
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
 
           SimpleEntry[] entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, fieldIds);
           for (int i=0; i<entries.length; i++) {
@@ -215,6 +225,7 @@
 
           Integer groupLevel = group.split("::").length;
           String qualification = "'536870913'=\"" + group + "\" AND '536870917'=\"" + groupLevel + "\"";
+          qualification = "'7'=\"Active\" AND (" + qualification + ")"; 
           SimpleEntry[] entries = ArsBase.find(context, GROUP_FORM, qualification, fieldIds);
 
           if (entries.length > 0) {

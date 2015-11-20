@@ -1,4 +1,4 @@
-<%@include file="../../framework/includes/packageInitialization.jspf" %>
+<%@include file="../../../framework/includes/packageInitialization.jspf" %>
 <%@page contentType="application/json" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();

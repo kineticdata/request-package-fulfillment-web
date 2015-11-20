@@ -1,5 +1,5 @@
 <%@page contentType="application/json" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
-<%@include file="../../../framework/includes/packageInitialization.jspf" %>
+<%@include file="../../../../framework/includes/packageInitialization.jspf" %>
 <%
 Map<String,Object> results = new LinkedHashMap<String,Object>();
 ArrayList<Map<String,Object>> workOrders = new ArrayList<Map<String,Object>>();
