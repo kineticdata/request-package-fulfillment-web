@@ -128,20 +128,20 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
         return ($scope.workOrder.assignee && BUNDLE.config.user === $scope.workOrder.assignee.loginId)
       };
         // Grab it first.
-        WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
-          function() {
-            WorkOrdersService.WorkOrder(workOrderId).get().then(function(data) {
-              $scope.workOrder = data;
-              $rootScope.$broadcast('krs-workorder-modified');
-              $rootScope.$broadcast('krs-workit');
-            });
-          },
-          function(data) {
-            if(data.status === 400) {
-              $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
-            }
-          }
-        );
+        // WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
+        //   function() {
+        //     WorkOrdersService.WorkOrder(workOrderId).get().then(function(data) {
+        //       $scope.workOrder = data;
+        //       $rootScope.$broadcast('krs-workorder-modified');
+        //       $rootScope.$broadcast('krs-workit');
+        //     });
+        //   },
+        //   function(data) {
+        //     if(data.status === 400) {
+        //       $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
+        //     }
+        //   }
+        // );
 
 
       $scope.doNoteNext = function() {
