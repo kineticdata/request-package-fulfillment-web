@@ -5,7 +5,7 @@ angular.module('kineticdata.fulfillment.services.assignments', [])
     var groupsUrl = ConfigService.getBaseUrl() + '/assignment/groups';
 
     var buildParentParams = function(parents) {
-      var parentParam = '&parent=' +parents.join('::');
+      var parentParam = '?parent=' +parents.join('::');
       return (parents.length > 0 ? parentParam : '');
     };
 
@@ -30,7 +30,7 @@ angular.module('kineticdata.fulfillment.services.assignments', [])
       var group = groups.join('::');
 
 
-      $http.get(membersUrl + '&group=' + group).then(
+      $http.get(membersUrl + '?group=' + group).then(
         function(data) {
           var newData = new factory.factoryObject(data.data);
           deferred.resolve(newData);
