@@ -4,7 +4,7 @@ angular.module('kineticdata.fulfillment.directives.simplepaginator', [])
 
   var directive = {};
   directive.restrict = 'E';
-  directive.templateUrl = BUNDLE.packagePath+'assets/app/shared/directives/paginator.template.html';
+  directive.templateUrl = BUNDLE.packagePath+'/assets/app/shared/directives/paginator.template.html';
 
   directive.scope = {
     datasource: '=',

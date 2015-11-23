@@ -5,12 +5,17 @@
     <bundle:variable name="head">
 
         <bundle:stylepack>
+            <bundle:style src="${bundle.packagePath}/libraries/bootstrap/bootstrap.min.css "/>
             <bundle:style src="${bundle.packagePath}/assets/css/package.css "/>
             <bundle:style src="${bundle.packagePath}/assets/js/angular-loading-bar/loading-bar.css"/>
             <bundle:style src="${bundle.packagePath}/assets/js/toastr/toastr.css "/>
         </bundle:stylepack>
+
+        <link href="${bundle.packageLocation}/libraries/font-awesome/css/font-awesome.css" rel="stylesheet">
+
         <bundle:scriptpack>
             <bundle:script src="${bundle.packagePath}/libraries/jquery-datatables/jquery.dataTables.js" />
+            <bundle:script src="${bundle.packagePath}/libraries/bootstrap/bootstrap.min.js" />
         </bundle:scriptpack>
 
         <bundle:yield name="head"/>

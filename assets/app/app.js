@@ -124,7 +124,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
             template: '<div ui-view></div>'
           },
           'filters': {
-            templateUrl: BUNDLE.packagePath+'assets/app/main/main.tpl.html',
+            templateUrl: BUNDLE.packagePath+'/assets/app/main/main.tpl.html',
             controller: 'MainController'
           }
         }
@@ -162,7 +162,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         },
         views: {
           '': {
-            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.list.html',
+            templateUrl: BUNDLE.packagePath+'/assets/app/workorder/workorder.list.html',
             controller: 'WorkOrderListController',
 
             resolve: {
@@ -259,7 +259,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         },
         views: {
           '': {
-            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.detail.html',
+            templateUrl: BUNDLE.packagePath+'/assets/app/workorder/workorder.detail.html',
             controller: 'WorkOrderDetailController',
             resolve: {
               workOrderId: function($stateParams) {
@@ -323,7 +323,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
         url: '/:workOrderId/assign',
         views: {
           '': {
-            templateUrl: BUNDLE.packagePath+'assets/app/workorder/workorder.assign.html',
+            templateUrl: BUNDLE.packagePath+'/assets/app/workorder/workorder.assign.html',
             controller: 'WorkOrderAssignController',
             resolve: {
               workOrderId: function($stateParams) {
@@ -363,6 +363,7 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     // forward the user to the data error page.
     $rootScope.$on('$stateChangeError', function(event, to, toParams, from, fromParams, error) {
       event.preventDefault();
+      console.log('wtf', event, to, toParams, error)
       $state.go('dataerror')
     });
   }]);
