@@ -1,13 +1,13 @@
 <%@page pageEncoding="UTF-8" contentType="text/html" trimDirectiveWhitespaces="true"%>
 <%@include file="package/initialization.jspf" %>
 
-<% com.kineticdata.core.authentication.Identity identity = 
+<% com.kineticdata.core.authentication.Identity identity =
         (com.kineticdata.core.authentication.Identity) request.getAttribute("identity");
     java.util.Map<String,String> searchOptions = new java.util.HashMap<>();
     searchOptions.put("createdBy", identity.getUsername());
-    request.setAttribute("searchOptions", searchOptions); 
+    request.setAttribute("searchOptions", searchOptions);
     String view = "catalog";
-    request.setAttribute("view", view);    
+    request.setAttribute("view", view);
 %>
 
 <bundle:layout page="views/layouts/packageLayout.jsp">
@@ -25,6 +25,10 @@
 	    height: 5px;
 	  }
 	</style>
+  <script>
+    window.BUNDLE = window.BUNDLE || {};
+    BUNDLE.packagePath = "${bundle.packageLocation}";
+  </script>
 
 	<div ng-app="kineticdata.fulfillment" id="foo">
 		<div class="container">
