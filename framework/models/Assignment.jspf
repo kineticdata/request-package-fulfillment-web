@@ -248,6 +248,10 @@
             String groupId = entries[0].getEntryFieldValue("1");
 
             qualification = "'536870913'=\"" + groupId + "\"";
+            
+            // Add the status to qualification to make sure that the group is active
+            qualification = "'7'=\"Active\" AND (" + qualification + ")";
+
             entries = ArsBase.find(context, MEMBER_GROUP_ASSIGN_FORM, qualification, new String[] {"536870913","536870914"});
 
             memberIds = new String[entries.length];
@@ -274,7 +278,9 @@
 
               try {
                 for (Future<Member> future : memberFutureSet) {
-                  members.add(future.get());
+		  if (future.get() != null) {
+                    members.add(future.get());
+                  }
                 }
               } catch (Exception e) {
                   throw new RuntimeException(e);
@@ -306,6 +312,10 @@
             };
 
             String qualification = "'1'=\"" + this.groupId + "\"";
+            
+            // Add the status to qualification to make sure that the group is active
+            qualification = "'7'=\"Active\" AND (" + qualification + ")";
+
             SimpleEntry[] entries = ArsBase.find(this.context, Assignment.GROUP_FORM, qualification, fieldIds);
 
             result = entries[0].getEntryFieldValue("536870913");
@@ -337,14 +347,21 @@
             };
 
             String qualification = "'1'=\"" + this.memberId + "\"";
+  
+           // Add the status to qualification to make sure that the group is active
+           qualification = "'7'=\"Active\" AND (" + qualification + ")";
+
             SimpleEntry[] entries = ArsBase.find(this.context, Assignment.MEMBER_FORM, qualification, fieldIds);
-
-            String firstName = entries[0].getEntryFieldValue("536870913");
-            String lastName = entries[0].getEntryFieldValue("536870914");
-            String loginId = entries[0].getEntryFieldValue("536870917");
-            String email = entries[0].getEntryFieldValue("536870918");
-
-            return new Member(loginId, firstName, lastName, email);
+            if (entries.length != 0) {
+              String firstName = entries[0].getEntryFieldValue("536870913");
+              String lastName = entries[0].getEntryFieldValue("536870914");
+              String loginId = entries[0].getEntryFieldValue("536870917");
+              String email = entries[0].getEntryFieldValue("536870918");
+            
+              return new Member(loginId, firstName, lastName, email);
+            } else {
+              return null;
+            }
         }
     }
 %>
