@@ -17,6 +17,10 @@ angular.module('kineticdata.fulfillment.models.workorder', [
         self.groups = [];
       }
 
+      if(self.groups.length === 1 && _.isEmpty(self.groups[0])) {
+        self.groups = [];
+      }
+
       for(var idx=0; idx<self.groups.length; idx++) {
         var group = self.groups[idx];
         if(idx === 0) {

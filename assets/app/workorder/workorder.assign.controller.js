@@ -25,11 +25,15 @@ angular.module('kineticdata.fulfillment.controllers.workorderassign', [
       return workOrder.isUnassigned();
     };
 
-    $scope.getChildLabel = function() {
+    $scope.hasMoreGroups = function() {
       var hasMoreGroups = false;
       if(typeof $scope.possibleAssignments.items !== 'undefined' && $scope.possibleAssignments.items.length > 0) {
         hasMoreGroups = true;
       }
+      return hasMoreGroups;
+    };
+    $scope.getChildLabel = function() {
+      var hasMoreGroups = $scope.hasMoreGroups();
       return 'Assign ' + (hasMoreGroups===false ? 'Member' : 'Group');
     };
 

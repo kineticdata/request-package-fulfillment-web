@@ -12,6 +12,7 @@
       <!-- List off all of the assigned groups. -->
       <li class="list-group-item" ng-repeat="group in workOrder.groups">
         {{group}}
+
       <span class="pull-right">
         <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment($index)"><i class="fa fa-chevron-right"></i></button>
       </span>
@@ -21,7 +22,8 @@
       <li class="list-group-item" ng-if="showGroupSelect()">
         <strong>{{getChildLabel()}}</strong>
         <span class="pull-right">
-        <button class="btn btn-default btn-xs" ng-click="doStartGroupAssignment(currentGroupStructure.length)"><i class="fa fa-chevron-right"></i></button>
+        <button class="btn btn-default btn-xs" data-ng-if="hasMoreGroups()" ng-click="doStartGroupAssignment(currentGroupStructure.length)"><i class="fa fa-chevron-right"></i></button>
+        <button class="btn btn-default btn-xs" data-ng-if="!hasMoreGroups()" ng-click="doStartMemberAssignment()"><i class="fa fa-chevron-right"></i></button>
       </span>
       </li>
 
@@ -59,7 +61,7 @@
       <li class="list-group-item" ng-if="state.selectMembers && !state.loadingData">
         <p class="lead text-center">Member</p>
         <div class="btn-group-vertical btn-block" role="group" >
-          <button ng-repeat="member in possibleAssignments.members" class="btn btn-default" ng-click="assignMember(member)">{{member.firstName}} {{member.lastName}}</button>
+          <button ng-repeat="member in possibleAssignments.members" class="btn btn-default" ng-click="assignMember(member)">{{member.name}}</button>
         </div>
       </li>
     </ul>
