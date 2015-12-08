@@ -1,18 +1,9 @@
 <%@page pageEncoding="UTF-8" contentType="text/html" trimDirectiveWhitespaces="true"%>
-<%@include file="package/initialization.jspf" %>
+<%@include file="bundle/initialization.jspf" %>
 
-<% com.kineticdata.core.authentication.Identity identity =
-        (com.kineticdata.core.authentication.Identity) request.getAttribute("identity");
-    java.util.Map<String,String> searchOptions = new java.util.HashMap<>();
-    searchOptions.put("createdBy", identity.getUsername());
-    request.setAttribute("searchOptions", searchOptions);
-    String view = "catalog";
-    request.setAttribute("view", view);
-%>
-
-<bundle:layout page="views/layouts/packageLayout.jsp">
+<bundle:layout page="${bundle.path}/layouts/layout.jsp">
     <bundle:variable name="head">
-        <title>Kinetic Data ${app:escape(kapp.name)}</title>
+        <title>Kinetic Data ${kapp.name}</title>
     </bundle:variable>
 
 	<!-- Override the loading bar. -->
@@ -27,7 +18,10 @@
 	</style>
   <script>
     window.BUNDLE = window.BUNDLE || {};
-    BUNDLE.packagePath = "${bundle.packageLocation}";
+    BUNDLE.packagePath = "${bundle.location}";
+    BUNDLE.config = {};
+    BUNDLE.config.user = "${identity.username}";
+    BUNDLE.config.spaceLocation = "${bundle.spaceLocation}";
   </script>
 
 	<div ng-app="kineticdata.fulfillment" id="foo">
@@ -45,48 +39,48 @@
 	</div>
 
 	<bundle:scriptpack>
-		<bundle:script src="${bundle.packagePath}/assets/js/angular/angular.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-flash/angular-flash.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-moment/angular-moment.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-animate/angular-animate.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-ui-bootstrap/ui-bootstrap.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-ui-bootstrap/ui-bootstrap-tpls.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-ui-bootstrap/pagination.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-ui-router/angular-ui-router.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-loading-bar/loading-bar.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/angular-truncate/truncate.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular/angular.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-flash/angular-flash.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-moment/angular-moment.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-animate/angular-animate.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-ui-bootstrap/ui-bootstrap.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-ui-bootstrap/ui-bootstrap-tpls.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-ui-bootstrap/pagination.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-ui-router/angular-ui-router.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-loading-bar/loading-bar.js" />
+		<bundle:script src="${bundle.path}/assets/js/angular-truncate/truncate.js" />
 
-		<bundle:script src="${bundle.packagePath}/assets/js/ng-file-upload/ng-file-upload-shim.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/ng-file-upload/ng-file-upload.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/restangular/restangular.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/lodash/lodash.js" />
-		<bundle:script src="${bundle.packagePath}/assets/js/toastr/toastr.js" />
+		<bundle:script src="${bundle.path}/assets/js/ng-file-upload/ng-file-upload-shim.js" />
+		<bundle:script src="${bundle.path}/assets/js/ng-file-upload/ng-file-upload.js" />
+		<bundle:script src="${bundle.path}/assets/js/restangular/restangular.js" />
+		<bundle:script src="${bundle.path}/assets/js/lodash/lodash.js" />
+		<bundle:script src="${bundle.path}/assets/js/toastr/toastr.js" />
 
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/directives/simple.paginator.directive.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/directives/rowhover.directive.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/directives/simple.paginator.directive.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/directives/rowhover.directive.js" />
 
 		<!-- Services -->
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/services/config.service.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/services/filters.service.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/services/auth.interceptor.factory.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/services/model.factory.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/services/assignments.service.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/services/config.service.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/services/filters.service.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/services/auth.interceptor.factory.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/services/model.factory.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/services/assignments.service.js" />
 
 
 		<!-- Models -->
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/models/workorders.model.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/models/filters.model.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/shared/models/assignments.model.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/models/workorders.model.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/models/filters.model.js" />
+		<bundle:script src="${bundle.path}/assets/app/shared/models/assignments.model.js" />
 
 		<!-- Work Orders -->
-		<bundle:script src="${bundle.packagePath}/assets/app/main/main.controller.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/workorder/workorder.service.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/workorder/workorder.list.controller.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/workorder/workorder.detail.controller.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/workorder/workorder.assign.controller.js" />
-		<bundle:script src="${bundle.packagePath}/assets/app/workorder/workorder.frame.directive.js" />
+		<bundle:script src="${bundle.path}/assets/app/main/main.controller.js" />
+		<bundle:script src="${bundle.path}/assets/app/workorder/workorder.service.js" />
+		<bundle:script src="${bundle.path}/assets/app/workorder/workorder.list.controller.js" />
+		<bundle:script src="${bundle.path}/assets/app/workorder/workorder.detail.controller.js" />
+		<bundle:script src="${bundle.path}/assets/app/workorder/workorder.assign.controller.js" />
+		<bundle:script src="${bundle.path}/assets/app/workorder/workorder.frame.directive.js" />
 
-		<bundle:script src="${bundle.packagePath}/assets/app/app.js" />
+		<bundle:script src="${bundle.path}/assets/app/app.js" />
 	</bundle:scriptpack>
 
 
