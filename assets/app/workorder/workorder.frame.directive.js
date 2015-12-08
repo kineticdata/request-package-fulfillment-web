@@ -3,7 +3,7 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
     var directive = {};
 
     directive.restrict = 'E';
-    directive.template = '<iframe id="workFrame"></iframe>';
+    directive.template = '<div id="workFrame"></div>';
 
     directive.link = function(scope, element, attributes) {
 
@@ -32,16 +32,13 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
           return;
         }
 
-        $log.info('{WorkFrame} Updating work frame URL: ' + dest);
-        var frame = $('iframe#workFrame');
-        frame.attr('src', dest);
-        frame.on('load', function(){
-          frame[0].contentWindow.KRFWorkOrder = updater;
 
-          var iFrameHeight = frame[0].contentWindow.document.body.scrollHeight + 'px';
-          var iFrameWidth = '100%';
-          frame.css('width', iFrameWidth);
-          frame.css('height', iFrameHeight);
+        console.log('{WorkFrame} Updating work frame URL: ' + dest);
+        K.reset();
+        K.load({
+          container: '#workFrame',
+          path: dest,
+          completed: updater.completed
         });
       });
 
