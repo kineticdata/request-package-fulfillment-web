@@ -34,7 +34,24 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $scope.doWorkIt();
       };
       $scope.doWorkIt = function(){
-        $scope.activeTab = 'work';
+        //$scope.activeTab = 'work';
+
+        // Grab it first.
+        WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
+           function() {
+             WorkOrdersService.WorkOrder(workOrderId).get().then(function(data) {
+               $scope.workOrder = data;
+               $rootScope.$broadcast('krs-workorder-modified');
+               //$rootScope.$broadcast('krs-workit');
+               $scope.activeTab = 'work';
+             });
+           },
+           function(data) {
+             if(data.status === 400) {
+               $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
+             }
+           }
+        );
       };
 
       $scope.workitLabel = function() {
@@ -127,22 +144,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       $scope.isMine = function() {
         return ($scope.workOrder.assignee && BUNDLE.config.user === $scope.workOrder.assignee.loginId)
       };
-        // Grab it first.
-        // WorkOrdersService.postAssignMe($scope.currentWorkOrderId).then(
-        //   function() {
-        //     WorkOrdersService.WorkOrder(workOrderId).get().then(function(data) {
-        //       $scope.workOrder = data;
-        //       $rootScope.$broadcast('krs-workorder-modified');
-        //       $rootScope.$broadcast('krs-workit');
-        //     });
-        //   },
-        //   function(data) {
-        //     if(data.status === 400) {
-        //       $state.go('workorders.assign', { workOrderId: $scope.currentWorkOrderId });
-        //     }
-        //   }
-        // );
-
 
       $scope.doNoteNext = function() {
         var offset = ($scope.notesPage) * 5;
@@ -159,10 +160,6 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
           $state.go('.', {np: page, tab: 'notes'});
         }
       };
-
-
-
-
 
       $scope.doNotePage = function(page) {
         $state.go('.', {np: page, tab: 'notes'});
