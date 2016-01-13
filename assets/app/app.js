@@ -356,7 +356,8 @@ angular.module('kineticdata.fulfillment').config(['$stateProvider', '$urlRouterP
     $httpProvider.defaults.withCredentials = true;
     $httpProvider.interceptors.push('AuthInterceptor');
   }]).run(['$rootScope', '$state', function($rootScope, $state) {
-
+    var locale = window.navigator.userLanguage || window.navigator.language;
+    moment.locale(locale);
     // Capture state change errors. This will be triggered whenever one of the state resolutions fails. This shouldn't
     // normally happen with a functioning API or legit data but will always happen if something 'off' happens on the
     // the Request side. In the event of a failed state change we're going to assume that it is error related and
