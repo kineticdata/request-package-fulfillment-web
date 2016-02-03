@@ -13,7 +13,7 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
       // Loading trackers.
       $scope.showAddNote = false;
       $scope.tmpNote = {};
-      $scope.requestUrl={};
+      $scope.requestUrl='';
 
       $scope.notesPage = parseInt($stateParams.np) || 0;
       $scope.logsPage = parseInt($stateParams.lp) || 0;
@@ -23,9 +23,9 @@ angular.module('kineticdata.fulfillment.controllers.workorderdetail', [
 
       $scope.workOrderURL = workOrder.workOrderURL;
 
-      if ($scope.workOrder.status == "Completed") {
-        $scope.workOrder.workOrderURL= workOrder.workOrderURL.replace("DisplayPage","ReviewRequest");
-        $scope.requestUrl = workOrder.workOrderURL.replace("DisplayPage","ReviewRequest");
+      if ($scope.workOrder.status == "Closed") {
+        var separator = ($scope.workOrder.workOrderURL.indexOf("?")===-1)?"?":"&";
+        $scope.requestUrl = workOrder.workOrderURL.concat(separator + "review");
         $scope.isCompleted = true;
       }
 
