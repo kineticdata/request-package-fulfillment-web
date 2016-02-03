@@ -66,7 +66,7 @@
       <!-- Working buttons -->
       <div class="row row-workorder-actions">
         <div class="col-md-6 col-xs-6">
-          <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })">Assign</button>
+          <button class="btn btn-block btn-warning" ui-sref="workorders.assign({ workOrderId: currentWorkOrderId })" data-ng-disable="isCompleted === true">Assign</button>
         </div>
         <div class="col-md-6 col-xs-6">
           <button class="btn btn-block btn-primary" ng-click="workView()">{{workitLabel()}}</button>
