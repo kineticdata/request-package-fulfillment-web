@@ -21,7 +21,7 @@ angular.module('kineticdata.fulfillment.directives.workframe', [])
 
             //var filter = (wos.activeFilter===''?'default':wos.activeFilter);
             $timeout(function() {
-              $state.go('workorders', { id: filter });
+              $state.go('workorders', { id: filter }, {reload: true});
             }, 3000);
           }]);
         }
