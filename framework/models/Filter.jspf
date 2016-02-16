@@ -41,9 +41,11 @@
           for (String groupName : groups) {
            indvGroupQuals.add(String.format("'%s'=\"%s\"",WorkOrder.FLD_ASSIGNED_GROUPS, groupName));
           }
-          if (!indvGroupQuals.isEmpty()) {
-            qualification += " AND (" + StringUtils.join(indvGroupQuals," OR ") + ")";
+          if (indvGroupQuals.isEmpty()) {
+            // Add group == $NULL$ to the qualification to make sure no groups get returned
+            indvGroupQuals.add(String.format("'%s'=$NULL$",WorkOrder.FLD_ASSIGNED_GROUPS));
           }
+          qualification += " AND (" + StringUtils.join(indvGroupQuals," OR ") + ")";
           qualification = convertFieldNames(qualification);
           if (qualification != null) {
             filter = new Filter(name, qualification, false);

@@ -198,7 +198,9 @@
 
           try {
             for (Future<String> future : groupsFutureSet) {
-              groupNames.add(future.get());
+              if (future.get() != null) {
+                groupNames.add(future.get());
+              }
             }
           } catch (Exception e) {
               throw new RuntimeException(e);
@@ -278,7 +280,7 @@
 
               try {
                 for (Future<Member> future : memberFutureSet) {
-		  if (future.get() != null) {
+                  if (future.get() != null) {
                     members.add(future.get());
                   }
                 }
@@ -318,9 +320,11 @@
 
             SimpleEntry[] entries = ArsBase.find(this.context, Assignment.GROUP_FORM, qualification, fieldIds);
 
-            result = entries[0].getEntryFieldValue("536870913");
-
-            return result;
+            if (entries.length != 0) {
+              return entries[0].getEntryFieldValue("536870913");
+            } else {
+              return null;
+            }
         }
     }
 
